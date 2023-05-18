@@ -1,5 +1,8 @@
 namespace MakeYouPro.Bank.CRM
 {
+    using MakeYouPro.Bank.CRM.ExceptionMiddleware;
+    using Microsoft.AspNetCore.Builder;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -26,6 +29,7 @@ namespace MakeYouPro.Bank.CRM
 
             app.UseAuthorization();
 
+            app.UseMiddleware<GlobalExceptionHandler>();
 
             app.MapControllers();
 
