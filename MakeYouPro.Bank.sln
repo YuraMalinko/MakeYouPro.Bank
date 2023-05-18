@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.CRM", "MakeYouPro.Bank.CRM\MakeYouPro.Bank.CRM.csproj", "{B2E957E9-92A2-4225-9E6A-B5A018AD900A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.CRM", "MakeYouPro.Bank.CRM\MakeYouPro.Bank.CRM.csproj", "{B2E957E9-92A2-4225-9E6A-B5A018AD900A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ", "RabbitMQ\RabbitMQ.csproj", "{1E48D54F-21CF-4074-97D3-02E9762BD579}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E48D54F-21CF-4074-97D3-02E9762BD579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E48D54F-21CF-4074-97D3-02E9762BD579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E48D54F-21CF-4074-97D3-02E9762BD579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E48D54F-21CF-4074-97D3-02E9762BD579}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
