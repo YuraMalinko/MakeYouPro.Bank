@@ -1,23 +1,24 @@
 ﻿using System.Text;
 using System.Text.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace RabbitMQ
 {
-    public class Publisher
+    public class Consumer
     {
         private IConnectionFactory _factory;
         private IConnection _connection;
         private IModel _channel;
 
-        public Publisher(IConnectionFactory factory, IConnection connection, IModel channel)
+        public Consumer(IConnectionFactory factory, IConnection connection, IModel channel)
         {
             _factory = factory;
             _connection = connection;
             _channel = channel;
         }
 
-        public void SendMessage<T>(T value)
+        public T GetMessage<T>()
         {
             _factory = new ConnectionFactory() { HostName = "localhost" };
             using (_connection = _factory.CreateConnection())
@@ -30,13 +31,19 @@ namespace RabbitMQ
                                         autoDelete: false,
                                         arguments: null);
 
-                var message = JsonSerializer.Serialize(value);
-                var body = Encoding.UTF8.GetBytes(message);
-                _channel.BasicPublish(exchange: "",
-                                        routingKey: queueName,
-                                        basicProperties: null,
-                                        body: body);
-                Console.WriteLine($"Sent {message}");
+                var consumer = new EventingBasicConsumer(_channel);
+                T value = default;
+                consumer.Received += (sender, args) =>
+                {
+                    var body = args.Body;
+                    var message = Encoding.UTF8.GetString(body.ToArray());
+                    value = JsonSerializer.Deserialize<T>(message);
+                };
+
+                _channel.BasicConsume(queue: queueName,
+                                        autoAck: true,
+                                        consumer: consumer);
+                return value;
             }
         }
     }

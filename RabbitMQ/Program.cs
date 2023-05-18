@@ -1,2 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+using RabbitMQ;
+
+Publisher<List<string>> publisher = new Publisher<List<string>> { Value = { "dent,nocs,coda","sad","asd"} };
+
+publisher.SendMessege();
