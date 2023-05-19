@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.CRM", "MakeYouPro.Bank.CRM\MakeYouPro.Bank.CRM.csproj", "{B2E957E9-92A2-4225-9E6A-B5A018AD900A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.CRM", "MakeYouPro.Bank.CRM\MakeYouPro.Bank.CRM.csproj", "{B2E957E9-92A2-4225-9E6A-B5A018AD900A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{39E48B94-F2C1-47E3-AAD2-DEF8ED2EE8CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Api.Auth", "MakeYouPro.Bank.Auth\MakeYouPro.Bank.Api.Auth.csproj", "{C16FF821-1213-40D8-A25B-2B15679BF2DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Dal.Auth", "MakeYouPro.Bank.Dal.Auth\MakeYouPro.Bank.Dal.Auth.csproj", "{06BB5504-3B71-4709-9676-74B096EECA65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Service.Auth", "MakeYouPro.Bank.Service.Auth\MakeYouPro.Bank.Service.Auth.csproj", "{82956627-C304-4DEE-B54E-43BD333D196B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +25,27 @@ Global
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2E957E9-92A2-4225-9E6A-B5A018AD900A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16FF821-1213-40D8-A25B-2B15679BF2DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C16FF821-1213-40D8-A25B-2B15679BF2DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C16FF821-1213-40D8-A25B-2B15679BF2DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C16FF821-1213-40D8-A25B-2B15679BF2DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06BB5504-3B71-4709-9676-74B096EECA65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06BB5504-3B71-4709-9676-74B096EECA65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06BB5504-3B71-4709-9676-74B096EECA65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06BB5504-3B71-4709-9676-74B096EECA65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82956627-C304-4DEE-B54E-43BD333D196B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82956627-C304-4DEE-B54E-43BD333D196B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82956627-C304-4DEE-B54E-43BD333D196B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82956627-C304-4DEE-B54E-43BD333D196B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92} = {39E48B94-F2C1-47E3-AAD2-DEF8ED2EE8CA}
+		{C16FF821-1213-40D8-A25B-2B15679BF2DC} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
+		{06BB5504-3B71-4709-9676-74B096EECA65} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
+		{82956627-C304-4DEE-B54E-43BD333D196B} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {416A70E5-B624-4A1B-BE9E-EC5BED89FD9F}
