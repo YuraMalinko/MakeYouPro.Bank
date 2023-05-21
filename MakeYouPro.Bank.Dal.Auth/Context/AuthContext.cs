@@ -8,7 +8,7 @@ namespace MakeYouPro.Bank.Dal.Auth.Context
         public DbSet<UserDal> Users { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-TO5LEQA\SQLEXPRESS;Initial Catalog = Bank.Auth.Local; Integrated Security = True; Persist Security Info = False; Pooling = False; MultipleActiveResultSets = False; Connect Timeout = 60; Encrypt = False; TrustServerCertificate = False");
+            optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("Bank.Auth.Local"));
         }
     }
 }

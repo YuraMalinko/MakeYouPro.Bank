@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MakeYouPro.Bank.Dal.Auth.Repository;
 using MakeYouPro.Bank.Dal.Auth.Models;
+using MakeYouPro.Bank.Dal.Auth.Repository;
 using MakeYouPro.Bank.Service.Auth.Models;
 
 namespace MakeYouPro.Bank.Service.Auth.Services
@@ -18,17 +18,22 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
         public async Task<User> RegisterUserAsync(User user)
         {
-            var userDal = _mapper.Map<UserDal>(user);
+            if (!await _authRepository.CheckEmailAsync(user.Email))
+            {
+                var userDal = _mapper.Map<UserDal>(user);
 
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(userDal.Password);
-            userDal.Password = passwordHash;
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(userDal.Password);
+                userDal.Password = passwordHash;
 
-            var callback = await _authRepository.AddUserAsync(userDal);
-            var result = _mapper.Map<User>(callback);
+                var callback = await _authRepository.AddUserAsync(userDal);
+                var result = _mapper.Map<User>(callback);
 
-            return result;
-
-
+                return result;
+            }
+            else
+            {
+                throw new Exception($"Что-то пошло не так");
+            }
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using MakeYouPro.Bank.Api.Auth.Models.Requests;
-using MakeYouPro.Bank.Dal.Auth.Models;
 using MakeYouPro.Bank.Service.Auth.Models;
 using MakeYouPro.Bank.Service.Auth.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MakeYouPro.Bank.Api.Auth.Controllers
@@ -22,11 +20,23 @@ namespace MakeYouPro.Bank.Api.Auth.Controllers
         }
 
         [HttpPost("register")]
-        public async Task <IActionResult> RegisterAsync(UserRegisterRequest request)
+        public async Task<IActionResult> RegisterAsync(UserRegisterRequest request)
         {
-            var user =  _mapper.Map<User>(request);
-            _authService.RegisterUserAsync(user);
-            return Ok();
+            try
+            {
+                var user = _mapper.Map<User>(request);
+                await _authService.RegisterUserAsync(user);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using MakeYouPro.Bank.Dal.Auth.Context;
 using MakeYouPro.Bank.Dal.Auth.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MakeYouPro.Bank.Dal.Auth.Repository
 {
@@ -19,6 +18,13 @@ namespace MakeYouPro.Bank.Dal.Auth.Repository
 
             return _context.Users
                 .Single(u => u.Id == user.Id);
+        }
+
+        public async Task<bool> CheckEmailAsync(string email)
+        {
+            return _context.Users
+                    .ToList()
+                    .Any(u => u.Email == email);
         }
     }
 }
