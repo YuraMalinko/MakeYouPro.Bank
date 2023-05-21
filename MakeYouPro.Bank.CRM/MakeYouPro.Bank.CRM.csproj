@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>23b31826-14c0-48bd-81a2-bf0d1a15ae54</UserSecretsId>
@@ -9,12 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MakeYouPro.Bank.CRM.Bll\MakeYouPro.Bank.CRM.Bll.csproj" />
+    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Bll\MakeYouPro.Bourse.CRM.Bll.csproj" />
   </ItemGroup>
 
 </Project>
