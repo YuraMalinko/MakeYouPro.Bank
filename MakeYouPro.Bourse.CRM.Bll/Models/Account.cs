@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bank.CRM.Dal.Models;
+﻿using MakeYouPro.Bource.CRM.Dal.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
