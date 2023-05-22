@@ -1,7 +1,7 @@
-﻿using MakeYouPro.Bank.CRM.Dal.Models;
+﻿using MakeYouPro.Bource.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bank.CRM.Dal
+namespace MakeYouPro.Bource.CRM.Dal
 {
     public class CRMContext : DbContext
     {
@@ -12,6 +12,7 @@ namespace MakeYouPro.Bank.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

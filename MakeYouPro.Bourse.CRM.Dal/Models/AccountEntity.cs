@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MakeYouPro.Bank.CRM.Dal.Models
+namespace MakeYouPro.Bource.CRM.Dal.Models
 {
+    
     public class AccountEntity
     {
         [Key]
