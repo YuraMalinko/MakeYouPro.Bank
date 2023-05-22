@@ -46,9 +46,6 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [MinLength(2)]
         public string Citizenship { get; set; }
 
-        [Column(TypeName = "nvarchar(50)")]
-        public string? PassportSeries { get; set; }
-
         [Required]
         [Column(TypeName = "nvarchar(50)")]
         public string PassportNumber { get; set; }
@@ -57,7 +54,7 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [Column(TypeName = "nvarchar(300)")]
         public string Registration { get; set; }
 
-        [Column(TypeName = "nvarchar(500)")]
+        [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
 
         public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity> ();
