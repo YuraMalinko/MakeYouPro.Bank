@@ -5,5 +5,7 @@ namespace MakeYouPro.Bank.Service.Auth.Services
     public interface IAuthService
     {
         Task<User> RegisterUserAsync(User userregister);
+
+        Task<bool> SendMessageAsync(Message message);
     }
 }
