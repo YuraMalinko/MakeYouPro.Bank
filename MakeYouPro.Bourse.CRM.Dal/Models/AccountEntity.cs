@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MakeYouPro.Bource.CRM.Dal.Models
 {
-    
+
     public class AccountEntity
     {
         [Key]
@@ -24,13 +23,13 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public string Currency { get; set; }
 
         [Required]
-        [Column(TypeName ="decimal(38,4)")]
+        [Column(TypeName = "decimal(38,4)")]
         public decimal Balance { get; set; }
 
         [Required]
         public int Status { get; set; }
 
-        [StringLength(2000, MinimumLength = 2)]
+        [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
     }
 }
