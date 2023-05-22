@@ -5,15 +5,15 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.CRM", "MakeYouPro.Bank.CRM\MakeYouPro.Bank.CRM.csproj", "{B2E957E9-92A2-4225-9E6A-B5A018AD900A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQ", "RabbitMQ\RabbitMQ.csproj", "{1E48D54F-21CF-4074-97D3-02E9762BD579}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQ", "RabbitMQ\RabbitMQ.csproj", "{1E48D54F-21CF-4074-97D3-02E9762BD579}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MakeYouPro.Bank.ReportingService", "MakeYouPro.Bank.ReportingService", "{EF000179-67B5-4162-8A9F-724E762CD668}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MakeYouPro.Bourse.ReportingService", "MakeYouPro.Bourse.ReportingService", "{EF000179-67B5-4162-8A9F-724E762CD668}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingService.Api", "ReportingService.API\ReportingService.Api.csproj", "{DD4D9EF8-E60E-4311-8883-1DDE44312E4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportingService.Api", "ReportingService.API\ReportingService.Api.csproj", "{DD4D9EF8-E60E-4311-8883-1DDE44312E4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingService.Bll", "ReportingService.Bll\ReportingService.Bll.csproj", "{ED65C7C2-0A44-4C59-A6DA-E193A6637101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportingService.Bll", "ReportingService.Bll\ReportingService.Bll.csproj", "{ED65C7C2-0A44-4C59-A6DA-E193A6637101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportingService.Dal", "ReportingService.Dal\ReportingService.Dal.csproj", "{A8790D79-FAB8-49E3-AF06-371192BBE7E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportingService.Dal", "ReportingService.Dal\ReportingService.Dal.csproj", "{A8790D79-FAB8-49E3-AF06-371192BBE7E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
