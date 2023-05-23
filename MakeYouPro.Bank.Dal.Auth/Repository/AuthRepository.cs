@@ -26,5 +26,11 @@ namespace MakeYouPro.Bank.Dal.Auth.Repository
                     .ToList()
                     .Any(u => u.Email == email);
         }
+
+        public async Task<UserDal> GetUserByEmailAsync(string email)
+        {
+            return _context.Users
+                .Single(u => u.Email == email);
+        }
     }
 }

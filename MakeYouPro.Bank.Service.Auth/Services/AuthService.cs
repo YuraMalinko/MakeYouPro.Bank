@@ -47,7 +47,31 @@ namespace MakeYouPro.Bank.Service.Auth.Services
             }
         }
 
-        public async Task<bool> SendMessageAsync(Message message)
+        public async Task<User> GetUserByEmail(User user)
+        {
+            if (await _authRepository.CheckEmailAsync(user.Email))
+            {
+                var userDal = _mapper.Map<UserDal>(user);
+                var callback = await _authRepository.GetUserByEmailAsync(userDal.Email);
+
+                if (BCrypt.Net.BCrypt.Verify(userDal.Password, callback.Password))
+                {
+                    var result = _mapper.Map<User>(callback);
+                 
+                    return result;
+                }
+                else
+                {
+                    throw new Exception($"Что-то пошло не так");
+                }
+            }
+            else
+            {
+                throw new Exception($"Что-то пошло не так");
+            }
+        }
+
+        private async Task<bool> SendMessageAsync(Message message)
         {
             using var emailMessage = new MimeMessage();
 
@@ -69,7 +93,6 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
                 return true;
             }
-
         }
     }
 }

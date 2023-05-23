@@ -38,5 +38,25 @@ namespace MakeYouPro.Bank.Api.Auth.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UserRegisterRequest>> Login(UserRegisterRequest request)
+        {
+            try
+            {
+                var user = _mapper.Map<User>(request);
+                var user1 = await _authService.GetUserByEmail(user);
+
+                return Ok(user1);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

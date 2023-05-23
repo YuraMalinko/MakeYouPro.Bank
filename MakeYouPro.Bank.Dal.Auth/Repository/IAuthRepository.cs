@@ -7,5 +7,7 @@ namespace MakeYouPro.Bank.Dal.Auth.Repository
         Task<UserDal> AddUserAsync(UserDal user);
 
         Task<bool> CheckEmailAsync(string email);
+
+        Task<UserDal> GetUserByEmailAsync(string email);
     }
 }
