@@ -9,6 +9,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
     public interface ILeadRepository
     {
-        Task<LeadEntity> CreateLead(LeadEntity lead);
+        Task<LeadEntity> CreateLeadAsync(LeadEntity lead);
+
+        Task<List<LeadEntity>> GetLeadsByEmail(string email);
     }
 }

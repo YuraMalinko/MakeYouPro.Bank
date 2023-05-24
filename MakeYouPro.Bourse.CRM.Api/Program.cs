@@ -9,6 +9,7 @@ using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandler>();
 
 app.MapControllers();
 

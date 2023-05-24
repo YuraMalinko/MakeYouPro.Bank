@@ -12,6 +12,7 @@ using MakeYouPro.Bource.CRM.Dal.Models;
 using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -33,18 +34,24 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             _logger = nLogger;
         }
 
-        public async Task<Lead> CreateLead(Lead lead)
+        public async Task<Lead> CreateLeadAsync(Lead lead)
         {
+            if (!await CheckEmailIsNotExistAsync(lead.Email))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this email is already exist.");
+                throw new AlreadyExistException(nameof(LeadEntity.Email));
+            }
+
             var leadEntity = _mapper.Map<LeadEntity>(lead);
-            leadEntity.Role = (int)LeadRoleEnum.StandardLead;
-            leadEntity.Status = (int)LeadStatusEnum.Active;
-            var addLeadEntity = await _leadRepository.CreateLead(leadEntity);
+            leadEntity.Role = LeadRoleEnum.StandardLead;
+            leadEntity.Status = LeadStatusEnum.Active;
+            var addLeadEntity = await _leadRepository.CreateLeadAsync(leadEntity);
 
             if (addLeadEntity != null)
             {
                 var defaultRubAccount = CreateDefaultRubAccount();
                 defaultRubAccount.LeadId = addLeadEntity.Id;
-                var addRubAccount = await _accountService.CreateAccount(defaultRubAccount);
+                var addRubAccount = await _accountService.CreateAccountAsync(defaultRubAccount);
 
                 var result = _mapper.Map<Lead>(addLeadEntity);
                 result.Accounts.Add(addRubAccount);
@@ -68,6 +75,17 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             };
 
             return rubAccount;
+        }
+
+        private async Task<bool> CheckEmailIsNotExistAsync(string email)
+        {
+            var leads = await _leadRepository.GetLeadsByEmail(email);
+            if (leads.Any())
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

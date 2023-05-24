@@ -28,12 +28,12 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             _logger = nLogger;
         }
 
-        [HttpPost(Name = "CreateLead")]
+        [HttpPost(Name = "CreateLeadAsync")]
         [SwaggerResponse((int)HttpStatusCode.Created)]
-        public async Task<ActionResult<LeadResponseInfo>> CreateLead(LeadRequestCreate addLead)
+        public async Task<ActionResult<LeadResponseInfo>> CreateLeadAsync(LeadRequestCreate addLead)
         {
             var leadBll = _mapper.Map<Lead>(addLead);
-            var addLeadBll = await _leadService.CreateLead(leadBll);
+            var addLeadBll = await _leadService.CreateLeadAsync(leadBll);
             var result = _mapper.Map<LeadResponseInfo>(addLeadBll);
 
             return Created(new Uri("api/Lead", UriKind.Relative), result);

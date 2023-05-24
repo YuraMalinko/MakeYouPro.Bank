@@ -6,7 +6,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        public async Task<AccountEntity> CreateAccount(AccountEntity account)
+        public async Task<AccountEntity> CreateAccountAsync(AccountEntity account)
         {
             return new AccountEntity();
         }

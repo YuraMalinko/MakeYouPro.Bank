@@ -9,6 +9,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
     public interface IAccountService
     {
-        Task<Account> CreateAccount(Account account);
+        Task<Account> CreateAccountAsync(Account account);
     }
 }

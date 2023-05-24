@@ -10,7 +10,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
     public class AccountService : IAccountService
     {
-        public async Task<Account> CreateAccount(Account account)
+        public async Task<Account> CreateAccountAsync(Account account)
         {
             return new Account();
         }

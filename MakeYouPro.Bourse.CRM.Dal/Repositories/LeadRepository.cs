@@ -19,7 +19,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             _logger = nLogger;
         }
 
-        public async Task<LeadEntity> CreateLead(LeadEntity lead)
+        public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)
         {
             await _context.Leads.AddAsync(lead);
             //lead.DateCreate = DateTime.UtcNow;
@@ -29,6 +29,13 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             return await _context.Leads
                 .Include(l => l.Accounts)
                 .SingleAsync(l => l.Id == lead.Id);
+        }
+
+        public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
+        {
+            return await _context.Leads
+                        .Where(l => l.Email == email)
+                        .ToListAsync();
         }
     }
 }
