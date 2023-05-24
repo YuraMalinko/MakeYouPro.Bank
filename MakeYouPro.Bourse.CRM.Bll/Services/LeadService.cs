@@ -41,6 +41,18 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this email is already exist.");
                 throw new AlreadyExistException(nameof(LeadEntity.Email));
             }
+            
+            if (!await CheckPhoneNumberIsNotExistAsync(lead.PhoneNumber))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this phoneNumber is already exist.");
+                throw new AlreadyExistException(nameof(LeadEntity.PhoneNumber));
+            }
+
+            if (!await CheckPassportIsNotExistAsync(lead.PassportNumber))
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this passportNumber is already exist.");
+                throw new AlreadyExistException(nameof(LeadEntity.PassportNumber));
+            }
 
             var leadEntity = _mapper.Map<LeadEntity>(lead);
             leadEntity.Role = LeadRoleEnum.StandardLead;
@@ -80,7 +92,34 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         private async Task<bool> CheckEmailIsNotExistAsync(string email)
         {
             var leads = await _leadRepository.GetLeadsByEmail(email);
+
             if (leads.Any())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> CheckPhoneNumberIsNotExistAsync(string phoneNumber)
+        {
+            var leads = await _leadRepository.GetLeadsByPhoneNumber(phoneNumber);
+            var leadsActiveOrDeactive = leads.Where(l => l.Status == LeadStatusEnum.Active || l.Status == LeadStatusEnum.Deactive).ToList();
+
+            if (leadsActiveOrDeactive.Any())
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task<bool> CheckPassportIsNotExistAsync(string passport)
+        {
+            var leads = await _leadRepository.GetLeadsByPassport(passport);
+            var leadsActiveOrDeactive = leads.Where(l => l.Status == LeadStatusEnum.Active || l.Status == LeadStatusEnum.Deactive).ToList();
+
+            if (leadsActiveOrDeactive.Any())
             {
                 return false;
             }

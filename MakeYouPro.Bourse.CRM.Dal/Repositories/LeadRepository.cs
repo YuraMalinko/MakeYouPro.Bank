@@ -33,9 +33,28 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
         public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
         {
+            string emailWithoutwhitespace = email.Replace(" ", String.Empty);
             return await _context.Leads
-                        .Where(l => l.Email == email)
+                        .Where(l => l.Email.Replace(" ", String.Empty) == emailWithoutwhitespace)
                         .ToListAsync();
+        }
+
+        public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
+        {
+            string phoneNumbertWithoutwhitespace = phoneNumber.Replace(" ", String.Empty);
+            return await _context.Leads
+                        .Where(l => l.PhoneNumber.Replace(" ", String.Empty) == phoneNumber)
+                        .ToListAsync();
+        }
+
+        public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
+        {
+            string passportWithoutwhitespace = passport.Replace(" ", String.Empty);
+            var q = await _context.Leads
+                        .Where(l => l.PassportNumber.Replace(" ", String.Empty) == passport)
+                        .ToListAsync();
+
+            return q;
         }
     }
 }

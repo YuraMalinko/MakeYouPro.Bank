@@ -13,6 +13,7 @@ namespace MakeYouPro.Bource.CRM.Dal
         {
             //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -12,5 +12,9 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
         Task<LeadEntity> CreateLeadAsync(LeadEntity lead);
 
         Task<List<LeadEntity>> GetLeadsByEmail(string email);
+
+        Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber);
+
+        Task<List<LeadEntity>> GetLeadsByPassport(string passport);
     }
 }
