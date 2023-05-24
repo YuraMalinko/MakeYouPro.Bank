@@ -8,7 +8,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Request
 
         public string Citizenship { get; set; }
 
-        public string PassportSeries { get; set; }
+        public string Registration { get; set; }
 
         public string PassportNumber { get; set; }
 

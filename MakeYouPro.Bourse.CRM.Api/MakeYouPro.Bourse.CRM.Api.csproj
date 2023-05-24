@@ -7,16 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.5" />
+    <PackageReference Include="NLog" Version="5.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Dal\MakeYouPro.Bourse.CRM.Dal.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Bll\MakeYouPro.Bourse.CRM.Bll.csproj" />
+    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Core\MakeYouPro.Bourse.CRM.Core.csproj" />
   </ItemGroup>
 
 </Project>

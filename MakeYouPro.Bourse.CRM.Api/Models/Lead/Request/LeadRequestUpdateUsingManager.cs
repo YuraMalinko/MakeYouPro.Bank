@@ -6,6 +6,8 @@
 
         public string Citizenship { get; set; }
 
+        public string Registration { get; set; }
+
         public string PassportNumber { get; set; }
     }
 }

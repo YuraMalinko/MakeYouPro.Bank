@@ -12,7 +12,7 @@ namespace MakeYouPro.Bource.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
+            //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,7 +22,15 @@ namespace MakeYouPro.Bource.CRM.Dal
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }                       
+            }
+
+            modelBuilder.Entity<LeadEntity>()
+                .Property(l => l.DateCreate)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<AccountEntity>()
+                .Property(l => l.DateCreate)
+                .HasDefaultValueSql("getdate()");
         }
     }
 }
