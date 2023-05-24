@@ -1,12 +1,14 @@
-﻿namespace MakeYouPro.Bank.CRM.Bll.Models
+﻿using MakeYouPro.Bource.CRM.Core.Enums;
+
+namespace MakeYouPro.Bank.CRM.Bll.Models
 {
     public class Lead
     {
         public int Id { get; set; }
 
-        public int Role { get; set; }
+        public LeadRoleEnum Role { get; set; }
 
-        public int Status { get; set; }
+        public LeadStatusEnum Status { get; set; }
 
         public DateTime DateCreate { get; set; }
 

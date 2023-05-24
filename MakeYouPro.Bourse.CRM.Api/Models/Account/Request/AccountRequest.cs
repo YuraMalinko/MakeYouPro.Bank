@@ -1,4 +1,6 @@
-﻿namespace MakeYouPro.Bank.CRM.Models.Account.Request
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+
+namespace MakeYouPro.Bank.CRM.Models.Account.Request
 {
     public class AccountRequest
     {
@@ -10,7 +12,7 @@
 
         public decimal Balance { get; set; }
 
-        public int Status { get; set; }
+        public AccountStatusEnum Status { get; set; }
 
         public string? Comment { get; set; }
     }

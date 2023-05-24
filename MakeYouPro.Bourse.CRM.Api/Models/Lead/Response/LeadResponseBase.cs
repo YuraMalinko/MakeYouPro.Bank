@@ -1,4 +1,5 @@
 ﻿using MakeYouPro.Bank.CRM.Models.Account.Response;
+using MakeYouPro.Bource.CRM.Core.Enums;
 
 namespace MakeYouPro.Bank.CRM.Models.Lead.Response
 {
@@ -6,9 +7,9 @@ namespace MakeYouPro.Bank.CRM.Models.Lead.Response
     {
         public int Id { get; set; }
 
-        public int Role { get; set; }
+        public LeadRoleEnum Role { get; set; }
 
-        public int Status { get; set; }
+        public LeadStatusEnum Status { get; set; }
 
         public string Name { get; set; }
 
