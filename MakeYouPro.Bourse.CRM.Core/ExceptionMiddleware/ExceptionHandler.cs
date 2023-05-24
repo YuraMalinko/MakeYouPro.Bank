@@ -20,6 +20,14 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             catch (AlreadyExistException ex)
             {
                 var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error:" + ex.Message });
+                context.Response.StatusCode = 409;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "ArgumentNullException Error:" + ex.Message });
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 

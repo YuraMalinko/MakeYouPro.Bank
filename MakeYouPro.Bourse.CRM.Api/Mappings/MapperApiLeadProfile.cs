@@ -9,7 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
     {
         public MapperApiLeadProfile()
         {
-            CreateMap<LeadRequestCreate, Lead>();
+            CreateMap<CreateLeadRequest, Lead>();
             CreateMap<Lead, LeadResponseInfo>();
         }
     }

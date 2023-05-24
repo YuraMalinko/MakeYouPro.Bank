@@ -2,7 +2,7 @@
 
 namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Request
 {
-    public class LeadRequestCreate:LeadRequestBase
+    public class CreateLeadRequest:LeadRequestBase
     {
         public string Email { get; set; }
 

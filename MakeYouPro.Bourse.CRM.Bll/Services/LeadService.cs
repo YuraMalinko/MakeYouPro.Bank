@@ -55,8 +55,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
 
             var leadEntity = _mapper.Map<LeadEntity>(lead);
-            leadEntity.Role = LeadRoleEnum.StandardLead;
-            leadEntity.Status = LeadStatusEnum.Active;
+            //leadEntity.Role = LeadRoleEnum.StandardLead;
+            //leadEntity.Status = LeadStatusEnum.Active;
             var addLeadEntity = await _leadRepository.CreateLeadAsync(leadEntity);
 
             if (addLeadEntity != null)
@@ -72,8 +72,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                //ИСПРАВИТЬ
-                return new Lead();
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, New lead did not created");
+                throw new ArgumentNullException("New lead did not created");
             }
         }
 

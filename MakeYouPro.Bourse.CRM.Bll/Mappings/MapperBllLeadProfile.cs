@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Conventions;
 using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bource.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Mappings
@@ -8,7 +10,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Mappings
     {
         public MapperBllLeadProfile() 
         {
-            CreateMap<Lead, LeadEntity>().ReverseMap();
+            CreateMap<Lead, LeadEntity>();
+            CreateMap<LeadEntity, Lead>();
         }
     }
 }
