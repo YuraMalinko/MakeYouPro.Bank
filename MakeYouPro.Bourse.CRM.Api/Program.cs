@@ -10,6 +10,9 @@ using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using FluentValidation;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Api.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +34,7 @@ builder.Services.AddScoped<ILeadService, LeadService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILeadRepository, LeadRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
 
 
 var app = builder.Build();

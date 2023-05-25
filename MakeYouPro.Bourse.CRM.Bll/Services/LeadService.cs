@@ -13,6 +13,7 @@ using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Core.Extensions;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -91,7 +92,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             else
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, New lead did not created");
-                throw new ArgumentNullException("New lead did not created");
+                throw new ArgumentException("New lead did not created");
             }
         }
 

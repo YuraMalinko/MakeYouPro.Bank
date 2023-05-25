@@ -19,7 +19,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AlreadyExistException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error "});
                 context.Response.StatusCode = 409;
                 context.Response.ContentType = "application/json";
 
@@ -27,15 +27,15 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (NotFoundException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "NotFoundException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "NotFoundException Error: " + ex.EntityName });
                 context.Response.StatusCode = 404;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "ArgumentNullException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error " });
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 
