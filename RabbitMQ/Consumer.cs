@@ -2,6 +2,7 @@
 using System.Text.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ReportingService.Bll.Services;
 
 namespace RabbitMQ
 {
@@ -10,6 +11,7 @@ namespace RabbitMQ
         private IConnectionFactory _factory;
         private IConnection _connection;
         private IModel _channel;
+        private RecordingServices _record;
 
         public Consumer(IConnectionFactory factory, IConnection connection, IModel channel)
         {
@@ -18,7 +20,7 @@ namespace RabbitMQ
             _channel = channel;
         }
 
-        public T GetMessage<T>()
+        public T GetMessage<T>() where T : class 
         {
             _factory = new ConnectionFactory() { HostName = "localhost" };
             using (_connection = _factory.CreateConnection())
@@ -38,6 +40,7 @@ namespace RabbitMQ
                     var body = args.Body;
                     var message = Encoding.UTF8.GetString(body.ToArray());
                     value = JsonSerializer.Deserialize<T>(message);
+                    _record.CreateAnEntryInDatabase(value);
                 };
 
                 _channel.BasicConsume(queue: queueName,
