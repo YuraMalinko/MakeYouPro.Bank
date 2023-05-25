@@ -1,26 +1,31 @@
-﻿using ReportingService.Bll.Models.CRM;
-using ReportingService.Dal.IRepository.CRM;
+﻿using ReportingService.Dal.IRepository.CRM;
+using ReportingService.Dal.Models.CRM;
 
 namespace ReportingService.Bll.Services
 {
     public class RecordingServices
     {
-        private readonly ILeadRepository leadRepositry;
+        private readonly ILeadRepository _leadRepositry;
 
-        public RecordingServices() 
+        public RecordingServices(ILeadRepository leadRepositry)
         {
-
+            _leadRepositry = leadRepositry;
         }
 
-        public void CreateAnEntryInDatabase<T>(T record)where T : class
+        public async Task CreateAnEntryInDatabaseAsync<T>(T record)
         {
-            if(record is Lead)
+            var type = record.GetType();
+            if (type == typeof(LeadEntity))
+            {
+                await _leadRepositry.CreateLeadAsync(record as LeadEntity);
+            }
+            else if (type == typeof(AccountEntity))
             {
 
             }
-            else if(record is Account) 
-            {
-
+            else 
+            { 
+                throw new ArgumentException("Unnknow record type"); 
             }
         }
 

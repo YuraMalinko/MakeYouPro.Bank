@@ -40,9 +40,9 @@ namespace RabbitMQ
                     var body = args.Body;
                     var message = Encoding.UTF8.GetString(body.ToArray());
                     value = JsonSerializer.Deserialize<T>(message);
-                    _record.CreateAnEntryInDatabaseAsync(value);
+                    //_record.CreateAnEntryInDatabaseAsync(value);
                 };
-
+                _channel.B
                 _channel.BasicConsume(queue: queueName,
                                         autoAck: true,
                                         consumer: consumer);
