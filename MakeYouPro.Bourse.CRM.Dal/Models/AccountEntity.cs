@@ -12,7 +12,7 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
 
         [Required]
         [ForeignKey(nameof(LeadId))]
-        public LeadEntity Lead { get; set; }
+        public virtual LeadEntity Lead { get; set; }
 
         public int LeadId { get; set; }
 

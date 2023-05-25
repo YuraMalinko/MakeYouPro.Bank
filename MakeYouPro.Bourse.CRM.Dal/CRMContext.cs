@@ -13,7 +13,10 @@ namespace MakeYouPro.Bource.CRM.Dal
         {
             //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            //builder.UseSqlServer(@"Data Source=NACH_SIPO\SQLEXPRESS;Initial Catalog=CRM;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            builder
+                .UseLazyLoadingProxies()
+                .UseSqlServer(@"Data Source=NACH_SIPO\SQLEXPRESS;Initial Catalog=ebuchka;Integrated Security=True;TrustServerCertificate=true");
 
         }
 
@@ -28,11 +31,11 @@ namespace MakeYouPro.Bource.CRM.Dal
 
             modelBuilder.Entity<LeadEntity>()
                 .Property(l => l.DateCreate)
-                .HasDefaultValueSql("getdate()");
+                .HasDefaultValueSql("GETUTCDATE()");
 
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)
-                .HasDefaultValueSql("getdate()");
+                .HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }
