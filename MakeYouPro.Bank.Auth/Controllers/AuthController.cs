@@ -45,9 +45,9 @@ namespace MakeYouPro.Bank.Api.Auth.Controllers
             try
             {
                 var user = _mapper.Map<User>(request);
-                var user1 = await _authService.GetUserByEmail(user);
+                var response = await _authService.GetUserByEmail(user);
 
-                return Ok(user1);
+                return Ok(response);
             }
             catch (ArgumentException ex)
             {

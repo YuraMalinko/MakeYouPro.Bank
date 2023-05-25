@@ -3,7 +3,12 @@ using MailKit.Net.Smtp;
 using MakeYouPro.Bank.Dal.Auth.Models;
 using MakeYouPro.Bank.Dal.Auth.Repository;
 using MakeYouPro.Bank.Service.Auth.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MimeKit;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MakeYouPro.Bank.Service.Auth.Services
 {
@@ -11,11 +16,13 @@ namespace MakeYouPro.Bank.Service.Auth.Services
     {
         private readonly IMapper _mapper;
         private readonly IAuthRepository _authRepository;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IMapper mapper, IAuthRepository authRepository)
+        public AuthService(IMapper mapper, IAuthRepository authRepository, IConfiguration configuration)
         {
             _mapper = mapper;
             _authRepository = authRepository;
+            _configuration = configuration;
         }
 
         public async Task<User> RegisterUserAsync(User user)
@@ -47,7 +54,7 @@ namespace MakeYouPro.Bank.Service.Auth.Services
             }
         }
 
-        public async Task<User> GetUserByEmail(User user)
+        public async Task<string> GetUserByEmail(User user)
         {
             if (await _authRepository.CheckEmailAsync(user.Email))
             {
@@ -56,9 +63,10 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
                 if (BCrypt.Net.BCrypt.Verify(userDal.Password, callback.Password))
                 {
-                    var result = _mapper.Map<User>(callback);
-                 
-                    return result;
+                    //var result = _mapper.Map<User>(callback);
+                    //return result;
+                    var token = CreateToken(user);
+                    return token;
                 }
                 else
                 {
@@ -93,6 +101,27 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
                 return true;
             }
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(1),
+                signingCredentials: creds
+                );
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
     }
 }

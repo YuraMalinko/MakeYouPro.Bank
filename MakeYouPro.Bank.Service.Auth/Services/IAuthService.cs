@@ -9,6 +9,6 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
         //Task<bool> SendMessageAsync(Message message);
 
-        Task<User> GetUserByEmail(User user);
+        Task<string> GetUserByEmail(User user);
     }
 }
