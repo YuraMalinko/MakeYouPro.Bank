@@ -29,6 +29,15 @@ namespace MakeYouPro.Bource.CRM.Dal
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
             }
 
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var isDeletedProp = entityType.FindProperty("IsDeleted");
+                if (isDeletedProp != null)
+                {
+                    isDeletedProp.SetDefaultValue(false);
+                }
+            }
+
             modelBuilder.Entity<LeadEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
