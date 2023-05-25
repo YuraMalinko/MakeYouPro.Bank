@@ -9,6 +9,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
     public interface ILeadService
     {
-        Task<Lead> CreateLeadAsync(Lead lead);
+        Task<Lead> CreateOrRecoverLeadAsync(Lead addLead);
     }
 }

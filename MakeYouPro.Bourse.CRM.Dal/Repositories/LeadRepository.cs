@@ -1,4 +1,5 @@
-﻿using MakeYouPro.Bource.CRM.Dal;
+﻿using MakeYouPro.Bource.CRM.Core.Enums;
+using MakeYouPro.Bource.CRM.Dal;
 using MakeYouPro.Bource.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -30,37 +31,57 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 .SingleAsync(l => l.Id == lead.Id);
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
+        public async Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead)
         {
-            string emailWithoutWhitespace = email.Replace(" ", String.Empty);
-
             return await _context.Leads
-                        .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
-                        .ToListAsync();
+                            .Where(l =>
+                              (l.PassportNumber == lead.PassportNumber && l.Citizenship == lead.Citizenship)
+                            || l.Email == lead.Email
+                            || l.PhoneNumber == lead.PhoneNumber)
+                            .ToListAsync();
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
+        public async Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId)
         {
-            string phoneNumbertWithoutWhitespace = phoneNumber
-                                                        .Replace(" ", String.Empty)
-                                                        .Replace("-", String.Empty)
-                                                        .Replace("+", String.Empty);
+            var leadDb = await _context.Leads.SingleAsync(l => l.Id == leadId);
+            leadDb.Status = leadStatus;
+            await _context.SaveChangesAsync();
 
-            return await _context.Leads
-                                    .Where(l => l.PhoneNumber
-                                    .Replace(" ", String.Empty)
-                                    .Replace("-", String.Empty)
-                                    .Replace("+", "") == phoneNumbertWithoutWhitespace)
-                                    .ToListAsync();
+            return leadDb;
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
-        {
-            string passportWithoutWhitespace = passport.Replace(" ","");
 
-            return await _context.Leads
-                        .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
-                        .ToListAsync();
-        }
+        //public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
+        //{
+        //    string emailWithoutWhitespace = email.Replace(" ", String.Empty);
+
+        //    return await _context.Leads
+        //                .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
+        //                .ToListAsync();
+        //}
+
+        //public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
+        //{
+        //    string phoneNumbertWithoutWhitespace = phoneNumber
+        //                                                .Replace(" ", String.Empty)
+        //                                                .Replace("-", String.Empty)
+        //                                                .Replace("+", String.Empty);
+
+        //    return await _context.Leads
+        //                            .Where(l => l.PhoneNumber
+        //                            .Replace(" ", String.Empty)
+        //                            .Replace("-", String.Empty)
+        //                            .Replace("+", "") == phoneNumbertWithoutWhitespace)
+        //                            .ToListAsync();
+        //}
+
+        //public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
+        //{
+        //    string passportWithoutWhitespace = passport.Replace(" ","");
+
+        //    return await _context.Leads
+        //                .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
+        //                .ToListAsync();
+        //}
     }
 }
