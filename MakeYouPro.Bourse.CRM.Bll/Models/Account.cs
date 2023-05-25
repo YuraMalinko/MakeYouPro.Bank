@@ -1,6 +1,7 @@
 ﻿using MakeYouPro.Bource.CRM.Dal.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 
 namespace MakeYouPro.Bank.CRM.Bll.Models
 {
@@ -18,7 +19,7 @@ namespace MakeYouPro.Bank.CRM.Bll.Models
 
         public decimal Balance { get; set; }
 
-        public int Status { get; set; }
+        public AccountStatusEnum Status { get; set; }
 
         public string? Comment { get; set; }
     }

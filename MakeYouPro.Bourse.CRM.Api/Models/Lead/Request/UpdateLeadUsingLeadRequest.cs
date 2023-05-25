@@ -1,6 +1,6 @@
 ﻿namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Request
 {
-    public class LeadRequestUpdateUsingLead
+    public class UpdateLeadUsingLeadRequest
     {
         public int Id { get; set; }
 

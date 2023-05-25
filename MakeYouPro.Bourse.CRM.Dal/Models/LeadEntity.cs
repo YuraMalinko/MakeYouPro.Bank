@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MakeYouPro.Bource.CRM.Core.Enums;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,10 +12,10 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public int Id { get; set; }
 
         [Required]
-        public int Role { get; set; }
+        public LeadRoleEnum Role { get; set; }
 
         [Required]
-        public int Status { get; set; }
+        public LeadStatusEnum Status { get; set; }
 
         [Required]
         [Column(TypeName = "datetime2")]

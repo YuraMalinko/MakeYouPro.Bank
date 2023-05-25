@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MakeYouPro.Bource.CRM.Dal.Models
@@ -27,7 +28,7 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public decimal Balance { get; set; }
 
         [Required]
-        public int Status { get; set; }
+        public AccountStatusEnum Status { get; set; }
 
         [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
