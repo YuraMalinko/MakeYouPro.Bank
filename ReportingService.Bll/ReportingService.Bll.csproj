@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="IServices\" />
     <Folder Include="Mapping\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ReportingService.Dal\ReportingService.Dal.csproj" />
   </ItemGroup>
 
 </Project>

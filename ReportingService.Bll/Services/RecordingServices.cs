@@ -1,9 +1,12 @@
 ﻿using ReportingService.Bll.Models.CRM;
+using ReportingService.Dal.IRepository.CRM;
 
 namespace ReportingService.Bll.Services
 {
     public class RecordingServices
     {
+        private readonly ILeadRepository leadRepositry;
+
         public RecordingServices() 
         {
 
