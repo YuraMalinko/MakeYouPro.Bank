@@ -58,6 +58,9 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity> ();
     }
 }

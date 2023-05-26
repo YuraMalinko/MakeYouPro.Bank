@@ -14,6 +14,8 @@ using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Core.Extensions;
+using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -63,7 +65,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     return await CreateLeadAsync(addLead);
 
                 case 1:
-                    return await RecoverOrThrowAsync(leadsMatched.First());
+                    return await RecoverOrThrowAsync(leadsMatched.First(), addLead);
 
                 default:
                     _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, 2 or more properties (email/phoneNumber/passportNumber) belong to different Leads in database.");
@@ -96,30 +98,78 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        private async Task<Lead> RecoverOrThrowAsync(Lead lead)
+        //private async Task<Lead> RecoverOrThrowAsync(Lead lead)
+        //{
+        //    var leadStatus = lead.Status;
+
+        //    if (leadStatus == LeadStatusEnum.Deleted)
+        //    {
+        //        try
+        //        {
+        //            var updateLeadEntity = await _leadRepository.UpdateLeadStatus(LeadStatusEnum.Active, lead.Id);
+        //            var result = _mapper.Map<Lead>(updateLeadEntity);
+
+        //            return result;
+        //        }
+        //        catch (InvalidOperationException)
+        //        {
+        //            _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)},Lead with id {lead.Id} is not found");
+        //            throw new NotFoundException(lead.Id, nameof(LeadEntity));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, email or phoneNumber or passportNumber is already exist.");
+        //        throw new AlreadyExistException("email/phoneNumber/passportNumber");
+        //    }
+        //}
+
+        private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
-            var leadStatus = lead.Status;
-
-            if (leadStatus == LeadStatusEnum.Deleted)
+            if (!leadDb.IsDeleted)
             {
-                try
-                {
-                    var updateLeadEntity = await _leadRepository.UpdateLeadStatus(LeadStatusEnum.Active, lead.Id);
-                    var result = _mapper.Map<Lead>(updateLeadEntity);
-
-                    return result;
-                }
-                catch (InvalidOperationException)
-                {
-                    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)},Lead with id {lead.Id} is not found");
-                    throw new NotFoundException(lead.Id, nameof(LeadEntity));
-                }
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, one of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
+                throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
             }
             else
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, email or phoneNumber or passportNumber is already exist.");
-                throw new AlreadyExistException("email/phoneNumber/passportNumber");
+                if (leadDb.PassportNumber == leadRequest.PassportNumber)
+                {
+                    return await UpdateLeadWhenCreateLeadHasSamePassportInDb(leadDb, leadRequest);
+                }
+                else if (leadDb.Email == leadRequest.Email && leadDb.PhoneNumber == leadRequest.PhoneNumber)
+                {
+                    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, email and phoneNumber belong to other Lead in database.");
+                    throw new AlreadyExistException("email and phoneNumber");
+                }
+                else if (leadDb.Email == leadRequest.Email)
+                {
+                    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, email belong to other Lead in database.");
+                    throw new AlreadyExistException(nameof(LeadEntity.Email));
+                }
+                else if (leadDb.PhoneNumber == leadRequest.PhoneNumber)
+                {
+                    var leadUpdateEntity = _leadRepository.UpdateLeadPhoneNumber("0", leadDb.Id);
+                    var result = await CreateLeadAsync(leadRequest);
+
+                    return result;
+                }
             }
+            throw new ArgumentException();
+        }
+
+        private async Task<Lead> UpdateLeadWhenCreateLeadHasSamePassportInDb(Lead leadDb, Lead leadRequest)
+        {
+            var leadRequestEntity = _mapper.Map<LeadEntity>(leadRequest);
+            leadRequestEntity.Id = leadDb.Id;
+            var leadUpdateEntity = await _leadRepository.UpdateLead(leadRequestEntity);
+            await _leadRepository.ChangeIsDeletedLeadFromTrueToFalse(leadDb.Id);
+            var result = _mapper.Map<Lead>(leadUpdateEntity);
+            var defaultRubAccount = CreateDefaultRubAccount();
+            defaultRubAccount.LeadId = result.Id;
+            await _accountService.CreateAccountAsync(defaultRubAccount);
+
+            return result;
         }
 
         private Account CreateDefaultRubAccount()

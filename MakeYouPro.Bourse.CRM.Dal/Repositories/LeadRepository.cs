@@ -1,6 +1,7 @@
 ﻿using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bource.CRM.Dal;
 using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using NLog;
@@ -43,11 +44,82 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
         public async Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId)
         {
-            var leadDb = await _context.Leads.SingleAsync(l => l.Id == leadId);
-            leadDb.Status = leadStatus;
-            await _context.SaveChangesAsync();
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
-            return leadDb;
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Status = leadStatus;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+        public async Task<LeadEntity> UpdateLead(LeadEntity leadUpdate)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadUpdate.Id);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
+                throw new NotFoundException(leadUpdate.Id, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Surname = leadUpdate.Surname;
+                leadDb.Name = leadUpdate.Name;
+                leadDb.MiddleName = leadUpdate.MiddleName;
+                leadDb.PhoneNumber = leadUpdate.PhoneNumber;
+                leadDb.Email = leadUpdate.Email;
+                leadDb.Citizenship = leadUpdate.Citizenship;
+                leadDb.PassportNumber = leadUpdate.PassportNumber;
+                leadDb.Registration = leadUpdate.Registration;
+                leadDb.Comment = leadUpdate.Comment;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+        public async Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.PhoneNumber = phoneNumber;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.IsDeleted = false;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
         }
 
 

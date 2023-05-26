@@ -13,7 +13,7 @@ namespace MakeYouPro.Bource.CRM.Dal
         {
             //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM4;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM5;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
 
         }
 
@@ -24,6 +24,15 @@ namespace MakeYouPro.Bource.CRM.Dal
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var isDeletedProp = entityType.FindProperty("IsDeleted");
+                if (isDeletedProp != null)
+                {
+                    isDeletedProp.SetDefaultValue(false);
+                }
             }
 
             modelBuilder.Entity<LeadEntity>()

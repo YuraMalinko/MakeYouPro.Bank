@@ -27,8 +27,15 @@ namespace MakeYouPro.Bourse.CRM.Core.Extensions
 
         public static string FormatName(this string value)
         {
-            return value.Trim()
-                        .Substring(0, 1).ToUpper() + value.Trim().Substring(1).ToLower();
+            if (value.Length > 1)
+            {
+                return value.Trim()
+                            .Substring(0, 1).ToUpper() + value.Trim().Substring(1).ToLower();
+            }
+            else
+            {
+                return value.ToUpper();
+            }
         }
 
         public static string FormatCitizenship(this string value)
