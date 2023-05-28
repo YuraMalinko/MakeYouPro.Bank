@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
-using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Models.Lead.Response;
 
 namespace MakeYouPro.Bourse.CRM.Api.Mappings
 {
@@ -11,6 +13,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
         {
             CreateMap<CreateLeadRequest, Lead>();
             CreateMap<Lead, LeadResponseInfo>();
+            CreateMap<Lead,LeadResponseBase>();
         }
     }
 }

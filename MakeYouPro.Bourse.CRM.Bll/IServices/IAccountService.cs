@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bank.CRM.Bll.Models;
+﻿using MakeYouPro.Bourse.CRM.Bll.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
     public interface IAccountService
     {
-        Task<Account> CreateAccountAsync(Account account);
+       public Task<Account> CreateAccountAsync(Account account);
     }
 }

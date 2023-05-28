@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using ILogger = NLog.ILogger;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using AutoMapper;
 using System.Net;
 using Swashbuckle.AspNetCore.Annotations;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {

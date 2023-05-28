@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MakeYouPro.Bource.CRM.Dal.Models
+namespace MakeYouPro.Bourse.CRM.Dal.Models
 {
 
     public class AccountEntity

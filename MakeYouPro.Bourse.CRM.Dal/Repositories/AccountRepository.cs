@@ -1,12 +1,11 @@
 ﻿
-using MakeYouPro.Bource.CRM.Dal;
-using MakeYouPro.Bource.CRM.Dal.Models;
-using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
-using Microsoft.IdentityModel.Tokens;
+using ILogger = NLog.ILogger;
+using LogManager = NLog.LogManager;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
@@ -28,24 +27,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             return (await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == account.Id))!;
-        }
-
-        public async Task<AccountEntity> UpdateAccountAsync(AccountEntity account)
-        {
-            var oldAccount = await _context.Accounts
-                .SingleOrDefaultAsync(a => a.Id == account.Id);
-
-            if (oldAccount != null || oldAccount!.Status==AccountStatusEnum.Active)
-            {
-                oldAccount.Comment = account.Comment;
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new ArgumentNullException("");
-            }
-
-            return oldAccount;
         }
     }
 }

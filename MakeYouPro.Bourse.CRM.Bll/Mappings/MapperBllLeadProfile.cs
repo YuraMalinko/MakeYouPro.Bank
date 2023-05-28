@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration.Conventions;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Mappings
 {

@@ -1,18 +1,13 @@
-﻿using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Dal.IRepositories;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Dal.Models;
-using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal.Repositories;
+﻿using AutoMapper;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using NLog;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -41,7 +36,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this email is already exist.");
                 throw new AlreadyExistException(nameof(LeadEntity.Email));
             }
-            
+
             if (!await CheckPhoneNumberIsNotExistAsync(lead.PhoneNumber))
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateLeadAsync)}, this phoneNumber is already exist.");

@@ -1,7 +1,7 @@
-﻿using MakeYouPro.Bank.CRM.Models.Account.Response;
-using MakeYouPro.Bource.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Models.Account.Response;
 
-namespace MakeYouPro.Bank.CRM.Models.Lead.Response
+namespace MakeYouPro.Bourse.CRM.Models.Lead.Response
 {
     public class LeadResponseBase
     {

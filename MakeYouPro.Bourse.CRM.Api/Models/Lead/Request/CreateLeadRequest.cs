@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bank.CRM.Models.Lead.Request;
+﻿using MakeYouPro.Bourse.CRM.Models.Lead.Request;
 
 namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Request
 {

@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bank.CRM.Models.Account.Request;
-using MakeYouPro.Bank.CRM.Models.Account.Response;
+using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Models.Account.Request;
+using MakeYouPro.Bourse.CRM.Models.Account.Response;
+using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
 
 namespace MakeYouPro.Bourse.CRM.Api.Mappings
 {
@@ -10,6 +11,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
         public MapperApiAccountProfile() 
         {
             CreateMap<AccountRequest, Account>();
+            CreateMap<AccountCreateRequest, Account>();
             CreateMap<Account, AccountResponse>();
         }
     }

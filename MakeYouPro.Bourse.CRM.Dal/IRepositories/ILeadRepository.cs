@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bource.CRM.Dal.Models;
+﻿using MakeYouPro.Bourse.CRM.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +16,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
         Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber);
 
         Task<List<LeadEntity>> GetLeadsByPassport(string passport);
+
+        Task<LeadEntity> GetLeadAsync(int id);
     }
 }

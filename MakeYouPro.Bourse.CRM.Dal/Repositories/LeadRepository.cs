@@ -1,9 +1,11 @@
-﻿using MakeYouPro.Bource.CRM.Dal;
-using MakeYouPro.Bource.CRM.Dal.Models;
+﻿using MakeYouPro.Bourse.CRM.Dal;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using System.Runtime.CompilerServices;
+using ILogger = NLog.ILogger;
+using LogManager = NLog.LogManager;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
@@ -61,6 +63,14 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             return await _context.Leads
                         .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
                         .ToListAsync();
+        }
+
+        public async Task<LeadEntity> GetLeadAsync(int id)
+        {
+            return (await _context.Leads
+                //.Where(l => l.Id == id)
+                //.Include(l => l.Accounts)
+                .SingleOrDefaultAsync(l => l.Id == id))!;
         }
     }
 }

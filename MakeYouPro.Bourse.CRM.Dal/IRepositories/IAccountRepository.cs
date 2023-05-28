@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bource.CRM.Dal.Models;
+﻿using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
