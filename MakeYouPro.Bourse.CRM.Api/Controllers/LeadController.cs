@@ -52,5 +52,16 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Created(new Uri("api/Lead", UriKind.Relative), result);
         }
 
+        [HttpGet(Name = "GetLeadById")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseInfo>> GetLeadById(int leadId)
+        {
+            var lead = await _leadService.GetLeadById(leadId);
+            var result = _mapper.Map<LeadResponseInfo>(lead);
+
+            return Ok(result);
+        }
     }
 }

@@ -51,11 +51,19 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             };
         }
 
+        public async Task<Lead> GetLeadById(int leadId)
+        {
+            var leadEntity = await _leadRepository.GetLeadById(leadId);
+            var result = _mapper.Map<Lead>(leadEntity);
+
+            return result;
+        }
+
         private async Task<Lead> CreateLeadAsync(Lead lead)
         {
             //try
             //{
-            //    await _authServiceClient.RegisterAsync(RegisterUserForAuth(lead));
+            //    await _authServiceClient.RegisterAsync(CreateUserRegisterReguest(lead));
             //}
             //catch ()
             //{ 
@@ -85,7 +93,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        private UserRegisterRequest RegisterUserForAuth(Lead addLead)
+        private UserRegisterRequest CreateUserRegisterReguest(Lead addLead)
         {
             UserRegisterRequest user = new UserRegisterRequest
             {

@@ -17,10 +17,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId);
 
-        //Task<List<LeadEntity>> GetLeadsByEmail(string email);
-
-        //Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber);
-
-        //Task<List<LeadEntity>> GetLeadsByPassport(string passport);
+        Task<LeadEntity> GetLeadById(int leadId);
     }
 }
