@@ -52,7 +52,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Created(new Uri("api/Lead", UriKind.Relative), result);
         }
 
-        [HttpGet(Name = "GetLeadById")]
+        [HttpGet(Name = "GetLeadByIdAsync")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
@@ -62,6 +62,17 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             var result = _mapper.Map<LeadResponseInfo>(lead);
 
             return Ok(result);
+        }
+
+        [HttpDelete(Name = "DeleteLeadByIdAsync")]
+        [SwaggerResponse((int)HttpStatusCode.NoContent)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> DeleteLeadByIdAsync(int leadId)
+        {
+            await _leadService.DeleteLeadByIdAsync(leadId);
+
+            return NoContent();
         }
     }
 }

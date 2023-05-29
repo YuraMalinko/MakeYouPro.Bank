@@ -41,7 +41,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                             .ToListAsync();
         }
 
-        public async Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId)
+        public async Task<LeadEntity> UpdateLeadStatusAsync(LeadStatusEnum leadStatus, int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -59,7 +59,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> UpdateLead(LeadEntity leadUpdate)
+        public async Task<LeadEntity> UpdateLeadAsync(LeadEntity leadUpdate)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadUpdate.Id);
 
@@ -85,7 +85,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId)
+        public async Task<LeadEntity> UpdateLeadPhoneNumberAsync(string phoneNumber, int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -103,7 +103,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId)
+        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalseAsync(int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -121,7 +121,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> GetLeadById(int leadId)
+        public async Task<LeadEntity> GetLeadByIdAsync(int leadId)
         {
             var leadDB = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -138,5 +138,21 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
+        public async Task DeleteLeadByIdAsync(int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.IsDeleted = true;
+                await _context.SaveChangesAsync();
+            }
+
+        }
     }
 }

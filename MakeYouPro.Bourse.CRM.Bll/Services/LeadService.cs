@@ -53,10 +53,28 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Lead> GetLeadById(int leadId)
         {
-            var leadEntity = await _leadRepository.GetLeadById(leadId);
-            var result = _mapper.Map<Lead>(leadEntity);
+            var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
+            var lead = _mapper.Map<Lead>(leadEntity);
+            var accounts = lead.Accounts.Where(a => !a.IsDeleted).ToList();
+            lead.Accounts = accounts;
 
-            return result;
+            return lead;
+        }
+
+        public async Task DeleteLeadByIdAsync(int leadId)
+        {
+            var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
+
+            if (leadEntity.Status == LeadStatusEnum.Active)
+            {
+                await _leadRepository.DeleteLeadByIdAsync(leadId);
+                await _accountService.DeleteAccountByLeadIdAsync(leadId);
+            }
+            else
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(DeleteLeadByIdAsync)}, You can delete lead only with status-Active");
+                throw new ArgumentException("You can delete lead only with status-Active");
+            }
         }
 
         private async Task<Lead> CreateLeadAsync(Lead lead)
@@ -129,7 +147,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else if (leadDb.PhoneNumber == leadRequest.PhoneNumber)
                 {
-                    var leadUpdateEntity = _leadRepository.UpdateLeadPhoneNumber("0", leadDb.Id);
+                    var leadUpdateEntity = _leadRepository.UpdateLeadPhoneNumberAsync("0", leadDb.Id);
                     var result = await CreateLeadAsync(leadRequest);
 
                     return result;
@@ -142,8 +160,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             var leadRequestEntity = _mapper.Map<LeadEntity>(leadRequest);
             leadRequestEntity.Id = leadDb.Id;
-            var leadUpdateEntity = await _leadRepository.UpdateLead(leadRequestEntity);
-            await _leadRepository.ChangeIsDeletedLeadFromTrueToFalse(leadDb.Id);
+            var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadRequestEntity);
+            await _leadRepository.ChangeIsDeletedLeadFromTrueToFalseAsync(leadDb.Id);
             var result = _mapper.Map<Lead>(leadUpdateEntity);
             var defaultRubAccount = CreateDefaultRubAccount();
             defaultRubAccount.LeadId = result.Id;
