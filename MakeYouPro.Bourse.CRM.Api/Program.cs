@@ -37,7 +37,6 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
 
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
-//builder.Services.AddScoped<AuthServiceClient, HttpClient>();
 
 
 var app = builder.Build();
