@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bourse.CRM.Api",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bourse.CRM.Core", "MakeYouPro.Bourse.CRM.Core\MakeYouPro.Bourse.CRM.Core.csproj", "{ED337C0A-3B91-4EA3-A6A2-C4C16F5DF5A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MakeYouPro.Bourse.Rates", "MakeYouPro.Bourse.Rates", "{9C81275E-9F2A-42B1-BD75-A052C3FA01A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
