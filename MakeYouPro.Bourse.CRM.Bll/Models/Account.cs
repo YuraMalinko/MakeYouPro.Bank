@@ -6,8 +6,6 @@ namespace MakeYouPro.Bank.CRM.Bll.Models
     {
         public int Id { get; set; }
 
-        public Lead Lead { get; set; }
-
         public int LeadId { get; set; }
 
         public DateTime DateCreate { get; set; }
@@ -17,6 +15,8 @@ namespace MakeYouPro.Bank.CRM.Bll.Models
         public decimal Balance { get; set; }
 
         public AccountStatusEnum Status { get; set; }
+
+        public bool IsDeleted { get; set; }
 
         public string? Comment { get; set; }
     }

@@ -5,5 +5,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
     public interface IAccountService
     {
         Task<Account> CreateAccountAsync(Account account);
+
+        Task DeleteAccountByLeadIdAsync(int leadId);
     }
 }

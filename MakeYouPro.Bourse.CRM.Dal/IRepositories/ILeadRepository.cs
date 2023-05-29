@@ -9,14 +9,16 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead);
 
-        Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId);
+        Task<LeadEntity> UpdateLeadStatusAsync(LeadStatusEnum leadStatus, int leadId);
 
-        Task<LeadEntity> UpdateLead(LeadEntity leadUpdate);
+        Task<LeadEntity> UpdateLeadAsync(LeadEntity leadUpdate);
 
-        Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId);
+        Task<LeadEntity> UpdateLeadPhoneNumberAsync(string phoneNumber, int leadId);
 
-        Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId);
+        Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalseAsync(int leadId);
 
-        Task<LeadEntity> GetLeadById(int leadId);
+        Task<LeadEntity> GetLeadByIdAsync(int leadId);
+
+        Task DeleteLeadByIdAsync(int leadId);
     }
 }

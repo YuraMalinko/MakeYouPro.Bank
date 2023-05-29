@@ -5,5 +5,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
     public interface IAccountRepository
     {
         Task<AccountEntity> CreateAccountAsync(AccountEntity account);
+
+        Task DeleteAccountsByLeadIdAsync(int leadId);
     }
 }
