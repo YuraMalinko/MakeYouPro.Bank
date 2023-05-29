@@ -19,7 +19,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AlreadyExistException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error "});
+                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error " });
                 context.Response.StatusCode = 409;
                 context.Response.ContentType = "application/json";
 

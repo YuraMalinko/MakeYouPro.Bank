@@ -2,7 +2,7 @@
 
 namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Response
 {
-    public class LeadResponseInfo:LeadResponseBase
+    public class LeadResponseInfo : LeadResponseBase
     {
         public DateTime DateCreate { get; set; }
 

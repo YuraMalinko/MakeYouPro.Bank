@@ -1,4 +1,5 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
+﻿using EntityFrameworkCore.EncryptColumn.Attribute;
+using MakeYouPro.Bource.CRM.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -48,11 +49,13 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public string Citizenship { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(50)")]
+        //   [Column(TypeName = "nvarchar(50)")]
+        [EncryptColumn]
         public string PassportNumber { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(300)")]
+        //  [Column(TypeName = "nvarchar(300)")]
+        [EncryptColumn]
         public string Registration { get; set; }
 
         [Column(TypeName = "nvarchar(1000)")]
@@ -61,6 +64,6 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [Required]
         public bool IsDeleted { get; set; }
 
-        public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity> ();
+        public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
     }
 }

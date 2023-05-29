@@ -7,7 +7,7 @@ namespace MakeYouPro.Bank.CRM.Controllers
     public class TestController : ControllerBase
     {
         [HttpGet]
-        public IActionResult GetTest() 
+        public IActionResult GetTest()
         {
             TestBll bll = new TestBll();
 

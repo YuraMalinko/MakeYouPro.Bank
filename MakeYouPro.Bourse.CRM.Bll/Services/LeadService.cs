@@ -1,21 +1,14 @@
-﻿using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Dal.IRepositories;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
+﻿using AutoMapper;
 using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Dal.Models;
 using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal.Repositories;
+using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
-using MakeYouPro.Bourse.CRM.Core.Extensions;
-using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Http.HttpResults;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using NLog;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -25,38 +18,23 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly IAccountService _accountService;
 
+        private readonly IAuthServiceClient _authServiceClient;
+
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
 
-        public LeadService(ILeadRepository leadRepository, IAccountService accountService, IMapper mapper, ILogger nLogger)
+        public LeadService(ILeadRepository leadRepository, IAccountService accountService, IAuthServiceClient authServiceClient, IMapper mapper, ILogger nLogger)
         {
             _leadRepository = leadRepository;
             _accountService = accountService;
+            _authServiceClient = authServiceClient;
             _mapper = mapper;
             _logger = nLogger;
         }
 
         public async Task<Lead> CreateOrRecoverLeadAsync(Lead addLead)
         {
-            //if (!await CheckEmailIsNotExistAsync(lead.Email))
-            //{
-            //    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, this email is already exist.");
-            //    throw new AlreadyExistException(nameof(LeadEntity.Email));
-            //}
-
-            //if (!await CheckPhoneNumberIsNotExistAsync(lead.PhoneNumber))
-            //{
-            //    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, this phoneNumber is already exist.");
-            //    throw new AlreadyExistException(nameof(LeadEntity.PhoneNumber));
-            //}
-
-            //if (!await CheckPassportIsNotExistAsync(lead.PassportNumber))
-            //{
-            //    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, this passportNumber is already exist.");
-            //    throw new AlreadyExistException(nameof(LeadEntity.PassportNumber));
-            //}
-
             var leadsMatched = await GetLeadsWhosPropertiesAreMatchedAsync(addLead);
 
             switch (leadsMatched.Count)
@@ -75,6 +53,15 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> CreateLeadAsync(Lead lead)
         {
+            //try
+            //{
+            //    await _authServiceClient.RegisterAsync(RegisterUserForAuth(lead));
+            //}
+            //catch ()
+            //{ 
+
+            //}
+
             var leadEntity = _mapper.Map<LeadEntity>(lead);
             leadEntity.Role = LeadRoleEnum.StandardLead;
             leadEntity.Status = LeadStatusEnum.Active;
@@ -98,31 +85,16 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        //private async Task<Lead> RecoverOrThrowAsync(Lead lead)
-        //{
-        //    var leadStatus = lead.Status;
+        private UserRegisterRequest RegisterUserForAuth(Lead addLead)
+        {
+            UserRegisterRequest user = new UserRegisterRequest
+            {
+                Email = addLead.Email,
+                Password = addLead.Password
+            };
 
-        //    if (leadStatus == LeadStatusEnum.Deleted)
-        //    {
-        //        try
-        //        {
-        //            var updateLeadEntity = await _leadRepository.UpdateLeadStatus(LeadStatusEnum.Active, lead.Id);
-        //            var result = _mapper.Map<Lead>(updateLeadEntity);
-
-        //            return result;
-        //        }
-        //        catch (InvalidOperationException)
-        //        {
-        //            _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)},Lead with id {lead.Id} is not found");
-        //            throw new NotFoundException(lead.Id, nameof(LeadEntity));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, email or phoneNumber or passportNumber is already exist.");
-        //        throw new AlreadyExistException("email/phoneNumber/passportNumber");
-        //    }
-        //}
+            return user;
+        }
 
         private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
@@ -192,43 +164,5 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             return result;
         }
-
-        //private async Task<bool> CheckEmailIsNotExistAsync(string email)
-        //{
-        //    var leads = await _leadRepository.GetLeadsByEmail(email);
-
-        //    if (leads.Any())
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
-
-        //private async Task<bool> CheckPhoneNumberIsNotExistAsync(string phoneNumber)
-        //{
-        //    var leads = await _leadRepository.GetLeadsByPhoneNumber(phoneNumber);
-        //    var leadsActiveOrDeactive = leads.Where(l => l.Status == LeadStatusEnum.Active || l.Status == LeadStatusEnum.Deactive).ToList();
-
-        //    if (leadsActiveOrDeactive.Any())
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
-
-        //private async Task<bool> CheckPassportIsNotExistAsync(string passport)
-        //{
-        //    var leads = await _leadRepository.GetLeadsByPassport(passport);
-        //    var leadsActiveOrDeactive = leads.Where(l => l.Status == LeadStatusEnum.Active || l.Status == LeadStatusEnum.Deactive).ToList();
-
-        //    if (leadsActiveOrDeactive.Any())
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
     }
 }

@@ -7,7 +7,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
 {
     public class MapperApiAccountProfile : Profile
     {
-        public MapperApiAccountProfile() 
+        public MapperApiAccountProfile()
         {
             CreateMap<AccountRequest, Account>();
             CreateMap<Account, AccountResponse>();

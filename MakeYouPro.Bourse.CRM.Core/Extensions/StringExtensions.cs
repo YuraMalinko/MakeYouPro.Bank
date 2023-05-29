@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MakeYouPro.Bourse.CRM.Core.Extensions
+﻿namespace MakeYouPro.Bourse.CRM.Core.Extensions
 {
     public static class StringExtensions
     {
-        public static string FormatEmail(this string value) 
+        public static string FormatEmail(this string value)
         {
             return value.Trim().ToLower();
         }
