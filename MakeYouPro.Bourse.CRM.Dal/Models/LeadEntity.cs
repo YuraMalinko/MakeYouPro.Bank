@@ -61,6 +61,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         [Required]
         public bool IsDeleted { get; set; }
 
-        public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity> ();
+        public List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
     }
 }

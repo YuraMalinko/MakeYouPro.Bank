@@ -9,6 +9,11 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
+using FluentValidation;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Bll.Services;
+using MakeYouPro.Bourse.CRM.Dal.Models;
+using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {
@@ -19,31 +24,35 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         private readonly IAccountService _accountService;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-
-        public AccountCotroller(IAccountService accountService, IMapper mapper, ILogger nLogger)
+        private readonly IValidator<AccountCreateRequest> _validatorCreate;
+        public AccountCotroller(IAccountService accountService, IMapper mapper, ILogger nLogger, IValidator<AccountCreateRequest> validatorCreate)
         {
             _accountService = accountService;
             _mapper = mapper;
             _logger = nLogger;
+            _validatorCreate = validatorCreate;
         }
 
         [HttpPost(Name = "CreateAccountAsync")]
         [SwaggerResponse((int)HttpStatusCode.Created)]
         [SwaggerResponse((int)HttpStatusCode.Conflict)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+
         public async Task<ActionResult<AccountResponse>> CreateAccountAsync([FromQuery] AccountCreateRequest account)
         {
-            if (account == null)
-            {
+            var validateAccount = await _validatorCreate.ValidateAsync(account);
 
-            }
-            else if (account.Currency.IsNullOrEmpty())
+            if (!validateAccount.IsValid)
             {
-
-            }
-            else if (account.Comment is not null && account.Comment.IsNullOrEmpty())
-            {
-
+                foreach (var error in validateAccount.Errors)
+                {
+                    //_logger.Log(LogLevel.Debug,{ });
+                    //_logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(CreateOrRecoverLeadAsync)}, 2 or more properties (email/phoneNumber/passportNumber) belong to different Leads in database.");
+                    _logger.Log(LogLevel.Error, $"{nameof(LeadService)} {nameof(LeadEntity)}");
+                }
+                throw new AccountDataException(account, validateAccount.Errors[0].ErrorMessage);
             }
 
             var createAccount = await _accountService.CreateAccountAsync(_mapper.Map<Account>(account));

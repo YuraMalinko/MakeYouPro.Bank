@@ -15,7 +15,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
             //builder.UseSqlServer(@"Data Source=NACH_SIPO\SQLEXPRESS;Initial Catalog=CRM;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
             builder
-                .UseLazyLoadingProxies()
+                //.UseLazyLoadingProxies()
                 .UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
             //.UseSqlServer(@"Data Source=NACH_SIPO\SQLEXPRESS;Initial Catalog=ebuchka;Integrated Security=True;TrustServerCertificate=true");
 

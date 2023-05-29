@@ -68,8 +68,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         public async Task<LeadEntity> GetLeadAsync(int id)
         {
             return (await _context.Leads
-                //.Where(l => l.Id == id)
-                //.Include(l => l.Accounts)
+                .Where(l => l.Id == id)
+                .Include(l => l.Accounts)
                 .SingleOrDefaultAsync(l => l.Id == id))!;
         }
     }
