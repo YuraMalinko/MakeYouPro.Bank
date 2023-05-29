@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MakeYouPro.Bourse.CRM.Bll.IServices;
-using ILogger = NLog.ILogger;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using AutoMapper;
-using System.Net;
-using Swashbuckle.AspNetCore.Annotations;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bank.CRM.Bll.Models;
+﻿using AutoMapper;
 using FluentValidation;
+using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {

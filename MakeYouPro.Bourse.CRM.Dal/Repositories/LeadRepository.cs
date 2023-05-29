@@ -5,7 +5,6 @@ using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using NLog;
-using System.Runtime.CompilerServices;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
@@ -121,39 +120,5 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 return leadDb;
             }
         }
-
-
-        //public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
-        //{
-        //    string emailWithoutWhitespace = email.Replace(" ", String.Empty);
-
-        //    return await _context.Leads
-        //                .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
-        //                .ToListAsync();
-        //}
-
-        //public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
-        //{
-        //    string phoneNumbertWithoutWhitespace = phoneNumber
-        //                                                .Replace(" ", String.Empty)
-        //                                                .Replace("-", String.Empty)
-        //                                                .Replace("+", String.Empty);
-
-        //    return await _context.Leads
-        //                            .Where(l => l.PhoneNumber
-        //                            .Replace(" ", String.Empty)
-        //                            .Replace("-", String.Empty)
-        //                            .Replace("+", "") == phoneNumbertWithoutWhitespace)
-        //                            .ToListAsync();
-        //}
-
-        //public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
-        //{
-        //    string passportWithoutWhitespace = passport.Replace(" ","");
-
-        //    return await _context.Leads
-        //                .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
-        //                .ToListAsync();
-        //}
     }
 }

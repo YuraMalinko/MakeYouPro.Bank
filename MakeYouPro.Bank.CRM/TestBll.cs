@@ -11,7 +11,7 @@ namespace MakeYouPro.Bank.CRM
                 var repo = new TestDal();
                 repo.GetTest();
             }
-            catch(MyCustomException ex)
+            catch (MyCustomException ex)
             {
                 throw new NotImplementedException(ex.Message);
             }
@@ -19,7 +19,7 @@ namespace MakeYouPro.Bank.CRM
     }
 
     public class TestDal
-    { 
+    {
         public void GetTest()
         {
             throw new MyCustomException("Not Implemented Exception");

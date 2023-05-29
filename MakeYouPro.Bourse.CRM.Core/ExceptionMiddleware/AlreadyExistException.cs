@@ -5,9 +5,9 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
     {
         public string PropertyName { get; set; }
 
-        public AlreadyExistException(string propertyName) : base($"{propertyName} is already exist in dataBase") 
+        public AlreadyExistException(string propertyName) : base($"{propertyName} is already exist in dataBase")
         {
-            PropertyName= propertyName;
+            PropertyName = propertyName;
         }
     }
 }

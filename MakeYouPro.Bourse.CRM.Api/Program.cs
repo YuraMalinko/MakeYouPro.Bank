@@ -1,18 +1,18 @@
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using FluentValidation;
 using MakeYouPro.Bource.CRM.Dal;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
-using MakeYouPro.Bourse.CRM.Bll.Mappings;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Api.Validations;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Bll.Services;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
-using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
-using FluentValidation;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Api.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<CRMContext>();
+builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
                                typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
 builder.Services.AddScoped<ILeadService, LeadService>();
@@ -35,6 +35,9 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ILeadRepository, LeadRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
+
+builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
+//builder.Services.AddScoped<AuthServiceClient, HttpClient>();
 
 
 var app = builder.Build();
