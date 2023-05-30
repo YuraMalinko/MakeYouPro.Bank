@@ -9,5 +9,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
         Task<Lead> GetLeadById(int leadId);
 
         Task DeleteLeadByIdAsync(int leadId);
+
+        Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead);
+
+        Task<Lead> UpdateLeadUsingManagerAsync(Lead updateLead, int managerId);
     }
 }
