@@ -25,6 +25,14 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (NotFoundException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "NotFoundException Error: " + ex.EntityName });
+                context.Response.StatusCode = 404;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
             catch (ArgumentNullException ex)
             {
                 var result = JsonSerializer.Serialize(new { Error = "ArgumentNullException Error:" + ex.Message });
@@ -37,6 +45,14 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             {
                 var result = JsonSerializer.Serialize(new { Error = "AccountDataException Error:" + ex.Message });
                 context.Response.StatusCode = 412;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (ArgumentException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error:" + ex.Message });
+                context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);

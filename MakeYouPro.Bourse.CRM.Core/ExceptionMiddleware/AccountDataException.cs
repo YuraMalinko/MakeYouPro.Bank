@@ -2,7 +2,7 @@
 {
     public class AccountDataException : Exception
     {
-        private string _message = "";
+        private string _message;
 
         private object _objectException;
 

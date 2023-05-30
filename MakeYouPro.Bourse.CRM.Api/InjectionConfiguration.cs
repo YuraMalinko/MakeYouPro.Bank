@@ -7,9 +7,8 @@ namespace MakeYouPro.Bourse.CRM.Api
     {
         public InjectionConfiguration(WebApplicationBuilder builder)
         {
-            //var currencySettings = builder.Configuration.GetSection("CurrencySetting").Get<CurrencySetting>();
-
-            builder.Services.AddScoped<ICurrencySetting,CurrencySetting>();
+            builder.Services.AddScoped<ICurrencySetting, CurrencySetting>();
+            builder.Services.AddScoped<IAccountSetting, AccountSetting>();
         }
     }
 }

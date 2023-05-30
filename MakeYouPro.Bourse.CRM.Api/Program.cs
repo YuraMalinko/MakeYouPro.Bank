@@ -3,10 +3,10 @@ using MakeYouPro.Bourse.CRM.Api;
 using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Validations;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,6 +33,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ExceptionHandler>();
 
 app.UseHttpsRedirection();
 

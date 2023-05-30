@@ -6,6 +6,6 @@ namespace MakeYouPro.Bourse.CRM.Core.Configurations.Settings
     {
         public  List<string> CurrencyStandart { get; set; } = new List<string>() { "RUB", "USD", "EUR" };
 
-        public  List<string> CurrencyVip { get; set; } = new List<string>() { "RUB", "USD", "EUR" };
+        public  List<string> CurrencyVip { get; set; } = new List<string>() { "JPY", "CNY", "RSD", "BGN", "ARS" };
     }
 }
