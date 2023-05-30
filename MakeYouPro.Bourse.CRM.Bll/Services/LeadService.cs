@@ -77,6 +77,67 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
+        public async Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead)
+        {
+            var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
+
+            if (leadEntityDb.IsDeleted)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead with id {updateLead.Id} is deleted");
+                throw new ArgumentException($"Lead with id {updateLead.Id} is deleted");
+            }
+            else
+            {
+                if (updateLead.Role == LeadRoleEnum.StandardLead || updateLead.Role == LeadRoleEnum.VipLead)
+                {
+                    var shortLeadEntity = _mapper.Map<LeadEntity>(updateLead);
+                    shortLeadEntity.Email = leadEntityDb.Email;
+                    shortLeadEntity.Citizenship = leadEntityDb.Citizenship;
+                    shortLeadEntity.Registration = leadEntityDb.Registration;
+                    shortLeadEntity.PassportNumber = leadEntityDb.PassportNumber;
+
+                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(shortLeadEntity);
+                    var result = _mapper.Map<Lead>(updateLeadEntity);
+
+                    return result;
+                }
+                else
+                {
+                    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead has unsuitable role for update");
+                    throw new ArgumentException($"Lead has unsuitable role for update");
+                }
+            }
+        }
+
+        public async Task<Lead> UpdateLeadUsingManagerAsync(Lead updateLead, int managerId)
+        {
+            var managerEntityDb = await _leadRepository.GetLeadByIdAsync(managerId);
+            var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
+
+            if (leadEntityDb.IsDeleted || managerEntityDb.IsDeleted)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead or Manager is deleted");
+                throw new ArgumentException($"Lead or Manager is deleted");
+            }
+            else
+            {
+                if (managerEntityDb.Role == LeadRoleEnum.Manager 
+                    && (updateLead.Role == LeadRoleEnum.VipLead || updateLead.Role == LeadRoleEnum.StandardLead))
+                {
+                    var leadEntity = _mapper.Map<LeadEntity>(updateLead);
+                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(leadEntity);
+                    var result = _mapper.Map<Lead>(updateLeadEntity);
+
+                    return result;
+                }
+                else
+                {
+                    _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, One of Leads has unsuitable role for update");
+                    throw new ArgumentException($"One of Leads has unsuitable role for update");
+                }
+            }
+        }
+
         private async Task<Lead> CreateLeadAsync(Lead lead)
         {
             //try

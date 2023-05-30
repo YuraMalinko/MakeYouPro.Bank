@@ -23,7 +23,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)
         {
             await _context.Leads.AddAsync(lead);
-            //lead.DateCreate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             return await _context.Leads

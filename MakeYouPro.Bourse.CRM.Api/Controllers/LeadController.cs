@@ -74,5 +74,29 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("usingLead", Name = "UpdateLeadUsingLead")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingLeadAsync(UpdateLeadUsingLeadRequest updateRequestLead)
+        {
+            var lead = _mapper.Map<Lead>(updateRequestLead);
+            var updateLead = await _leadService.UpdateLeadUsingLeadAsync(lead);
+            var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
+
+        [HttpPut("usingManager", Name = "UpdateLeadUsingManager")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingManagerAsync(UpdateLeadUsingManagerRequest updateRequestLead, int managerId)
+        {
+            var lead = _mapper.Map<Lead>(updateRequestLead);
+            var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
+            var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
     }
 }
