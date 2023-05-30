@@ -78,6 +78,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 leadDb.PassportNumber = leadUpdate.PassportNumber;
                 leadDb.Registration = leadUpdate.Registration;
                 leadDb.Comment = leadUpdate.Comment;
+                leadDb.Role = leadUpdate.Role;
+                leadDb.Status = leadUpdate.Status;
                 await _context.SaveChangesAsync();
 
                 return leadDb;

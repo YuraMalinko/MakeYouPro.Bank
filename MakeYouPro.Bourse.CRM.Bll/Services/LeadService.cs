@@ -54,11 +54,20 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Lead> GetLeadById(int leadId)
         {
             var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
-            var lead = _mapper.Map<Lead>(leadEntity);
-            var accounts = lead.Accounts.Where(a => !a.IsDeleted).ToList();
-            lead.Accounts = accounts;
 
-            return lead;
+            if (leadEntity.IsDeleted)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead with id {leadId} is deleted");
+                throw new ArgumentException($"Lead with id {leadId} is deleted");
+            }
+            else
+            {
+                var lead = _mapper.Map<Lead>(leadEntity);
+                var accounts = lead.Accounts.Where(a => !a.IsDeleted).ToList();
+                lead.Accounts = accounts;
+
+                return lead;
+            }
         }
 
         public async Task DeleteLeadByIdAsync(int leadId)
@@ -79,6 +88,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead)
         {
+            //ДОБАВИТЬ проверку по клеймам? о том, что чел изменяет инфу о себе
+            // Во всех методах Добавить проверку? на то что чел залогинился
+
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
 
             if (leadEntityDb.IsDeleted)
@@ -88,15 +100,15 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                if (updateLead.Role == LeadRoleEnum.StandardLead || updateLead.Role == LeadRoleEnum.VipLead)
+                if (leadEntityDb.Role == LeadRoleEnum.StandardLead || leadEntityDb.Role == LeadRoleEnum.VipLead)
                 {
-                    var shortLeadEntity = _mapper.Map<LeadEntity>(updateLead);
-                    shortLeadEntity.Email = leadEntityDb.Email;
-                    shortLeadEntity.Citizenship = leadEntityDb.Citizenship;
-                    shortLeadEntity.Registration = leadEntityDb.Registration;
-                    shortLeadEntity.PassportNumber = leadEntityDb.PassportNumber;
+                    leadEntityDb.Name = updateLead.Name;
+                    leadEntityDb.MiddleName = updateLead.MiddleName;
+                    leadEntityDb.Surname = updateLead.Surname;
+                    leadEntityDb.PhoneNumber = updateLead.PhoneNumber;
+                    leadEntityDb.Comment = updateLead.Comment;
 
-                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(shortLeadEntity);
+                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
                     var result = _mapper.Map<Lead>(updateLeadEntity);
 
                     return result;
@@ -122,10 +134,18 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             else
             {
                 if (managerEntityDb.Role == LeadRoleEnum.Manager 
-                    && (updateLead.Role == LeadRoleEnum.VipLead || updateLead.Role == LeadRoleEnum.StandardLead))
+                    && (leadEntityDb.Role == LeadRoleEnum.VipLead || leadEntityDb.Role == LeadRoleEnum.StandardLead))
                 {
-                    var leadEntity = _mapper.Map<LeadEntity>(updateLead);
-                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(leadEntity);
+                    leadEntityDb.Name = updateLead.Name;
+                    leadEntityDb.MiddleName = updateLead.MiddleName;
+                    leadEntityDb.Surname = updateLead.Surname;
+                    leadEntityDb.PhoneNumber = updateLead.PhoneNumber;
+                    leadEntityDb.Comment = updateLead.Comment;
+                    leadEntityDb.Email = updateLead.Email;
+                    leadEntityDb.Citizenship = updateLead.Citizenship;
+                    leadEntityDb.Registration = updateLead.Registration;
+                    leadEntityDb.PassportNumber = updateLead.PassportNumber;
+                    var updateLeadEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
                     var result = _mapper.Map<Lead>(updateLeadEntity);
 
                     return result;
@@ -219,9 +239,19 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> UpdateLeadWhenCreateLeadHasSamePassportInDb(Lead leadDb, Lead leadRequest)
         {
-            var leadRequestEntity = _mapper.Map<LeadEntity>(leadRequest);
-            leadRequestEntity.Id = leadDb.Id;
-            var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadRequestEntity);
+            var leadEntityDb = await _leadRepository.GetLeadByIdAsync(leadDb.Id);
+            leadEntityDb.Name = leadRequest.Name;
+            leadEntityDb.MiddleName = leadRequest.MiddleName;
+            leadEntityDb.Surname = leadRequest.Surname;
+            leadEntityDb.PhoneNumber = leadRequest.PhoneNumber;
+            leadEntityDb.Comment = leadRequest.Comment;
+            leadEntityDb.Email = leadRequest.Email;
+            leadEntityDb.Citizenship = leadRequest.Citizenship;
+            leadEntityDb.Registration = leadRequest.Registration;
+            leadEntityDb.PassportNumber = leadRequest.PassportNumber;
+            //var leadRequestEntity = _mapper.Map<LeadEntity>(leadRequest);
+            //leadRequestEntity.Id = leadDb.Id;
+            var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
             await _leadRepository.ChangeIsDeletedLeadFromTrueToFalseAsync(leadDb.Id);
             var result = _mapper.Map<Lead>(leadUpdateEntity);
             var defaultRubAccount = CreateDefaultRubAccount();
