@@ -19,7 +19,7 @@ namespace ReportingService.Api.RabbitMQ
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(queue: "test",
-                               durable: false,
+                               durable: true,
                                exclusive: false,
                                autoDelete: false,
                                arguments: null);

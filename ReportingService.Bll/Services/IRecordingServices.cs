@@ -5,5 +5,7 @@ namespace ReportingService.Bll.Services
     public interface IRecordingServices
     {
         Task CreateLeadInDatabaseAsync(LeadEntity lead);
+
+        Task CreateAccountInDatabaseAsync(AccountEntity account);
     }
 }

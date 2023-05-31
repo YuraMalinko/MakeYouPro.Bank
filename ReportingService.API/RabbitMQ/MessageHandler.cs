@@ -1,9 +1,9 @@
 ﻿using ReportingService.Dal.Models.CRM;
 using ReportingService.Bll.Services;
 
-namespace RabPub
+namespace ReportingService.Api.RabbitMQ
 {
-    internal class MessageHandler<T>
+    internal class MessageHandler : IMessageHandler
     {
         private readonly IRecordingServices _recordingServices;
         public MessageHandler(IRecordingServices recordingServices) 
@@ -11,16 +11,15 @@ namespace RabPub
             _recordingServices = recordingServices;
         }
 
-        public async void GetModelForRecordAsync(T message)
+        public async void GetModelForRecordAsync(Object message)
         {
-            var type = message.GetType();
-            if (type == typeof(LeadEntity))
+            if (message is LeadEntity lead)
             {
-                await _recordingServices.CreateLeadInDatabaseAsync(message as LeadEntity);
+                await _recordingServices.CreateLeadInDatabaseAsync(lead);
             }
-            else if (type == typeof(AccountEntity))
+            else if (message is AccountEntity account)
             {
-
+                await _recordingServices.CreateAccountInDatabaseAsync(account);
             }
             else
             {

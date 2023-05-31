@@ -1,41 +1,53 @@
 ﻿using System.Text.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using ReportingService.Dal.Repository.CRM;
 
 namespace ReportingService.Api.RabbitMQ
 {
 
     public class RabbitMqListener : BackgroundService
     {
-        private IConnection _connectionFactory;
+        private IConnection _connection;
         private IModel _channel;
+        private IMessageHandler _messageHandler;
+        private readonly TimeSpan _interval = TimeSpan.FromSeconds(30);
 
-        public RabbitMqListener()
+        public RabbitMqListener(IMessageHandler messageHandler)
         {
+            _messageHandler = messageHandler;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await Task.Yield();
-
             var factory = new ConnectionFactory { HostName = "localhost" };
-            using var connection = factory.CreateConnection();
-            using var _channel = connection.CreateModel();
-
-            _channel.QueueDeclare("demo-queue", durable: true,
-            exclusive: true, autoDelete: false,
+            var _connection = factory.CreateConnection();
+            var _channel = _connection.CreateModel();
+            _channel.QueueDeclare("test", durable: true,
+            exclusive: false, autoDelete: false,
             arguments: null);
-
+            Console.WriteLine("я тут");
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.Received += (_, args) =>
             {
-                var message = JsonSerializer.Deserialize<>(args.Body.ToArray());
-                Console.WriteLine(message);
+                var message = JsonSerializer.Deserialize<Object>(args.Body.ToArray());
+                _messageHandler.GetModelForRecordAsync(message);
                 _channel.BasicAck(args.DeliveryTag, multiple: false);
                 return Task.CompletedTask;
             };
+            Console.WriteLine("уже тут");
             _channel.BasicConsume(consumer, queue: "test");
+
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(_interval, stoppingToken);
+            }
+        }
+
+        public override void Dispose()
+        {
+            _channel.Close();
+            _connection.Close();
+            base.Dispose();
         }
     }
 }

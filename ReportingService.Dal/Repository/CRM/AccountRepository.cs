@@ -8,12 +8,10 @@ namespace ReportingService.Dal.Repository.CRM
     public class AccountRepository : IAccountRepository
     {
         private Context _context;
-        private ILogger _logger;
 
-        public AccountRepository(Context context, ILogger logger)
+        public AccountRepository(Context context)
         {
             _context = context;
-            _logger = logger;
         }
 
         public async Task<AccountEntity> CreateAccountAsync(AccountEntity account)
