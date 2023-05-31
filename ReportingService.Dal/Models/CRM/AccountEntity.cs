@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CoreRS.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace ReportingService.Dal.Models.CRM
@@ -11,7 +12,7 @@ namespace ReportingService.Dal.Models.CRM
 
         [Required]
         [ForeignKey(nameof(LeadId))]
-        public LeadEntity Lead { get; set; }
+        public virtual LeadEntity Lead { get; set; }
 
         public int LeadId { get; set; }
 
@@ -27,9 +28,12 @@ namespace ReportingService.Dal.Models.CRM
         public decimal Balance { get; set; }
 
         [Required]
-        public int Status { get; set; }
+        public AccountStatusEnum Status { get; set; }
 
         [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
+
+        [Required]
+        public bool IsDeleted { get; set; }
     }
 }

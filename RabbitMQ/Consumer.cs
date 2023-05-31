@@ -42,7 +42,6 @@ namespace RabbitMQ
                     value = JsonSerializer.Deserialize<T>(message);
                     //_record.CreateAnEntryInDatabaseAsync(value);
                 };
-                _channel.B
                 _channel.BasicConsume(queue: queueName,
                                         autoAck: true,
                                         consumer: consumer);

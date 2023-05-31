@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Connections;
+using RabbitMQ.Client;
 using ReportingService.Api.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,11 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<RabbitMqListener>();
-builder.Services.AddScoped<IRabbitMqService, RabbitMqService>(); ;
 
 var app = builder.Build();
 

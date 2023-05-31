@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportingService.Bll", "Rep
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportingService.Dal", "ReportingService.Dal\ReportingService.Dal.csproj", "{A8790D79-FAB8-49E3-AF06-371192BBE7E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreRS", "CoreRS\CoreRS.csproj", "{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{A8790D79-FAB8-49E3-AF06-371192BBE7E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8790D79-FAB8-49E3-AF06-371192BBE7E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8790D79-FAB8-49E3-AF06-371192BBE7E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +50,7 @@ Global
 		{DD4D9EF8-E60E-4311-8883-1DDE44312E4C} = {EF000179-67B5-4162-8A9F-724E762CD668}
 		{ED65C7C2-0A44-4C59-A6DA-E193A6637101} = {EF000179-67B5-4162-8A9F-724E762CD668}
 		{A8790D79-FAB8-49E3-AF06-371192BBE7E0} = {EF000179-67B5-4162-8A9F-724E762CD668}
+		{7DEFF466-288F-4B7D-BBF1-7A556CFBCAD0} = {EF000179-67B5-4162-8A9F-724E762CD668}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {416A70E5-B624-4A1B-BE9E-EC5BED89FD9F}

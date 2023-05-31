@@ -3,7 +3,7 @@ using ReportingService.Dal.Models.CRM;
 
 namespace ReportingService.Bll.Services
 {
-    public class RecordingServices
+    public class RecordingServices : IRecordingServices
     {
         private readonly ILeadRepository _leadRepositry;
 
@@ -12,21 +12,9 @@ namespace ReportingService.Bll.Services
             _leadRepositry = leadRepositry;
         }
 
-        public async Task CreateAnEntryInDatabaseAsync<T>(T record)
+        public async Task CreateLeadInDatabaseAsync(LeadEntity lead)
         {
-            var type = record.GetType();
-            if (type == typeof(LeadEntity))
-            {
-                await _leadRepositry.CreateLeadAsync(record as LeadEntity);
-            }
-            else if (type == typeof(AccountEntity))
-            {
-
-            }
-            else 
-            { 
-                throw new ArgumentException("Unnknow record type"); 
-            }
+            await _leadRepositry.CreateLeadAsync(lead);
         }
 
     }

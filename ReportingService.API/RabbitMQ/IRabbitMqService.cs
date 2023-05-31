@@ -1,6 +1,8 @@
 ﻿namespace ReportingService.Api.RabbitMQ
 {
-    public interface Interface
+    public interface IRabbitMqService
     {
+        void SendMessage(object obj);
+        void SendMessage(string message);
     }
 }
