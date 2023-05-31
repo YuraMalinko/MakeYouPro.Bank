@@ -158,6 +158,16 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
+        public async Task<Lead> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            //Засунуть подписку на изменение сервиса
+            // и проверки на то кто на какой статус меняет
+            var leadEntity = await _leadRepository.UpdateLeadRoleAsync(leadRole, leadId);
+            var result = _mapper.Map<Lead>(leadEntity);
+
+            return result;
+        }
+
         private async Task<Lead> CreateLeadAsync(Lead lead)
         {
             //try

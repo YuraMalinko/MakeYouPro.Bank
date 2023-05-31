@@ -1,4 +1,5 @@
 ﻿using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bource.CRM.Core.Enums;
 
 namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
@@ -13,5 +14,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
         Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead);
 
         Task<Lead> UpdateLeadUsingManagerAsync(Lead updateLead, int managerId);
+
+        Task<Lead> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId);
     }
 }

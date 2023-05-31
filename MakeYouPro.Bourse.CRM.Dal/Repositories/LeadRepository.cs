@@ -58,6 +58,24 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
+        public async Task<LeadEntity> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Role = leadRole;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
         public async Task<LeadEntity> UpdateLeadAsync(LeadEntity leadUpdate)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadUpdate.Id);

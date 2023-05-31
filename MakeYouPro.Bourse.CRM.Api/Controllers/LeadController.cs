@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bank.CRM.Models.Lead.Response;
+using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
@@ -78,6 +80,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [HttpPut("usingLead", Name = "UpdateLeadUsingLead")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingLeadAsync(UpdateLeadUsingLeadRequest updateRequestLead)
         {
             var lead = _mapper.Map<Lead>(updateRequestLead);
@@ -90,11 +93,24 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [HttpPut("usingManager", Name = "UpdateLeadUsingManager")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingManagerAsync(UpdateLeadUsingManagerRequest updateRequestLead, int managerId)
         {
             var lead = _mapper.Map<Lead>(updateRequestLead);
             var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
             var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
+
+        [HttpPatch("leadRole", Name = "UpdateLeadRoleAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            var lead = await _leadService.UpdateLeadRoleAsync(leadRole, leadId);
+            var result = _mapper.Map<LeadResponseBase>(lead);
 
             return Ok(result);
         }

@@ -52,6 +52,11 @@ namespace MakeYouPro.Bource.CRM.Dal
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
 
+            //modelBuilder.Entity<LeadEntity>()
+            //    .HasMany(e => e.Accounts)
+            //    .WithOne(e => e.Lead)
+            //    .HasForeignKey(e => e.LeadId);
+
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
