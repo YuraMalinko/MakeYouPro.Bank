@@ -10,9 +10,10 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         [Key]
         public int Id { get; set; }
 
-        //[Required]
-        //[ForeignKey(nameof(LeadId))]
-        //public LeadEntity Lead { get; set; }
+        [Required]
+        [ForeignKey(nameof(LeadId))]
+        public LeadEntity Lead { get; set; }
+
         [Required]
         public int LeadId { get; set; }
 
