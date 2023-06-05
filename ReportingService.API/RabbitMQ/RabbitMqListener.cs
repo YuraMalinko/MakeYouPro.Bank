@@ -25,7 +25,6 @@ namespace ReportingService.Api.RabbitMQ
             _channel.QueueDeclare("test", durable: true,
             exclusive: false, autoDelete: false,
             arguments: null);
-            Console.WriteLine("я тут");
             var consumer = new AsyncEventingBasicConsumer(_channel);
             consumer.Received += (_, args) =>
             {
@@ -34,7 +33,6 @@ namespace ReportingService.Api.RabbitMQ
                 _channel.BasicAck(args.DeliveryTag, multiple: false);
                 return Task.CompletedTask;
             };
-            Console.WriteLine("уже тут");
             _channel.BasicConsume(consumer, queue: "test");
 
             while (!stoppingToken.IsCancellationRequested)

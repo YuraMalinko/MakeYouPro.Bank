@@ -1,3 +1,4 @@
+using ReportingService.Api.InternetRabbitMQ;
 using ReportingService.Api.RabbitMQ;
 using ReportingService.Bll;
 using ReportingService.Bll.Services;
@@ -12,22 +13,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+builder.Services.AddScoped<IRabbitMqServicetest, RabbitMqServicetest>();
 //builder.Services.AddHostedService<RabbitMqListener>();
+builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
+builder.Services.AddSingleton<IConsumerService, ConsumerService>();
+builder.Services.AddHostedService<ConsumerHostedService>();
 builder.Services.AddSingleton<IRecordingServices, RecordingServices>();
 builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 builder.Services.AddSingleton<ILeadRepository, LeadRepository>();
 builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
 builder.Services.AddSingleton<Context>();
-IHost host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
-    {
-        services.AddHostedService<RabbitMqListener>();
-    })
-    .Build();
+//IHost host = Host.CreateDefaultBuilder(args)
+//    .ConfigureServices(services =>
+//    {
+//        services.AddHostedService<RabbitMqListener>();
+//    })
+//    .Build();
 
 var app = builder.Build();
 
+//host.Start();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -7,9 +7,9 @@ namespace ReportingService.Api.Controllers
     [ApiController]
     public class RabbitMqController : ControllerBase
     {
-        private readonly IRabbitMqService _mqService;
+        private readonly IRabbitMqServicetest _mqService;
 
-        public RabbitMqController(IRabbitMqService mqService)
+        public RabbitMqController(IRabbitMqServicetest mqService)
         {
             _mqService = mqService;
         }
