@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using MakeYouPro.Bourse.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using NLog;
 using ILogger = NLog.ILogger;
 

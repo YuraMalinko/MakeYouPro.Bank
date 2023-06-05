@@ -31,5 +31,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Models
         public string? Comment { get; set; }
 
         public List<Account> Accounts { get; set; } = new List<Account>();
+
+        public bool IsDeleted { get; set; }
     }
 }

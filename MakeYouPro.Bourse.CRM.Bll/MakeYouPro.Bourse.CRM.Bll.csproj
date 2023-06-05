@@ -17,8 +17,4 @@
     <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Dal\MakeYouPro.Bourse.CRM.Dal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validations\" />
-  </ItemGroup>
-
 </Project>
