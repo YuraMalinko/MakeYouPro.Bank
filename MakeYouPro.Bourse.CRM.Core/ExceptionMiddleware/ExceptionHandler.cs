@@ -56,6 +56,15 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);
+
+            }
+            catch (FileNotFoundException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "FileNotFoundException Error:" + ex.Message });
+                context.Response.StatusCode = 404;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
             }
         }
     }
