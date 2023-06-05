@@ -1,8 +1,6 @@
-using FluentValidation;
-using MakeYouPro.Bourse.CRM.Api;
-using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Api.Validations;
+using MakeYouPro.Bourse.CRM.Api.Injections;
+using MakeYouPro.Bourse.CRM.Api.Mappings;
+using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using NLog;
 using ILogger = NLog.ILogger;
@@ -16,14 +14,17 @@ LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nl
 var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
 
+builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
+    typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
+new InjectionSettings(builder);
+new InjectionRepositories(builder);
+new InjectionServices(builder);
+new InjectionValidators(builder);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-new InjectionConfiguration(builder);
-new InjectionSettings(builder); 
-builder.Services.AddScoped<IValidator<AccountCreateRequest>, CreateAccountValidator>();
 
 var app = builder.Build();
 

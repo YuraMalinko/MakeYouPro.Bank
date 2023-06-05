@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
-using Microsoft.IdentityModel.Tokens;
 
 namespace MakeYouPro.Bourse.CRM.Api.Validations
 {
@@ -19,7 +18,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Validations
                 .WithMessage("Currency type not entered")
                 .Must(c => _currencySetting.CurrencyVip.Contains(c) || _currencySetting.CurrencyStandart.Contains(c))
                 .WithMessage("The entered currency code is incorrect or is not used by the program");
-            RuleFor(a => a.Comment).Must(com => com.IsNullOrEmpty()==true).When(com => com.Comment is not null)
+            RuleFor(a => a.Comment).Must(com => string.IsNullOrWhiteSpace(com) == false).When(com => com.Comment is not null)
                 .WithMessage("The comment is empty or consists of only spaces");
         }
     }

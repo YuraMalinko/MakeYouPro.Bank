@@ -13,6 +13,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
             CreateMap<AccountRequest, Account>();
             CreateMap<AccountCreateRequest, Account>();
             CreateMap<Account, AccountResponse>();
+            CreateMap<AccountFilterRequest, AccountFilter>().ReverseMap();
+            CreateMap<AccountUpdateRequest, Account>();
         }
     }
 }

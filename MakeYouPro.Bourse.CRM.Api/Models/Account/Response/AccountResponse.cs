@@ -1,4 +1,5 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 
 namespace MakeYouPro.Bourse.CRM.Models.Account.Response
 {
@@ -6,7 +7,7 @@ namespace MakeYouPro.Bourse.CRM.Models.Account.Response
     {
         public int Id { get; set; }
 
-        //public LeadResponseBase Lead { get; set; }
+        public LeadResponseMinInfo Lead { get; set; }
 
         public int LeadId { get; set; }
 
