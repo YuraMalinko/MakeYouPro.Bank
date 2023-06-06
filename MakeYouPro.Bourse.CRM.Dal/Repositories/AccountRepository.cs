@@ -91,7 +91,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 accounts.RemoveAll(a => a.DateCreate.Date > filter.ToDateCreate && filter.ToDateCreate != null);
                 accounts.RemoveAll(a => a.Balance < filter.FromBalace && filter.FromBalace != null);
                 accounts.RemoveAll(a => a.Balance > filter.ToBalace && filter.ToBalace != null);
-                accounts.RemoveAll(a => a.IsDeleted == filter.IsDeleted && filter.IsDeleted != null);
+                accounts.RemoveAll(a => a.IsDeleted == filter.AccountIsDeleted && filter.AccountIsDeleted != null);
                 accounts.RemoveAll(a => !filter.LeadsId.Contains(a.LeadId) && filter.LeadsId.Count != 0);
                 accounts.RemoveAll(a => !filter.Currencies.Contains(a.Currency) && filter.Currencies.Count != 0);
                 accounts.RemoveAll(a => filter.Statuses.Count != 0 && !filter.Statuses.Contains(a.Status));

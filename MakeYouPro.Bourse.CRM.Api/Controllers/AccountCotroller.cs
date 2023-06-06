@@ -66,9 +66,9 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<bool>> DeletedAccountAsync(int accountId)
         {
-            if (accountId < 0)
+            if (accountId <=0)
             {
-                var ex = new ArgumentException("The account ID cannot be 1 or less than zero");
+                var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);
                 throw ex;
             }
@@ -87,9 +87,9 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<AccountResponse>> ReactivationAccount(int accountId)
         {
-            if (accountId < 0)
+            if (accountId <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be 1 or less than zero");
+                var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);
                 throw ex;
             }
@@ -113,9 +113,9 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<AccountResponse>> DeactivationAccount(int accountId)
         {
-            if (accountId < 0)
+            if (accountId <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be 1 or less than zero");
+                var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);
                 throw ex;
             }
@@ -141,13 +141,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         {
             if (account.Id <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be 1 or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
-                throw ex;
-            }
-            else if (string.IsNullOrWhiteSpace(account.Comment))
-            {
-                var ex = new AccountDataException("The comment is empty or consists of only spaces");
+                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);
                 throw ex;
             }
@@ -164,9 +158,9 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<AccountResponse>> GetAccount(int accountId)
         {
-            if (accountId < 0)
+            if (accountId <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be 1 or less than zero");
+                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);
                 throw ex;
             }

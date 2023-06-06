@@ -6,7 +6,7 @@ using System.Net;
 using Swashbuckle.AspNetCore.Annotations;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bank.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using FluentValidation;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers

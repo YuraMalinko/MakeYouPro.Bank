@@ -18,6 +18,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Models.Account.Request
 
         public List<int>? LeadsId { get; set; } = new List<int>();
 
-        public bool? IsDeleted { get; set; }
+        public bool? AccountIsDeleted { get; set; }
     }
 }
