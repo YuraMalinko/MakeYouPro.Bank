@@ -1,6 +1,6 @@
 ﻿using ReportingService.Dal.Models.CRM;
 
-namespace ReportingService.Bll.Services
+namespace ReportingService.Bll.IServices
 {
     public interface IRecordingServices
     {

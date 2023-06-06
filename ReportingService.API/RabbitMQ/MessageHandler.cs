@@ -1,5 +1,5 @@
 ﻿using ReportingService.Dal.Models.CRM;
-using ReportingService.Bll.Services;
+using ReportingService.Bll.IServices;
 
 namespace ReportingService.Api.RabbitMQ
 {

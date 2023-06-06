@@ -1,6 +1,7 @@
 using ReportingService.Api.InternetRabbitMQ;
 using ReportingService.Api.RabbitMQ;
 using ReportingService.Bll;
+using ReportingService.Bll.IServices;
 using ReportingService.Bll.Services;
 using ReportingService.Dal;
 using ReportingService.Dal.IRepository.CRM;
