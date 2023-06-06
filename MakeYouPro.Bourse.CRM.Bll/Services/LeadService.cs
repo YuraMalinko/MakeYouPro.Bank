@@ -6,6 +6,10 @@ using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Core.Extensions;
 using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Http.HttpResults;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {

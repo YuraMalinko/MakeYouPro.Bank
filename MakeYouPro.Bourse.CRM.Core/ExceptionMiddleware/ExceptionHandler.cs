@@ -49,15 +49,6 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
-            catch (ArgumentException ex)
-            {
-                var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error:" + ex.Message });
-                context.Response.StatusCode = 400;
-                context.Response.ContentType = "application/json";
-
-                await context.Response.WriteAsync(result);
-
-            }
             catch (FileNotFoundException ex)
             {
                 var result = JsonSerializer.Serialize(new { Error = "FileNotFoundException Error:" + ex.Message });
