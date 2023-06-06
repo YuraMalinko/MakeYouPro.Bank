@@ -6,6 +6,8 @@ using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -19,15 +21,18 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
     {
         private readonly ILeadService _leadService;
 
+        private readonly IAuthServiceClient _authServiceClient;
+
         private readonly IMapper _mapper;
 
         private readonly IValidator<CreateLeadRequest> _validator;
 
         private readonly ILogger _logger;
 
-        public LeadController(ILeadService leadService, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
+        public LeadController(ILeadService leadService, IAuthServiceClient authServiceClient, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
         {
             _leadService = leadService;
+            _authServiceClient = authServiceClient;
             _mapper = mapper;
             _validator = validator;
             _logger = nLogger;
@@ -60,10 +65,25 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> GetLeadById(int leadId)
         {
+            var token = Request.Headers.Authorization.FirstOrDefault().Replace("Bearer", string.Empty);
+
+            // В АусСервисе д.б. Метод верифай, который принимает токен и возвращает модель Юзера с айди и ролью
+            if (!_authServiceClient.Verify(token))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
+
             var lead = await _leadService.GetLeadById(leadId);
             var result = _mapper.Map<LeadResponseInfo>(lead);
 
             return Ok(result);
+        }
+
+        [HttpGet("login", Name = "Login")]
+        public async Task<ActionResult<string>> Login(string email, string password)
+        {
+            //здесь еще должен токен возвращаться
+            var userRegister = await _authServiceClient.Login(new UserRegisterRequest { Email=email, Password=password});
         }
 
         [HttpDelete(Name = "DeleteLeadByIdAsync")]
