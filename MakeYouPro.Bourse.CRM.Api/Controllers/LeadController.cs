@@ -65,25 +65,10 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> GetLeadById(int leadId)
         {
-            var token = Request.Headers.Authorization.FirstOrDefault().Replace("Bearer", string.Empty);
-
-            // В АусСервисе д.б. Метод верифай, который принимает токен и возвращает модель Юзера с айди и ролью
-            if (!_authServiceClient.Verify(token))
-            {
-                return StatusCode(StatusCodes.Status403Forbidden);
-            }
-
             var lead = await _leadService.GetLeadById(leadId);
             var result = _mapper.Map<LeadResponseInfo>(lead);
 
             return Ok(result);
-        }
-
-        [HttpGet("login", Name = "Login")]
-        public async Task<ActionResult<string>> Login(string email, string password)
-        {
-            //здесь еще должен токен возвращаться
-            var userRegister = await _authServiceClient.Login(new UserRegisterRequest { Email=email, Password=password});
         }
 
         [HttpDelete(Name = "DeleteLeadByIdAsync")]

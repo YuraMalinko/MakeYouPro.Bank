@@ -1,5 +1,4 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
-using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.Clients.AuthService
@@ -21,9 +20,9 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.AuthService
         public async Task<UserRegisterRequest> Login(UserRegisterRequest request)
         {
             // дописать проверки
-            
+
             var response = await _client.PostAsJsonAsync("login", request);
-            
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var body = await response.Content.ReadFromJsonAsync<UserRegisterRequest>();

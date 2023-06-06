@@ -1,5 +1,4 @@
-﻿using MakeYouPro.Bank.CRM.Models.Lead.Response;
-using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 
 namespace MakeYouPro.Bank.CRM.Models.Account.Response
 {
@@ -9,7 +8,7 @@ namespace MakeYouPro.Bank.CRM.Models.Account.Response
 
         public int LeadId { get; set; }
 
-        //public LeadResponseBase Lead { get; set; }
+        public LeadResponseBase Lead { get; set; }
 
         public DateTime DateCreate { get; set; }
 

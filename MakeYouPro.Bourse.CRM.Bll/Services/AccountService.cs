@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MakeYouPro.Bank.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using NLog;
 

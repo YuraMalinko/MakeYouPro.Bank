@@ -49,12 +49,10 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public string Citizenship { get; set; }
 
         [Required]
-        //   [Column(TypeName = "nvarchar(50)")]
         [EncryptColumn]
         public string PassportNumber { get; set; }
 
         [Required]
-        //  [Column(TypeName = "nvarchar(300)")]
         [EncryptColumn]
         public string Registration { get; set; }
 

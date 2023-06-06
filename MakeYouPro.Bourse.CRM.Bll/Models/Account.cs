@@ -8,7 +8,7 @@ namespace MakeYouPro.Bank.CRM.Bll.Models
 
         public int LeadId { get; set; }
 
-      //  public Lead Lead { get; set; }
+        public Lead Lead { get; set; }
 
         public DateTime DateCreate { get; set; }
 

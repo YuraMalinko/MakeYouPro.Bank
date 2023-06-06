@@ -133,7 +133,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                if (managerEntityDb.Role == LeadRoleEnum.Manager 
+                if (managerEntityDb.Role == LeadRoleEnum.Manager
                     && (leadEntityDb.Role == LeadRoleEnum.VipLead || leadEntityDb.Role == LeadRoleEnum.StandardLead))
                 {
                     leadEntityDb.Name = updateLead.Name;

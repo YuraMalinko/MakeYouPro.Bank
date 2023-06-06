@@ -1,12 +1,9 @@
-﻿//using EntityFrameworkCore.EncryptColumn.Example.Entity;
-using Bogus;
+﻿
 using EntityFrameworkCore.EncryptColumn.Extension;
 using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bource.CRM.Dal.Models;
-using MakeYouPro.Bourse.CRM.Dal;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace MakeYouPro.Bource.CRM.Dal
 {
@@ -21,14 +18,6 @@ namespace MakeYouPro.Bource.CRM.Dal
         public CRMContext(string encryptKey)
         {
             this._provider = new GenerateEncryptionProvider(encryptKey);
-            foreach (var lead in leads)
-            {
-                this.Leads.Add(lead);
-            };
-            foreach (var account in accounts)
-            {
-                this.Accounts.Add(account);
-            };
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -73,12 +62,5 @@ namespace MakeYouPro.Bource.CRM.Dal
                 .HasDefaultValueSql("GETUTCDATE()");
 
         }
-
-
-        static Faker<LeadEntity> generatorRandomLead = FakerGenerate.GetGeneratorRandomLead();
-        //Faker<AccountEntity> generatorAccount = FakerGenerate.GetGeneratorRandomAccount();
-        List<LeadEntity> leads = generatorRandomLead.Generate(100);
-        List<AccountEntity> accounts = FakerGenerate.GetGeneratorRandomAccount().Generate(100);
-
     }
 }
