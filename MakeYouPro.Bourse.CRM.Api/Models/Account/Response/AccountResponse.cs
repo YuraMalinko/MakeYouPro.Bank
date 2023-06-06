@@ -8,7 +8,7 @@ namespace MakeYouPro.Bank.CRM.Models.Account.Response
 
         public int LeadId { get; set; }
 
-        public LeadResponseBase Lead { get; set; }
+      //  public LeadResponseBase Lead { get; set; }
 
         public DateTime DateCreate { get; set; }
 
