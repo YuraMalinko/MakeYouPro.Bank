@@ -1,11 +1,11 @@
-﻿
+
 using EntityFrameworkCore.EncryptColumn.Extension;
 using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bource.CRM.Dal
+namespace MakeYouPro.Bourse.CRM.Dal
 {
     public class CRMContext : DbContext
     {
@@ -22,10 +22,7 @@ namespace MakeYouPro.Bource.CRM.Dal
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
-            //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM7Generate;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
-
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -51,11 +48,6 @@ namespace MakeYouPro.Bource.CRM.Dal
             modelBuilder.Entity<LeadEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
-
-            //modelBuilder.Entity<LeadEntity>()
-            //    .HasMany(e => e.Accounts)
-            //    .WithOne(e => e.Lead)
-            //    .HasForeignKey(e => e.LeadId);
 
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)

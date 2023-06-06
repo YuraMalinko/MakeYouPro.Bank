@@ -1,14 +1,21 @@
-п»їusing AutoMapper;
+using AutoMapper;
 using MakeYouPro.Bank.CRM.Bll.Models;
 using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bource.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Core.Extensions;
+using AutoMapper.Configuration.Annotations;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
-using NLog;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -88,8 +95,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead)
         {
-            //Р”РћР‘РђР’РРўР¬ РїСЂРѕРІРµСЂРєСѓ РїРѕ РєР»РµР№РјР°Рј? Рѕ С‚РѕРј, С‡С‚Рѕ С‡РµР» РёР·РјРµРЅСЏРµС‚ РёРЅС„Сѓ Рѕ СЃРµР±Рµ
-            // Р’Рѕ РІСЃРµС… РјРµС‚РѕРґР°С… Р”РѕР±Р°РІРёС‚СЊ РїСЂРѕРІРµСЂРєСѓ? РЅР° С‚Рѕ С‡С‚Рѕ С‡РµР» Р·Р°Р»РѕРіРёРЅРёР»СЃСЏ
+            //ДОБАВИТЬ проверку по клеймам? о том, что чел изменяет инфу о себе
+            // Во всех методах Добавить проверку? на то что чел залогинился
 
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
 
@@ -160,8 +167,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Lead> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
         {
-            //Р—Р°СЃСѓРЅСѓС‚СЊ РїРѕРґРїРёСЃРєСѓ РЅР° РёР·РјРµРЅРµРЅРёРµ СЃРµСЂРІРёСЃР°
-            // Рё РїСЂРѕРІРµСЂРєРё РЅР° С‚Рѕ РєС‚Рѕ РЅР° РєР°РєРѕР№ СЃС‚Р°С‚СѓСЃ РјРµРЅСЏРµС‚
+            //Засунуть подписку на изменение сервиса
+            // и проверки на то кто на какой статус меняет
             var leadEntity = await _leadRepository.UpdateLeadRoleAsync(leadRole, leadId);
             var result = _mapper.Map<Lead>(leadEntity);
 
@@ -259,8 +266,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             leadEntityDb.Citizenship = leadRequest.Citizenship;
             leadEntityDb.Registration = leadRequest.Registration;
             leadEntityDb.PassportNumber = leadRequest.PassportNumber;
-            //var leadRequestEntity = _mapper.Map<LeadEntity>(leadRequest);
-            //leadRequestEntity.Id = leadDb.Id;
             var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
             await _leadRepository.ChangeIsDeletedLeadFromTrueToFalseAsync(leadDb.Id);
             var result = _mapper.Map<Lead>(leadUpdateEntity);

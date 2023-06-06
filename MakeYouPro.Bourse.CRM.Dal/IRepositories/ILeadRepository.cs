@@ -1,5 +1,5 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
@@ -18,6 +18,9 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
         Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalseAsync(int leadId);
 
         Task<LeadEntity> GetLeadByIdAsync(int leadId);
+        Task<LeadEntity> GetLeadAsync(int id);
+
+        //Task<List<LeadEntity>> GetLeadsByEmail(string email);
 
         Task DeleteLeadByIdAsync(int leadId);
 

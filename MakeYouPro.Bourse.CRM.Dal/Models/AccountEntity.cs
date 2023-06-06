@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MakeYouPro.Bource.CRM.Dal.Models
+namespace MakeYouPro.Bourse.CRM.Dal.Models
 {
 
     public class AccountEntity
@@ -14,6 +14,7 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [ForeignKey(nameof(LeadId))]
         public LeadEntity Lead { get; set; }
 
+        [Required]
         public int LeadId { get; set; }
 
         [Required]

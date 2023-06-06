@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bank.CRM.Models.Lead.Response;
+using AutoMapper;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Extensions;
+using MakeYouPro.Bourse.CRM.Models.Lead.Response;
 
 namespace MakeYouPro.Bourse.CRM.Api.Mappings
 {
@@ -20,6 +20,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.Surname.FormatName()))
                 .ForMember(dest => dest.Citizenship, opt => opt.MapFrom(src => src.Citizenship.FormatCitizenship()));
             CreateMap<Lead, LeadResponseInfo>();
+            CreateMap<Lead, LeadResponseMinInfo>();
             CreateMap<Lead, LeadResponseBase>();
             CreateMap<UpdateLeadUsingLeadRequest, Lead>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name.FormatName()))

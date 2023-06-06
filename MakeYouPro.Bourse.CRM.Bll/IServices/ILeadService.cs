@@ -1,5 +1,6 @@
 ﻿using MakeYouPro.Bank.CRM.Bll.Models;
 using MakeYouPro.Bource.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {

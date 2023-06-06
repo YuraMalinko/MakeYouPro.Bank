@@ -1,6 +1,6 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 
-namespace MakeYouPro.Bank.CRM.Bll.Models
+namespace MakeYouPro.Bourse.CRM.Bll.Models
 {
     public class Account
     {

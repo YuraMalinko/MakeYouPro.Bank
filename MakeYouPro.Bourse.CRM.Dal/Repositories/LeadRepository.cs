@@ -1,17 +1,16 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using NLog;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
     public class LeadRepository : ILeadRepository
     {
         private static CRMContext _context;
-
         private readonly ILogger _logger;
 
         public LeadRepository(CRMContext context, ILogger nLogger)

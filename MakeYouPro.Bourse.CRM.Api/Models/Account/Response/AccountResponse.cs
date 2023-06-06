@@ -1,12 +1,13 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 
-namespace MakeYouPro.Bank.CRM.Models.Account.Response
+namespace MakeYouPro.Bourse.CRM.Models.Account.Response
 {
     public class AccountResponse
     {
         public int Id { get; set; }
 
-        public int LeadId { get; set; }
+        public LeadResponseMinInfo Lead { get; set; }
 
       //  public LeadResponseBase Lead { get; set; }
 

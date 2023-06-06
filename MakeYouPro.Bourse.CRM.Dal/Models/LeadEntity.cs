@@ -1,10 +1,11 @@
-﻿using EntityFrameworkCore.EncryptColumn.Attribute;
-using MakeYouPro.Bource.CRM.Core.Enums;
+using EntityFrameworkCore.EncryptColumn.Attribute;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MakeYouPro.Bource.CRM.Dal.Models
+
+namespace MakeYouPro.Bourse.CRM.Dal.Models
 {
     [Index(nameof(Email), IsUnique = true)]
     public class LeadEntity
@@ -17,6 +18,7 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
 
         [Required]
         public LeadStatusEnum Status { get; set; }
+
 
         [Required]
         [Column(TypeName = "datetime2")]
@@ -34,12 +36,10 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         public string Surname { get; set; }
 
         [Required]
-        [Phone]
         [Column(TypeName = "nvarchar(30)")]
         public string PhoneNumber { get; set; }
 
         [Required]
-        [EmailAddress]
         [Column(TypeName = "nvarchar(100)")]
         public string Email { get; set; }
 
@@ -62,6 +62,6 @@ namespace MakeYouPro.Bource.CRM.Dal.Models
         [Required]
         public bool IsDeleted { get; set; }
 
-        public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
+        public List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
     }
 }

@@ -1,5 +1,4 @@
-﻿
-namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
+﻿namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 {
     public class AlreadyExistException : Exception
     {

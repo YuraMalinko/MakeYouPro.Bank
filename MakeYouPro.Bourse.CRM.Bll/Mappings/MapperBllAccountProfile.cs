@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Mappings
 {
@@ -9,6 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Mappings
         public MapperBllAccountProfile()
         {
             CreateMap<Account, AccountEntity>().ReverseMap();
+            CreateMap<AccountFilter, AccountFilterEntity>().ReverseMap();
         }
     }
 }
