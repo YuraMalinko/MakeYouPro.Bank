@@ -1,4 +1,8 @@
-﻿using MakeYouPro.Bourse.CRM.Dal;
+using MakeYouPro.Bource.CRM.Core.Enums;
+using MakeYouPro.Bource.CRM.Dal;
+using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Dal;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using Microsoft.EntityFrameworkCore;
@@ -32,38 +36,129 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 .SingleAsync(l => l.Id == lead.Id);
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
+        public async Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead)
         {
-            string emailWithoutWhitespace = email.Replace(" ", String.Empty);
-
             return await _context.Leads
-                        .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
-                        .ToListAsync();
+                            .Where(l =>
+                              (l.PassportNumber == lead.PassportNumber && l.Citizenship == lead.Citizenship)
+                            || l.Email == lead.Email
+                            || l.PhoneNumber == lead.PhoneNumber)
+                            .ToListAsync();
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
+        public async Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId)
         {
-            string phoneNumbertWithoutWhitespace = phoneNumber
-                                                        .Replace(" ", String.Empty)
-                                                        .Replace("-", String.Empty)
-                                                        .Replace("+", String.Empty);
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
-            return await _context.Leads
-                                    .Where(l => l.PhoneNumber
-                                    .Replace(" ", String.Empty)
-                                    .Replace("-", String.Empty)
-                                    .Replace("+", "") == phoneNumbertWithoutWhitespace)
-                                    .ToListAsync();
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Status = leadStatus;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
         }
 
-        public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
+        public async Task<LeadEntity> UpdateLead(LeadEntity leadUpdate)
         {
-            string passportWithoutWhitespace = passport.Replace(" ","");
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadUpdate.Id);
 
-            return await _context.Leads
-                        .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
-                        .ToListAsync();
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
+                throw new NotFoundException(leadUpdate.Id, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Surname = leadUpdate.Surname;
+                leadDb.Name = leadUpdate.Name;
+                leadDb.MiddleName = leadUpdate.MiddleName;
+                leadDb.PhoneNumber = leadUpdate.PhoneNumber;
+                leadDb.Email = leadUpdate.Email;
+                leadDb.Citizenship = leadUpdate.Citizenship;
+                leadDb.PassportNumber = leadUpdate.PassportNumber;
+                leadDb.Registration = leadUpdate.Registration;
+                leadDb.Comment = leadUpdate.Comment;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
         }
+
+        public async Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.PhoneNumber = phoneNumber;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.IsDeleted = false;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+
+        //public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
+        //{
+        //    string emailWithoutWhitespace = email.Replace(" ", String.Empty);
+
+        //    return await _context.Leads
+        //                .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
+        //                .ToListAsync();
+        //}
+
+        //public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
+        //{
+        //    string phoneNumbertWithoutWhitespace = phoneNumber
+        //                                                .Replace(" ", String.Empty)
+        //                                                .Replace("-", String.Empty)
+        //                                                .Replace("+", String.Empty);
+
+        //    return await _context.Leads
+        //                            .Where(l => l.PhoneNumber
+        //                            .Replace(" ", String.Empty)
+        //                            .Replace("-", String.Empty)
+        //                            .Replace("+", "") == phoneNumbertWithoutWhitespace)
+        //                            .ToListAsync();
+        //}
+
+        //public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
+        //{
+        //    string passportWithoutWhitespace = passport.Replace(" ","");
+
+        //    return await _context.Leads
+        //                .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
+        //                .ToListAsync();
+        //}
 
         public async Task<LeadEntity> GetLeadAsync(int id)
         {

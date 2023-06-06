@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MakeYouPro.Bourse.CRM.Dal

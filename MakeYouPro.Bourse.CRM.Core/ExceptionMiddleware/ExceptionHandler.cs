@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
@@ -19,7 +19,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AlreadyExistException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error "});
                 context.Response.StatusCode = 409;
                 context.Response.ContentType = "application/json";
 
@@ -33,9 +33,9 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "ArgumentNullException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error " });
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 

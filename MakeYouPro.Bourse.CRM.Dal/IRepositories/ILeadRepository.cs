@@ -1,4 +1,10 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.Models;
+using MakeYouPro.Bource.CRM.Core.Enums;
+using MakeYouPro.Bource.CRM.Dal.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
@@ -6,12 +12,20 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
     {
         Task<LeadEntity> CreateLeadAsync(LeadEntity lead);
 
-        Task<List<LeadEntity>> GetLeadsByEmail(string email);
+        Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead);
 
-        Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber);
+        Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId);
 
-        Task<List<LeadEntity>> GetLeadsByPassport(string passport);
+        Task<LeadEntity> UpdateLead(LeadEntity leadUpdate);
 
-        Task<LeadEntity> GetLeadAsync(int id);
+        Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId);
+
+        Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId);
+
+        //Task<List<LeadEntity>> GetLeadsByEmail(string email);
+
+        //Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber);
+
+        //Task<List<LeadEntity>> GetLeadsByPassport(string passport);
     }
 }
