@@ -1,7 +1,7 @@
-﻿using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bource.CRM.Dal
+namespace MakeYouPro.Bourse.CRM.Dal
 {
     public class CRMContext : DbContext
     {
@@ -11,10 +11,7 @@ namespace MakeYouPro.Bource.CRM.Dal
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CRMContext"));
-            //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourceCrmDB"));
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM5;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
-
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

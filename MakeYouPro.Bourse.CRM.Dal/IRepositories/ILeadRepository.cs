@@ -1,10 +1,5 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
@@ -21,6 +16,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
         Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId);
 
         Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId);
+
+        Task<LeadEntity> GetLeadAsync(int id);
 
         //Task<List<LeadEntity>> GetLeadsByEmail(string email);
 

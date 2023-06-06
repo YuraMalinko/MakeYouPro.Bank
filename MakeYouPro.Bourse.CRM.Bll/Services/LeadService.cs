@@ -1,21 +1,15 @@
-﻿using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NLog;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Dal.Models;
-using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal.Repositories;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Core.Extensions;
 using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Http.HttpResults;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {

@@ -1,18 +1,16 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using NLog;
-using System.Runtime.CompilerServices;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
     public class LeadRepository : ILeadRepository
     {
         private static CRMContext _context;
-
         private readonly ILogger _logger;
 
         public LeadRepository(CRMContext context, ILogger nLogger)
@@ -155,5 +153,13 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         //                .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
         //                .ToListAsync();
         //}
+
+        public async Task<LeadEntity> GetLeadAsync(int id)
+        {
+            return (await _context.Leads
+                .Where(l => l.Id == id)
+                .Include(l => l.Accounts)
+                .SingleOrDefaultAsync(l => l.Id == id))!;
+        }
     }
 }
