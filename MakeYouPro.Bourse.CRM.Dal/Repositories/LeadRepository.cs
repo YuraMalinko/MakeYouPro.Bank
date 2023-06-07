@@ -121,7 +121,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalseAsync(int leadId)
+        public async Task<LeadEntity> RestoringDeletedStatusAsync(int leadId)
+
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -132,7 +133,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                leadDb.IsDeleted = false;
+                leadDb.Status = LeadStatusEnum.Active;
                 await _context.SaveChangesAsync();
 
                 return leadDb;
@@ -167,7 +168,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                leadDb.IsDeleted = true;
+                leadDb.Status = LeadStatusEnum.Deleted;
                 await _context.SaveChangesAsync();
             }
         }

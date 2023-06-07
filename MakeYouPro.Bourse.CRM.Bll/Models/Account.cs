@@ -18,8 +18,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Models
 
         public AccountStatusEnum Status { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public string? Comment { get; set; }
     }
 }

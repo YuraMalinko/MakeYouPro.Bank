@@ -1,21 +1,14 @@
 using AutoMapper;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bource.CRM.Core.Enums;
-using MakeYouPro.Bource.CRM.Dal.Models;
-using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
-using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
-using MakeYouPro.Bourse.CRM.Core.Extensions;
-using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using ILogger = NLog.ILogger;
 using LogLevel = NLog.LogLevel;
-using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -62,7 +55,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
 
-            if (leadEntity.IsDeleted)
+            if (leadEntity.Status == LeadStatusEnum.Deleted)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead with id {leadId} is deleted");
                 throw new ArgumentException($"Lead with id {leadId} is deleted");
@@ -70,7 +63,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             else
             {
                 var lead = _mapper.Map<Lead>(leadEntity);
-                var accounts = lead.Accounts.Where(a => !a.IsDeleted).ToList();
+                var accounts = lead.Accounts.Where(a => a.Status != AccountStatusEnum.Deleted).ToList();
                 lead.Accounts = accounts;
 
                 return lead;
@@ -100,7 +93,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
 
-            if (leadEntityDb.IsDeleted)
+            if (leadEntityDb.Status == LeadStatusEnum.Deleted)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead with id {updateLead.Id} is deleted");
                 throw new ArgumentException($"Lead with id {updateLead.Id} is deleted");
@@ -133,7 +126,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             var managerEntityDb = await _leadRepository.GetLeadByIdAsync(managerId);
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
 
-            if (leadEntityDb.IsDeleted || managerEntityDb.IsDeleted)
+            if (leadEntityDb.Status == LeadStatusEnum.Deleted || managerEntityDb.Status == LeadStatusEnum.Deleted)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(UpdateLeadUsingLeadAsync)}, Lead or Manager is deleted");
                 throw new ArgumentException($"Lead or Manager is deleted");
@@ -222,7 +215,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
-            if (!leadDb.IsDeleted)
+            if (leadDb.Status != LeadStatusEnum.Deleted)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, one of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
                 throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
@@ -267,7 +260,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             leadEntityDb.Registration = leadRequest.Registration;
             leadEntityDb.PassportNumber = leadRequest.PassportNumber;
             var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
-            await _leadRepository.ChangeIsDeletedLeadFromTrueToFalseAsync(leadDb.Id);
+            await _leadRepository.RestoringDeletedStatusAsync(leadDb.Id);
             var result = _mapper.Map<Lead>(leadUpdateEntity);
             var defaultRubAccount = CreateDefaultRubAccount();
             defaultRubAccount.LeadId = result.Id;

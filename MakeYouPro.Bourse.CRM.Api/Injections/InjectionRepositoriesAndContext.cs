@@ -4,11 +4,11 @@ using MakeYouPro.Bourse.CRM.Dal.Repositories;
 
 namespace MakeYouPro.Bourse.CRM.Api.Injections
 {
-    public class InjectionRepositories
+    public class InjectionRepositoriesAndContext
     {
-        public InjectionRepositories(WebApplicationBuilder builder)
+        public InjectionRepositoriesAndContext(WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<CRMContext>();
+            builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
             builder.Services.AddScoped<ILeadRepository, LeadRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         }

@@ -9,7 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Models.Account.Response
 
         public LeadResponseMinInfo Lead { get; set; }
 
-      //  public LeadResponseBase Lead { get; set; }
+        //  public LeadResponseBase Lead { get; set; }
 
         public DateTime DateCreate { get; set; }
 

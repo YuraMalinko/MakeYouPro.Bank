@@ -33,7 +33,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Account> CreateAccountAsync(Account account)
         {
-            var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadAsync(account.LeadId));
+            var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadByIdAsync(account.LeadId));
 
             Exception ex = null;
 
@@ -191,7 +191,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 ex = new NotFoundException(accountId, $"{nameof(account)} with id {accountId} not found.");
             }
-            else if (account.IsDeleted is true)
+            else if (account.Status == AccountStatusEnum.Deleted)
             {
                 ex = new ArgumentException($"{nameof(account)} with id {account.LeadId} is Deleted.");
             }
@@ -222,7 +222,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 ex = new NotFoundException(LeadId, $"{nameof(Lead)} with id {LeadId} not found.");
             }
-            else if (lead.IsDeleted is true)
+            else if (lead.Status == LeadStatusEnum.Deleted)
             {
                 ex = new ArgumentException($"{nameof(Lead)} with id {LeadId} is Deleted.");
             }
@@ -241,7 +241,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (identicalCurrencyAccount.Count != 0)
             {
-                var identicalAccount = identicalCurrencyAccount.Find(a => a.IsDeleted is false);
+                var identicalAccount = identicalCurrencyAccount.Find(a => a.Status != AccountStatusEnum.Deleted);
                 if (identicalAccount is not null)
                 {
                     ex = new AlreadyExistException($"{nameof(LeadEntity)} with id {account.LeadId} already has an active account with currency {account.Currency}");

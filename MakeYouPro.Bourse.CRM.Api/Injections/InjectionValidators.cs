@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Validations;
 
 namespace MakeYouPro.Bourse.CRM.Api.Injections
@@ -10,6 +11,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Injections
         {
             builder.Services.AddScoped<IValidator<AccountCreateRequest>, CreateAccountValidator>();
             builder.Services.AddScoped<IValidator<AccountFilterRequest>, AccountFilterValidation>();
+            builder.Services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
         }
     }
 }

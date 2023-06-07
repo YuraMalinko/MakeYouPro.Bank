@@ -1,10 +1,8 @@
 ﻿
-using MakeYouPro.Bource.CRM.Dal;
-using MakeYouPro.Bource.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -36,11 +34,11 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             bool result = false;
 
             var account = await _context.Accounts
-                .SingleOrDefaultAsync(a => a.Id == accountId && a.IsDeleted == false);
+                .SingleOrDefaultAsync(a => a.Id == accountId && a.Status != AccountStatusEnum.Deleted);
 
             if (account is not null)
             {
-                account.IsDeleted = true;
+                account.Status = AccountStatusEnum.Deleted;
                 await _context.SaveChangesAsync();
                 result = true;
             }
@@ -53,7 +51,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             var account = await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == accountUpdate.Id
                 && a.Status != accountUpdate.Status
-                && a.IsDeleted == false);
+                && a.Status != AccountStatusEnum.Deleted);
 
             if (account is not null)
             {
@@ -68,7 +66,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         {
             var account = await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == accountUpdate.Id
-                && a.IsDeleted == false);
+                && a.Status != AccountStatusEnum.Deleted);
 
             if (account is not null)
             {
@@ -100,7 +98,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 accounts.RemoveAll(a => a.DateCreate.Date > filter.ToDateCreate && filter.ToDateCreate != null);
                 accounts.RemoveAll(a => a.Balance < filter.FromBalace && filter.FromBalace != null);
                 accounts.RemoveAll(a => a.Balance > filter.ToBalace && filter.ToBalace != null);
-                accounts.RemoveAll(a => a.IsDeleted == filter.AccountIsDeleted && filter.AccountIsDeleted != null);
+              //  accounts.RemoveAll(a => a.IsDeleted == filter.AccountIsDeleted && filter.AccountIsDeleted != null);
                 accounts.RemoveAll(a => !filter.LeadsId.Contains(a.LeadId) && filter.LeadsId.Count != 0);
                 accounts.RemoveAll(a => !filter.Currencies.Contains(a.Currency) && filter.Currencies.Count != 0);
                 accounts.RemoveAll(a => filter.Statuses.Count != 0 && !filter.Statuses.Contains(a.Status));
@@ -119,7 +117,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                await _context.Accounts.Where(a => a.LeadId == leadId).ForEachAsync(a => a.IsDeleted = true);
+                await _context.Accounts.Where(a => a.LeadId == leadId).ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
                 await _context.SaveChangesAsync();
             }
         }

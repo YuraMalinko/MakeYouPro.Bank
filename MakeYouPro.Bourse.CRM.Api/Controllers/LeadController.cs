@@ -1,24 +1,16 @@
 using AutoMapper;
 using FluentValidation;
-using MakeYouPro.Bank.CRM.Bll.Models;
-using MakeYouPro.Bank.CRM.Models.Lead.Response;
-using MakeYouPro.Bource.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
-using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Models.Lead.Response;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using ILogger = NLog.ILogger;
-using AutoMapper;
-using System.Net;
-using Swashbuckle.AspNetCore.Annotations;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Bll.Models;
-using FluentValidation;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {

@@ -66,7 +66,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<bool>> DeletedAccountAsync(int accountId)
         {
-            if (accountId <=0)
+            if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
                 _logger.Log(LogLevel.Error, ex.Message);

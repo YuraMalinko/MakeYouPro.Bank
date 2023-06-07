@@ -1,17 +1,7 @@
 using MakeYouPro.Bourse.CRM.Api.Injections;
-using FluentValidation;
-using MakeYouPro.Bource.CRM.Dal;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Api.Validations;
-using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
-using MakeYouPro.Bourse.CRM.Bll.Services;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
-using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
-using MakeYouPro.Bourse.CRM.Dal.IRepositories;
-using MakeYouPro.Bourse.CRM.Dal.Repositories;
-using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using NLog;
 using ILogger = NLog.ILogger;
@@ -28,12 +18,12 @@ builder.Services.AddSingleton<ILogger>(nlog);
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
     typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
 new InjectionSettings(builder);
-new InjectionRepositories(builder);
+new InjectionRepositoriesAndContext(builder);
 new InjectionServices(builder);
 new InjectionValidators(builder);
-builder.Services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
 
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
+
 
 
 builder.Services.AddControllers();
