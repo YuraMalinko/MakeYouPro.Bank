@@ -15,14 +15,19 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         private readonly IEncryptionProvider _provider;
 
+        public CRMContext()
+        {
+            _provider = new GenerateEncryptionProvider("encryptKey7/P+2-");
+        }
+
         public CRMContext(string encryptKey)
         {
-            this._provider = new GenerateEncryptionProvider(encryptKey);
+            _provider = new GenerateEncryptionProvider(encryptKey);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
+              builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,15 +39,6 @@ namespace MakeYouPro.Bourse.CRM.Dal
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var isDeletedProp = entityType.FindProperty("IsDeleted");
-                if (isDeletedProp != null)
-                {
-                    isDeletedProp.SetDefaultValue(false);
-                }
             }
 
             modelBuilder.Entity<LeadEntity>()
