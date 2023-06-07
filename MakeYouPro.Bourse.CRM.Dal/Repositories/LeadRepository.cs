@@ -36,6 +36,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                               (l.PassportNumber == lead.PassportNumber && l.Citizenship == lead.Citizenship)
                             || l.Email == lead.Email
                             || l.PhoneNumber == lead.PhoneNumber)
+                            .AsNoTracking()
                             .ToListAsync();
         }
 
@@ -153,6 +154,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             {
                 return await _context.Leads
                         .Include(l => l.Accounts)
+                        .AsNoTracking()
                         .SingleAsync(l => l.Id == leadId);
             }
         }
