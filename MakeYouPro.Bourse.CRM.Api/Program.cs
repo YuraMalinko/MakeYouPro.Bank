@@ -1,8 +1,9 @@
-using MakeYouPro.Bourse.CRM.Api.Injections;
+using MakeYouPro.Bourse.CRM.Api.Extentions;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Dal;
 using NLog;
 using ILogger = NLog.ILogger;
 using LogManager = NLog.LogManager;
@@ -17,10 +18,15 @@ builder.Services.AddSingleton<ILogger>(nlog);
 
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
     typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
-new InjectionSettings(builder);
-new InjectionRepositoriesAndContext(builder);
-new InjectionServices(builder);
-new InjectionValidators(builder);
+
+builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
+builder.Services.AddRepositories();
+
+builder.Services.AddServices();
+
+builder.Services.AddValidators();
+
+builder.Services.AddSettings();
 
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
 
