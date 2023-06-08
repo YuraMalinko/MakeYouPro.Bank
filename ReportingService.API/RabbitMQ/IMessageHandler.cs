@@ -2,6 +2,6 @@
 {
     public interface IMessageHandler
     {
-        void GetModelForRecordAsync(Object message);
+        void GetModelForRecordAsync(Object message, string routingKey);
     }
 }

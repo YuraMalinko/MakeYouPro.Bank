@@ -12,7 +12,7 @@ namespace ReportingService.Api.InternetRabbitMQ
         private readonly IConnection _connection;
         private IMessageHandler _messageHandler;
 
-        public ConsumerService(IRabbitMqService rabbitMqService, IMessageHandler messageHandler)
+        public ConsumerService(IRabbitMqServices rabbitMqService, IMessageHandler messageHandler)
         {
             _connection = rabbitMqService.CreateChannel();
             _model = _connection.CreateModel();
@@ -31,7 +31,7 @@ namespace ReportingService.Api.InternetRabbitMQ
                 var text = System.Text.Encoding.UTF8.GetString(body);
                 Console.WriteLine(text);
                 var message = JsonSerializer.Deserialize<LeadEntity>(text);
-                _messageHandler.GetModelForRecordAsync(message);
+                //_messageHandler.GetModelForRecordAsync(message);
                 await Task.CompletedTask;
                 _model.BasicAck(ea.DeliveryTag, false);
             };

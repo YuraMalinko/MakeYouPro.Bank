@@ -2,7 +2,7 @@
 
 namespace ReportingService.Api.InternetRabbitMQ
 {
-    public interface IRabbitMqService
+    public interface IRabbitMqServices
     {
         IConnection CreateChannel();
     }

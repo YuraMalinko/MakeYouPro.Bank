@@ -11,7 +11,12 @@
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _consumerService.ReadMessgaes();
+            do
+            {
+                await _consumerService.ReadMessgaes();
+                Thread.Sleep(1000);
+            }
+            while (!stoppingToken.IsCancellationRequested);
         }
     }
 }

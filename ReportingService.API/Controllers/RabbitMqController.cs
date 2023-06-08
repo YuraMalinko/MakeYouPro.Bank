@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ReportingService.Api.RabbitMQ;
+using ReportingService.Api.FinalRabbitMQ;
 
 namespace ReportingService.Api.Controllers
 {
@@ -7,9 +7,9 @@ namespace ReportingService.Api.Controllers
     [ApiController]
     public class RabbitMqController : ControllerBase
     {
-        private readonly IRabbitMqServicetest _mqService;
+        private readonly IRabbitMqService _mqService;
 
-        public RabbitMqController(IRabbitMqServicetest mqService)
+        public RabbitMqController(IRabbitMqService mqService)
         {
             _mqService = mqService;
         }
@@ -18,7 +18,7 @@ namespace ReportingService.Api.Controllers
         [HttpGet]
         public IActionResult SendMessage(string message)
         {
-            _mqService.SendMessage(message);
+            _mqService.SendMessageAsync(message);
 
             return Ok("Сообщение отправлено");
         }

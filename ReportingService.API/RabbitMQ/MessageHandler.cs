@@ -11,7 +11,23 @@ namespace ReportingService.Api.RabbitMQ
             _recordingServices = recordingServices;
         }
 
-        public async void GetModelForRecordAsync(Object message)
+        public async void GetModelForRecordAsync(Object message, string routingKey)
+        {
+            if (routingKey == "Create")
+            {
+                CreateNewRecordAsync(message);
+            }
+            else if (routingKey == "Update")
+            {
+                UpdateRecordAsync(message);
+            }
+            else
+            {
+                throw new ArgumentException("Unnknow record type");
+            }
+        }
+
+        private async void CreateNewRecordAsync(Object message)
         {
             if (message is LeadEntity lead)
             {
@@ -25,6 +41,22 @@ namespace ReportingService.Api.RabbitMQ
             {
                 throw new ArgumentException("Unnknow record type");
             }
+        }
+
+        private async void UpdateRecordAsync(Object message)
+        {
+            //if (message is LeadEntity lead)
+            //{
+            //    await _recordingServices.CreateLeadInDatabaseAsync(lead);
+            //}
+            //else if (message is AccountEntity account)
+            //{
+            //    await _recordingServices.CreateAccountInDatabaseAsync(account);
+            //}
+            //else
+            //{
+            //    throw new ArgumentException("Unnknow record type");
+            //}
         }
     }
 }

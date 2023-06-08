@@ -3,10 +3,10 @@ using RabbitMQ.Client;
 
 namespace ReportingService.Api.InternetRabbitMQ
 {    
-    public class RabbitMqService : IRabbitMqService
+    public class RabbitMqServices : IRabbitMqServices
     {
         private readonly RabbitMqConfiguration _configuration;
-        public RabbitMqService(IOptions<RabbitMqConfiguration> options)
+        public RabbitMqServices(IOptions<RabbitMqConfiguration> options)
         {
             _configuration = options.Value;
         }
