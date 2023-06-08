@@ -1,6 +1,6 @@
 using ReportingService.Api.FinalRabbitMQ;
+using ReportingService.Api.FinalRabbitMQ.MessageHandler;
 using ReportingService.Api.InternetRabbitMQ;
-using ReportingService.Api.RabbitMQ;
 using ReportingService.Bll;
 using ReportingService.Bll.IServices;
 using ReportingService.Bll.Services;

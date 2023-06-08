@@ -2,6 +2,6 @@
 {
     public interface IRabbitMqService
     {
-        Task SendMessageAsync(string message);
+        Task SendMessageAsync(string message,string routingKey);
     }
 }

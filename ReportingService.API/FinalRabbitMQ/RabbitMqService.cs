@@ -1,17 +1,11 @@
 ﻿using System.Text;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
 
 namespace ReportingService.Api.FinalRabbitMQ
 {
     public class RabbitMqService : IRabbitMqService
     {
-        public void SendMessage(string message)
-        {
-            SendMessageAsync(message);
-        }
-
-        public async Task SendMessageAsync(string message)
+        public async Task SendMessageAsync(string message, string routingKey)
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -22,10 +16,16 @@ namespace ReportingService.Api.FinalRabbitMQ
                     channel.ExchangeDeclare(exchange: "MakeYouPro", type: ExchangeType.Direct);
 
                     // Отправка задач в очередь
-
-                    var serializedMessage = JsonConvert.SerializeObject(message);
-                    var body = Encoding.UTF8.GetBytes(serializedMessage);
-                    channel.BasicPublish(exchange: "MakeYouPro", routingKey: "Create", basicProperties: null, body: body);
+                    if (routingKey == "Create")
+                    {
+                        var body = Encoding.UTF8.GetBytes(message);
+                        channel.BasicPublish(exchange: "MakeYouPro", routingKey: "Create", basicProperties: null, body: body);
+                    }
+                    else if (routingKey == "Update")
+                    {
+                        var body = Encoding.UTF8.GetBytes(message);
+                        channel.BasicPublish(exchange: "MakeYouPro", routingKey: "Update", basicProperties: null, body: body);
+                    }
                 }
             }
         }

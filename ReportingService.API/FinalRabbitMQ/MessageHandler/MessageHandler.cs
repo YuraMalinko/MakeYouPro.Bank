@@ -1,17 +1,35 @@
 ﻿using ReportingService.Dal.Models.CRM;
 using ReportingService.Bll.IServices;
+using ReportingService.Api.FinalRabbitMQ;
+using Newtonsoft.Json;
 
-namespace ReportingService.Api.RabbitMQ
+namespace ReportingService.Api.FinalRabbitMQ.MessageHandler
 {
     internal class MessageHandler : IMessageHandler
     {
         private readonly IRecordingServices _recordingServices;
-        public MessageHandler(IRecordingServices recordingServices) 
-        { 
+        private readonly IRabbitMqService _rabbitMqService;
+        private readonly string create = "Create";
+        private readonly string update = "Update";
+        public MessageHandler(IRecordingServices recordingServices, IRabbitMqService rabbitMqService)
+        {
             _recordingServices = recordingServices;
+            _rabbitMqService = rabbitMqService;
         }
 
-        public async void GetModelForRecordAsync(Object message, string routingKey)
+        public async Task SendMessageForCreateAsync(object message)
+        {
+            var text = JsonConvert.SerializeObject(message);
+            await _rabbitMqService.SendMessageAsync(text, create);
+        }
+
+        public async Task SendMessageForUpdateAsync(object message)
+        {
+            var text = JsonConvert.SerializeObject(message);
+            await _rabbitMqService.SendMessageAsync(text, update);
+        }
+
+        public async void GetModelForRecordAsync(object message, string routingKey)
         {
             if (routingKey == "Create")
             {
@@ -27,7 +45,7 @@ namespace ReportingService.Api.RabbitMQ
             }
         }
 
-        private async void CreateNewRecordAsync(Object message)
+        private async void CreateNewRecordAsync(object message)
         {
             if (message is LeadEntity lead)
             {
@@ -43,7 +61,7 @@ namespace ReportingService.Api.RabbitMQ
             }
         }
 
-        private async void UpdateRecordAsync(Object message)
+        private async void UpdateRecordAsync(object message)
         {
             //if (message is LeadEntity lead)
             //{

@@ -18,7 +18,7 @@ namespace ReportingService.Api.Controllers
         [HttpGet]
         public IActionResult SendMessage(string message)
         {
-            _mqService.SendMessageAsync(message);
+            //_mqService.SendMessageAsync(message);
 
             return Ok("Сообщение отправлено");
         }

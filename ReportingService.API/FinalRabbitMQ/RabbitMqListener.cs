@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using ReportingService.Api.RabbitMQ;
+using ReportingService.Api.FinalRabbitMQ.MessageHandler;
 
 namespace ReportingService.Api.FinalRabbitMQ
 {

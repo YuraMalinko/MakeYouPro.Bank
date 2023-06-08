@@ -1,8 +1,8 @@
 ﻿using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
-using ReportingService.Api.RabbitMQ;
 using System.Text.Json;
 using ReportingService.Dal.Models.CRM;
+using ReportingService.Api.FinalRabbitMQ.MessageHandler;
 
 namespace ReportingService.Api.InternetRabbitMQ
 {
