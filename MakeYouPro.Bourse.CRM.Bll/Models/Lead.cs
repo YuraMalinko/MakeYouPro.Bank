@@ -32,8 +32,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Models
 
         public string? Password { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public List<Account> Accounts { get; set; } = new List<Account>();
+
+        public override string ToString()
+        {
+            return $"ID:{Id} Name: {Name} {MiddleName} {Surname}";
+        }
     }
 }

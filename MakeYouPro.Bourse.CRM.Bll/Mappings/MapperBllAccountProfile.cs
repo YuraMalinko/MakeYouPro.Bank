@@ -9,7 +9,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Mappings
         public MapperBllAccountProfile()
         {
             CreateMap<Account, AccountEntity>().ReverseMap();
-            CreateMap<AccountFilter, AccountFilterEntity>().ReverseMap();
         }
     }
 }

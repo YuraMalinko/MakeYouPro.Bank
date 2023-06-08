@@ -41,7 +41,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
-            catch (AccountDataException ex)
+            catch (AccountArgumentException ex)
             {
                 var result = JsonSerializer.Serialize(new { Error = "AccountDataException Error:" + ex.Message });
                 context.Response.StatusCode = 412;

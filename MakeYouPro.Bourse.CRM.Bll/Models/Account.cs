@@ -20,6 +20,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Models
 
         public string? Comment { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public override string ToString()
+        {
+            return $"ID:{Id} Currency: {Currency} ";
+        }
+
     }
 }

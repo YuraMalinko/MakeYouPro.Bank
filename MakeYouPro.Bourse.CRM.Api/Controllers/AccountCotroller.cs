@@ -48,13 +48,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
                 string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Error, error.ErrorMessage);
+                    _logger.Log(LogLevel.Warn, error.ErrorMessage);
                     exMessage += $"{error.ErrorMessage} |   ";
                 }
-                throw new AccountDataException(exMessage);
+                throw new AccountArgumentException(exMessage);
             }
 
-            var createAccount = await _accountService.CreateAccountAsync(_mapper.Map<Account>(account));
+            var createAccount = await _accountService.CreateOrRestoreAccountAsync(_mapper.Map<Account>(account));
 
             return Created(new Uri("api/Account", UriKind.Relative), _mapper.Map<AccountResponse>(createAccount));
         }
@@ -69,7 +69,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (accountId <=0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else
@@ -90,7 +90,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else
@@ -141,8 +141,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         {
             if (account.Id <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else
@@ -160,8 +160,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         {
             if (accountId <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else
@@ -186,10 +186,10 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
                 string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Error, error.ErrorMessage);
+                    _logger.Log(LogLevel.Warn, error.ErrorMessage);
                     exMessage += $"{error.ErrorMessage} |   ";
                 }
-                throw new AccountDataException(exMessage);
+                throw new AccountArgumentException(exMessage);
             }
 
             var accounts = await _accountService.GetAccountsAsync(_mapper.Map<AccountFilter>(filter));

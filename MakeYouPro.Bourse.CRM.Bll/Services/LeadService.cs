@@ -78,7 +78,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 var defaultRubAccount = CreateDefaultRubAccount();
                 defaultRubAccount.LeadId = addLeadEntity.Id;
-                var addRubAccount = await _accountService.CreateAccountAsync(defaultRubAccount);
+                var addRubAccount = await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount);
 
                 var result = _mapper.Map<Lead>(addLeadEntity);
                 result.Accounts.Add(addRubAccount);
@@ -120,7 +120,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
-            if (!leadDb.IsDeleted)
+            if (leadDb.Status!=LeadStatusEnum.Deleted)
             {
                 _logger.Log(LogLevel.Debug, $"{nameof(LeadService)} {nameof(LeadEntity)} {nameof(RecoverOrThrowAsync)}, one of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
                 throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
@@ -161,7 +161,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             var result = _mapper.Map<Lead>(leadUpdateEntity);
             var defaultRubAccount = CreateDefaultRubAccount();
             defaultRubAccount.LeadId = result.Id;
-            await _accountService.CreateAccountAsync(defaultRubAccount);
+            await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount);
 
             return result;
         }
