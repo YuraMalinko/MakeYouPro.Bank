@@ -39,6 +39,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> CreateAccountAsync([FromQuery] AccountCreateRequest account)
         {
             var validateAccount = await _validatorCreate.ValidateAsync(account);
@@ -64,6 +65,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<bool>> DeletedAccountAsync(int accountId)
         {
             if (accountId <=0)
@@ -85,6 +87,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> ReactivationAccount(int accountId)
         {
             if (accountId <= 0)
@@ -111,12 +114,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> DeactivationAccount(int accountId)
         {
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else
@@ -137,6 +141,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> UpdateAccount([FromQuery] AccountUpdateRequest account)
         {
             if (account.Id <= 0)
@@ -177,7 +182,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
-        public async Task<ActionResult<List<AccountResponse>>> GetAccounts([FromQuery] AccountFilterRequest filter)
+        public async Task<ActionResult<List<AccountResponse>>> GetAccounts([FromQuery] AccountFilterRequest? filter)
         {
             var validateAccount = await _validatorFilter.ValidateAsync(filter);
 

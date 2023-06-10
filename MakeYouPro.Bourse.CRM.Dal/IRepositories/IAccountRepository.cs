@@ -12,6 +12,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task<AccountEntity> GetAccountAsync(int accountId);
 
-        Task<List<AccountEntity>> GetAccountsAsync();
+        Task<List<AccountEntity>> GetAnyAccountsAsync(AccountFilterEntity account);
     }
 }

@@ -57,6 +57,14 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (AccountUnknownException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "AccountUnknownException Error:" + ex.Message });
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
         }
     }
 }

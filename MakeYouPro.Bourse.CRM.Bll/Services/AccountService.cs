@@ -54,7 +54,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     ($"{nameof(Lead)} {lead} unsuitable status - {lead.Status}," +
                     $"for creating an account with a currency {account.Currency}." +
                     $"Need a status {LeadStatusEnum.Active}.");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
 
@@ -66,7 +66,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     ($"{nameof(Lead)} {lead} unsuitable role - {lead.Role}," +
                     $"for creating an account with a currency {account.Currency}." +
                     $"Need a Role - {LeadRoleEnum.StandardLead}.");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
             else if (!await CheckRightsCreateVipAccount(lead, account.Currency))
@@ -75,7 +75,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     ($"{nameof(Lead)} {lead} unsuitable role - {lead.Role}," +
                     $"for creating an account with a currency {account.Currency}." +
                     $"Need a Role - {LeadRoleEnum.StandardLead}.");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
 
@@ -85,7 +85,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             if (!await CheckAccountDublication(lead, account))
             {
                 var ex = new AlreadyExistException($"{nameof(LeadEntity)} {lead} already has an active account with currency {account.Currency}");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Log(LogLevel.Warn, ex.Message);
                 throw ex;
             }
 
@@ -104,7 +104,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else
                 {
-                    _logger.Log(LogLevel.Warn, $"For some reason, the account {deletedAccount} belonging to lead {lead} Yura was not restored");
+                    
+                    _logger.Log(LogLevel.Error, $"For some reason, the account {deletedAccount} belonging to lead {lead} Yura was not restored");
                 }
 
                 _logger.Log(LogLevel.Debug, $"The process of executing the request is completed");
@@ -121,7 +122,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                _logger.Log(LogLevel.Warn, $"For some reason, an account {account} for lead {lead} was not created");
+                var ex = new AccountArgumentException($"For some reason, an account {account} for lead {lead} was not created");
+                _logger.Log(LogLevel.Warn, ex.Message);
+                throw ex;
             }
 
             _logger.Log(LogLevel.Debug, $"The process of executing the request is completed");
@@ -192,7 +195,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                _logger.Log(LogLevel.Warn, $"{nameof(account)} {account} for some reason it was not deleted.");
+                var ex = new AccountUnknownException($"{nameof(account)} {account} for some reason it was not deleted.");
+                _logger.Log(LogLevel.Warn, ex.Message);
+                throw ex;
             }
 
             _logger.Log(LogLevel.Debug, $"The process of executing the request is completed.");
@@ -237,7 +242,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                _logger.Log(LogLevel.Warn, $"For some reason, the account status change {account} failed.");
+                var ex = new AccountUnknownException($"For some reason, the account status change {account} failed.");
+                _logger.Log(LogLevel.Error, ex.Message);
+                throw ex;
             }
 
             var changeAccount = _mapper.Map<Account>(changeAccountEntiry);
@@ -278,7 +285,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                _logger.Log(LogLevel.Warn, $"For some reason, the account update {account} failed.");
+                var ex = new AccountUnknownException($"For some reason, the account update {account} failed.");
+                _logger.Log(LogLevel.Error, ex);
+                throw ex;
             }
 
             var chandeAccount = _mapper.Map<Account>(changeAccountEntity);
@@ -304,10 +313,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             return _mapper.Map<Account>(account);
         }
 
-        public async Task<List<Account>> GetAccountsAsync(AccountFilter filter)
+        public async Task<List<Account>> GetAccountsAsync(AccountFilter? filter)
         {
             _logger.Log(LogLevel.Debug, $"Request execution process started.");
-            var accountsEntity = await _accountRepository.GetAccountsAsync();
+            var accountsEntity = await _accountRepository.GetAnyAccountsAsync(_mapper.Map<AccountFilterEntity>(filter));
+
             if (accountsEntity is not null)
             {
                 _logger.Log(LogLevel.Debug, "The entire list of accounts has been unloaded from the database");
@@ -327,15 +337,25 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 _logger.Log(LogLevel.Debug, "The balance is recorded for all accounts");
             }
 
-            if (filter is not null)
+            if (filter is not null && (filter.FromBalace != null || filter.ToBalace != null))
             {
-                accounts.RemoveAll(a => a.DateCreate <= filter.FromDateCreate && filter.FromDateCreate != null);
-                accounts.RemoveAll(a => a.DateCreate.Date >= filter.ToDateCreate && filter.ToDateCreate != null);
-                accounts.RemoveAll(a => a.Balance <= filter.FromBalace && filter.FromBalace != null);
-                accounts.RemoveAll(a => a.Balance >= filter.ToBalace && filter.ToBalace != null);
-                accounts.RemoveAll(a => !filter.LeadsId!.Contains(a.LeadId) && filter.LeadsId.Count != 0);
-                accounts.RemoveAll(a => !filter.Currencies!.Contains(a.Currency) && filter.Currencies.Count != 0);
-                accounts.RemoveAll(a => filter.Statuses!.Count != 0 && !filter.Statuses.Contains(a.Status));
+                foreach (var a in accounts)
+                {
+                    //здесь запросы баланса для всех аккаунтов
+                }
+
+                _logger.Log(LogLevel.Debug, "The balance is recorded for all accounts");
+
+                if (filter.FromBalace != null)
+                {
+                    accounts.RemoveAll(a => a.Balance <= filter.FromBalace);
+                }
+
+                if (filter.ToBalace != null)
+                {
+                    accounts.RemoveAll(a => a.Balance >= filter.ToBalace);
+                }
+
                 _logger.Log(LogLevel.Debug, "Filter selection is performed");
             }
 
