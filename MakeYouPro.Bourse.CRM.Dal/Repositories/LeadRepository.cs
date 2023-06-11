@@ -46,7 +46,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -64,7 +64,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -82,7 +82,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
                 throw new NotFoundException(leadUpdate.Id, nameof(LeadEntity));
             }
             else
@@ -110,7 +110,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -129,7 +129,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -147,7 +147,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDB == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -165,7 +165,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
