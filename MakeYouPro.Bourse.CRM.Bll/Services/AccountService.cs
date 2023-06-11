@@ -153,7 +153,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<bool> DeleteAccountAsync(int accountId)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(accountId));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(accountId));
 
             if (account == null)
             {
@@ -208,7 +208,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Account> ChangeAccountStatusAsync(Account updateAccount)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
@@ -257,7 +257,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Account> UpdateAccountAsync(Account updateAccount)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
@@ -299,7 +299,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Account> GetAccountAsync(int accountId)
         {
-            var account = await _accountRepository.GetAccountAsync(accountId);
+            var account = await _accountRepository.GetAnyAccountAsync(accountId);
 
             if (account == null)
             {

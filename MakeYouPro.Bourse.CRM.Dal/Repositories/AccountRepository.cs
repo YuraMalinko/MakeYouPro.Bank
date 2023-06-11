@@ -57,7 +57,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             return account!;
         }
 
-        public async Task<AccountEntity> GetAccountAsync(int accountId)
+        public async Task<AccountEntity> GetAnyAccountAsync(int accountId)
         {
             var result = await _context.Accounts
                 .Include(a => a.Lead)
