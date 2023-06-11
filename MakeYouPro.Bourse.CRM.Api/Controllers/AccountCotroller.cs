@@ -8,9 +8,9 @@ using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Models.Account.Response;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics;
 using System.Net;
 using ILogger = NLog.ILogger;
-using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {
@@ -49,7 +49,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
                 string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Warn, error.ErrorMessage);
+                    _logger.Warn(error.ErrorMessage);
                     exMessage += $"{error.ErrorMessage} |   ";
                 }
                 throw new AccountArgumentException(exMessage);
@@ -68,10 +68,10 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<bool>> DeletedAccountAsync(int accountId)
         {
-            if (accountId <=0)
+            if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Warn, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -93,7 +93,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Warn, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -120,7 +120,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Warn, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -147,7 +147,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (account.Id <= 0)
             {
                 var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Warn, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -166,7 +166,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             if (accountId <= 0)
             {
                 var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Warn, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -191,7 +191,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
                 string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Warn, error.ErrorMessage);
+                    _logger.Warn(error.ErrorMessage);
                     exMessage += $"{error.ErrorMessage} |   ";
                 }
                 throw new AccountArgumentException(exMessage);

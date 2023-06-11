@@ -3,7 +3,6 @@ using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using ILogger = NLog.ILogger;
-using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
@@ -75,31 +74,31 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             if (filter!.FromDateCreate is not null)
             {
                 accounts = accounts.Where(a => a.DateCreate >= filter.FromDateCreate);
-                _logger.Log(LogLevel.Debug, $"The data is sorted by filter - FromDateCreate.");
+                _logger.Debug( $"The data is sorted by filter - FromDateCreate.");
             }
 
             if (filter.ToDateCreate is not null)
             {
                 accounts = accounts.Where(a => a.DateCreate.Date <= filter.ToDateCreate);
-                _logger.Log(LogLevel.Debug, $"The data is sorted by filter - ToDateCreate.");
+                _logger.Debug( $"The data is sorted by filter - ToDateCreate.");
             }
 
             if (filter.LeadsId!.Any())
             {
                 accounts = accounts.Where(a => filter.LeadsId!.Contains(a.LeadId));
-                _logger.Log(LogLevel.Debug, $"The data is sorted by filter - LeadsId.");
+                _logger.Debug($"The data is sorted by filter - LeadsId.");
             }
 
             if (filter.Currencies!.Any())
             {
                 accounts = accounts.Where(a => filter.Currencies!.Contains(a.Currency));
-                _logger.Log(LogLevel.Debug, $"The data is sorted by filter - Currencies.");
+                _logger.Debug( $"The data is sorted by filter - Currencies.");
             }
 
             if (filter.Statuses!.Any())
             {
                 accounts = accounts.Where(a => filter.Statuses!.Contains(a.Status));
-                _logger.Log(LogLevel.Debug, $"The data is sorted by filter - Statuses.");
+                _logger.Debug( $"The data is sorted by filter - Statuses.");
             }
 
             var result = await accounts.Include(a => a.Lead)
