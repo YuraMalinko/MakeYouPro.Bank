@@ -8,7 +8,6 @@ using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Models.Account.Response;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Diagnostics;
 using System.Net;
 using ILogger = NLog.ILogger;
 
@@ -46,13 +45,12 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
             if (!validateAccount.IsValid)
             {
-                string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
                     _logger.Warn(error.ErrorMessage);
-                    exMessage += $"{error.ErrorMessage} |   ";
                 }
-                throw new AccountArgumentException(exMessage);
+
+                throw new AccountArgumentException(string.Join($" | ", validateAccount.Errors));
             }
 
             var createAccount = await _accountService.CreateOrRestoreAccountAsync(_mapper.Map<Account>(account));
@@ -188,13 +186,12 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
             if (!validateAccount.IsValid)
             {
-                string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
                     _logger.Warn(error.ErrorMessage);
-                    exMessage += $"{error.ErrorMessage} |   ";
                 }
-                throw new AccountArgumentException(exMessage);
+
+                throw new AccountArgumentException(string.Join($" | ", validateAccount.Errors));
             }
 
             var accounts = await _accountService.GetAccountsAsync(_mapper.Map<AccountFilter>(filter));
