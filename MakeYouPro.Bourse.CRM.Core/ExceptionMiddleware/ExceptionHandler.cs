@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
@@ -19,16 +19,40 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AlreadyExistException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error " });
                 context.Response.StatusCode = 409;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);
             }
-            catch (ArgumentNullException ex)
+            catch (NotFoundException ex)
             {
-                var result = JsonSerializer.Serialize(new { Error = "ArgumentNullException Error:" + ex.Message });
+                var result = JsonSerializer.Serialize(new { Error = "NotFoundException Error: " + ex.EntityName });
+                context.Response.StatusCode = 404;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (ArgumentException)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error " });
                 context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (AccountDataException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "AccountDataException Error:" + ex.Message });
+                context.Response.StatusCode = 412;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (FileNotFoundException ex)
+            {
+                var result = JsonSerializer.Serialize(new { Error = "FileNotFoundException Error:" + ex.Message });
+                context.Response.StatusCode = 404;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);

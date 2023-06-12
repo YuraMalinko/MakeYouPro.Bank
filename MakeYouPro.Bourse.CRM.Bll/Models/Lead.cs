@@ -1,6 +1,6 @@
-﻿using MakeYouPro.Bource.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 
-namespace MakeYouPro.Bank.CRM.Bll.Models
+namespace MakeYouPro.Bourse.CRM.Bll.Models
 {
     public class Lead
     {
@@ -29,6 +29,8 @@ namespace MakeYouPro.Bank.CRM.Bll.Models
         public string Registration { get; set; }
 
         public string? Comment { get; set; }
+
+        public string? Password { get; set; }
 
         public List<Account> Accounts { get; set; } = new List<Account>();
     }

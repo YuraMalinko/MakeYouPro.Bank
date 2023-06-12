@@ -1,4 +1,4 @@
-﻿namespace MakeYouPro.Bource.CRM.Core.Enums
+﻿namespace MakeYouPro.Bourse.CRM.Core.Enums
 {
     public enum LeadStatusEnum
     {

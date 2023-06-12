@@ -1,4 +1,4 @@
-﻿namespace MakeYouPro.Bank.CRM.Models.Lead.Request
+﻿namespace MakeYouPro.Bourse.CRM.Models.Lead.Request
 {
     public class LeadRequestBase
     {

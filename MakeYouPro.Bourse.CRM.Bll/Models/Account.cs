@@ -1,17 +1,14 @@
-﻿using MakeYouPro.Bource.CRM.Dal.Models;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 
-namespace MakeYouPro.Bank.CRM.Bll.Models
+namespace MakeYouPro.Bourse.CRM.Bll.Models
 {
     public class Account
     {
         public int Id { get; set; }
-        
-        public Lead Lead { get; set; }
 
         public int LeadId { get; set; }
+
+        public Lead Lead { get; set; }
 
         public DateTime DateCreate { get; set; }
 

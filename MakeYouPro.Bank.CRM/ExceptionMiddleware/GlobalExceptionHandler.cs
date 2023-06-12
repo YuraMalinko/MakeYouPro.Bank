@@ -5,8 +5,8 @@ namespace MakeYouPro.Bank.CRM.ExceptionMiddleware
     public class GlobalExceptionHandler
     {
         private RequestDelegate _next;
-        public GlobalExceptionHandler(RequestDelegate next) 
-        { 
+        public GlobalExceptionHandler(RequestDelegate next)
+        {
             _next = next;
         }
 

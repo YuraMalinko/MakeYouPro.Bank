@@ -1,6 +1,6 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 
-namespace MakeYouPro.Bank.CRM.Models.Account.Request
+namespace MakeYouPro.Bourse.CRM.Models.Account.Request
 {
     public class AccountRequest
     {
