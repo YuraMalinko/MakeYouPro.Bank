@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MakeYouPro.Bourse.Rates.Dal.Models;
+using Microsoft.Data.SqlClient;
 
 
 namespace MakeYouPro.Bourse.Rates.Dal
