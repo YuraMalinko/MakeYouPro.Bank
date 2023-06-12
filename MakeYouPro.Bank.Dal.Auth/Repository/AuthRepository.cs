@@ -23,7 +23,6 @@ namespace MakeYouPro.Bank.Dal.Auth.Repository
         public async Task<bool> CheckEmailAsync(string email)
         {
             return _context.Users
-                    .ToList()
                     .Any(u => u.Email == email);
         }
 

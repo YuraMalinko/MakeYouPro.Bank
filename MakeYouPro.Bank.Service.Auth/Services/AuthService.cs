@@ -63,8 +63,6 @@ namespace MakeYouPro.Bank.Service.Auth.Services
 
                 if (BCrypt.Net.BCrypt.Verify(userDal.Password, callback.Password))
                 {
-                    //var result = _mapper.Map<User>(callback);
-                    //return result;
                     var token = CreateToken(user);
                     return token;
                 }
