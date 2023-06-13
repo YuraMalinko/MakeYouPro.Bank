@@ -1,16 +1,20 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        private CRMContext _context;
+        private readonly CRMContext _context;
+        private readonly ILogger _logger;
 
-        public AccountRepository(CRMContext context)
+        public AccountRepository(CRMContext context, ILogger logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<AccountEntity> CreateAccountAsync(AccountEntity account)
@@ -19,32 +23,15 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             await _context.SaveChangesAsync();
 
             return (await _context.Accounts
+                .AsNoTracking()
                 .SingleOrDefaultAsync(a => a.Id == account.Id))!;
-        }
-
-        public async Task<bool> DeleteAccountAsync(int accountId)
-        {
-            bool result = false;
-
-            var account = await _context.Accounts
-                .SingleOrDefaultAsync(a => a.Id == accountId && a.IsDeleted == false);
-
-            if (account is not null)
-            {
-                account.IsDeleted = true;
-                await _context.SaveChangesAsync();
-                result = true;
-            }
-
-            return result;
         }
 
         public async Task<AccountEntity> ChangeAccountStatusAsync(AccountEntity accountUpdate)
         {
             var account = await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == accountUpdate.Id
-                && a.Status != accountUpdate.Status
-                && a.IsDeleted == false);
+                && a.Status != accountUpdate.Status);
 
             if (account is not null)
             {
@@ -59,7 +46,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         {
             var account = await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == accountUpdate.Id
-                && a.IsDeleted == false);
+                && a.Status != AccountStatusEnum.Deleted);
 
             if (account is not null)
             {
@@ -72,32 +59,53 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
         public async Task<AccountEntity> GetAnyAccountAsync(int accountId)
         {
-            var result = (await _context.Accounts
+            var result = await _context.Accounts
                 .Include(a => a.Lead)
-                .SingleOrDefaultAsync(a => a.Id == accountId))!;
-            return result;
+                .AsNoTracking()
+                .SingleOrDefaultAsync(a => a.Id == accountId);
+
+            return result!;
         }
 
-
-        public async Task<List<AccountEntity>> GetAccountsAsync(AccountFilterEntity? filter)
+        public async Task<List<AccountEntity>> GetAnyAccountsAsync(AccountFilterEntity? filter)
         {
-            var accounts = await _context.Accounts
-                .Include(a => a.Lead)
-                .ToListAsync();
+            IQueryable<AccountEntity> accounts = _context.Accounts;
 
-            if (filter is not null)
+            if (filter!.FromDateCreate is not null)
             {
-                accounts.RemoveAll(a => a.DateCreate < filter.FromDateCreate && filter.FromDateCreate != null);
-                accounts.RemoveAll(a => a.DateCreate.Date > filter.ToDateCreate && filter.ToDateCreate != null);
-                accounts.RemoveAll(a => a.Balance < filter.FromBalace && filter.FromBalace != null);
-                accounts.RemoveAll(a => a.Balance > filter.ToBalace && filter.ToBalace != null);
-                accounts.RemoveAll(a => a.IsDeleted == filter.AccountIsDeleted && filter.AccountIsDeleted != null);
-                accounts.RemoveAll(a => !filter.LeadsId.Contains(a.LeadId) && filter.LeadsId.Count != 0);
-                accounts.RemoveAll(a => !filter.Currencies.Contains(a.Currency) && filter.Currencies.Count != 0);
-                accounts.RemoveAll(a => filter.Statuses.Count != 0 && !filter.Statuses.Contains(a.Status));
+                accounts = accounts.Where(a => a.DateCreate >= filter.FromDateCreate);
+                _logger.Debug( $"The data is sorted by filter - FromDateCreate.");
             }
 
-            return accounts;
+            if (filter.ToDateCreate is not null)
+            {
+                accounts = accounts.Where(a => a.DateCreate.Date <= filter.ToDateCreate);
+                _logger.Debug( $"The data is sorted by filter - ToDateCreate.");
+            }
+
+            if (filter.LeadsId!.Any())
+            {
+                accounts = accounts.Where(a => filter.LeadsId!.Contains(a.LeadId));
+                _logger.Debug($"The data is sorted by filter - LeadsId.");
+            }
+
+            if (filter.Currencies!.Any())
+            {
+                accounts = accounts.Where(a => filter.Currencies!.Contains(a.Currency));
+                _logger.Debug( $"The data is sorted by filter - Currencies.");
+            }
+
+            if (filter.Statuses!.Any())
+            {
+                accounts = accounts.Where(a => filter.Statuses!.Contains(a.Status));
+                _logger.Debug( $"The data is sorted by filter - Statuses.");
+            }
+
+            var result = await accounts.Include(a => a.Lead)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return result;
         }
     }
 }

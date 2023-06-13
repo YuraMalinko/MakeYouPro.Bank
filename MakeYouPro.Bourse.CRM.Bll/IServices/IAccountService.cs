@@ -4,11 +4,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
     public interface IAccountService
     {
-        Task<Account> ChangeAccountStatusAsync(Account account);
-        Task<Account> CreateAccountAsync(Account account);
+        Task<Account> CreateOrRestoreAccountAsync(Account account);
         Task<bool> DeleteAccountAsync(int accountId);
+        Task<Account> ChangeAccountStatusAsync(Account account);
+        Task<Account> UpdateAccountAsync(Account account);
         Task<Account> GetAccountAsync(int accountId);
         Task<List<Account>> GetAccountsAsync(AccountFilter filter);
-        Task<Account> UpdateAccountAsync(Account account);
     }
 }

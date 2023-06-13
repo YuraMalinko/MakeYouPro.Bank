@@ -12,8 +12,10 @@ namespace MakeYouPro.Bourse.CRM.Api.Validations
         {
             _currencySetting = currencySetting;
 
-            RuleFor(a => a.FromDateCreate).LessThanOrEqualTo(a => a.ToDateCreate).When(a => a.ToDateCreate != null).WithMessage("The beginning of the interval is greater than the end");
-            RuleFor(a => a.FromBalace).LessThanOrEqualTo(a => a.ToBalace).When(a => a.ToDateCreate != null).WithMessage("The beginning of the interval is greater than the end")
+            RuleFor(a => a.FromDateCreate).LessThanOrEqualTo(a => a.ToDateCreate).When(a => a.ToDateCreate != null)
+                .WithMessage("The beginning of the interval is greater than the end");
+            RuleFor(a => a.FromBalace).LessThanOrEqualTo(a => a.ToBalace).When(a => a.ToDateCreate != null)
+                .WithMessage("The beginning of the interval is greater than the end")
                 .GreaterThanOrEqualTo(0).When(a => a.FromBalace != null).WithMessage("Less than zero");
             RuleFor(a => a.ToBalace).GreaterThanOrEqualTo(0).When(a => a.FromBalace != null);
             RuleForEach(a => a.Currencies).Must(a => _currencySetting.CurrencyVip.Contains(a) || _currencySetting.CurrencyStandart.Contains(a))

@@ -3,6 +3,7 @@
     public enum LeadStatusEnum
     {
         Active,
-        Deactive
+        Deactive,
+        Deleted
     }
 }

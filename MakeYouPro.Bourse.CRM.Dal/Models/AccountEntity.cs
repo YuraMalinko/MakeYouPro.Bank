@@ -25,16 +25,9 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public string Currency { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(38,4)")]
-        public decimal Balance { get; set; }
-
-        [Required]
         public AccountStatusEnum Status { get; set; }
 
         [Column(TypeName = "nvarchar(1000)")]
         public string? Comment { get; set; }
-
-        [Required]
-        public bool IsDeleted { get; set; }
     }
 }

@@ -113,7 +113,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                leadDb.IsDeleted = false;
+                //leadDb.IsDeleted = false;
                 await _context.SaveChangesAsync();
 
                 return leadDb;

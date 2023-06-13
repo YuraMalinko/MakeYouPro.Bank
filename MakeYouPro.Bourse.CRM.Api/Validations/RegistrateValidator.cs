@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
-using System.Text.RegularExpressions;
 
 namespace MakeYouPro.Bourse.CRM.Api.Validations
 {
     public class RegistrateValidator : AbstractValidator<CreateLeadRequest>
     {
-        public RegistrateValidator() 
+        public RegistrateValidator()
         {
             RuleFor(lead => lead.Email.Trim())
                 .NotEmpty().WithMessage("Email address is required")

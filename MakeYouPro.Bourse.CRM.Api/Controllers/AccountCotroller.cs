@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using ILogger = NLog.ILogger;
-using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {
@@ -39,22 +38,22 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> CreateAccountAsync([FromQuery] AccountCreateRequest account)
         {
             var validateAccount = await _validatorCreate.ValidateAsync(account);
 
             if (!validateAccount.IsValid)
             {
-                string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Error, error.ErrorMessage);
-                    exMessage += $"{error.ErrorMessage} |   ";
+                    _logger.Warn(error.ErrorMessage);
                 }
-                throw new AccountDataException(exMessage);
+
+                throw new AccountArgumentException(string.Join($" | ", validateAccount.Errors));
             }
 
-            var createAccount = await _accountService.CreateAccountAsync(_mapper.Map<Account>(account));
+            var createAccount = await _accountService.CreateOrRestoreAccountAsync(_mapper.Map<Account>(account));
 
             return Created(new Uri("api/Account", UriKind.Relative), _mapper.Map<AccountResponse>(createAccount));
         }
@@ -64,12 +63,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<bool>> DeletedAccountAsync(int accountId)
         {
-            if (accountId <=0)
+            if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -85,12 +85,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> ReactivationAccount(int accountId)
         {
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -111,12 +112,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> DeactivationAccount(int accountId)
         {
             if (accountId <= 0)
             {
                 var ex = new ArgumentException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -137,12 +139,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError)]
         public async Task<ActionResult<AccountResponse>> UpdateAccount([FromQuery] AccountUpdateRequest account)
         {
             if (account.Id <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -160,8 +163,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         {
             if (accountId <= 0)
             {
-                var ex = new AccountDataException("The account ID cannot be equal to or less than zero");
-                _logger.Log(LogLevel.Error, ex.Message);
+                var ex = new AccountArgumentException("The account ID cannot be equal to or less than zero");
+                _logger.Warn(ex.Message);
                 throw ex;
             }
             else
@@ -177,19 +180,18 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
-        public async Task<ActionResult<List<AccountResponse>>> GetAccounts([FromQuery] AccountFilterRequest filter)
+        public async Task<ActionResult<List<AccountResponse>>> GetAccounts([FromQuery] AccountFilterRequest? filter)
         {
             var validateAccount = await _validatorFilter.ValidateAsync(filter);
 
             if (!validateAccount.IsValid)
             {
-                string exMessage = "";
                 foreach (var error in validateAccount.Errors)
                 {
-                    _logger.Log(LogLevel.Error, error.ErrorMessage);
-                    exMessage += $"{error.ErrorMessage} |   ";
+                    _logger.Warn(error.ErrorMessage);
                 }
-                throw new AccountDataException(exMessage);
+
+                throw new AccountArgumentException(string.Join($" | ", validateAccount.Errors));
             }
 
             var accounts = await _accountService.GetAccountsAsync(_mapper.Map<AccountFilter>(filter));
