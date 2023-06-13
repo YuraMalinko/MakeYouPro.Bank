@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
@@ -12,6 +12,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task<AccountEntity> GetAnyAccountAsync(int accountId);
 
-        Task<List<AccountEntity>> GetAnyAccountsAsync(AccountFilterEntity account);
+        Task<List<AccountEntity>> GetAccountsAsync(AccountFilterEntity? filter);
+
+        Task DeleteAccountsByLeadIdAsync(int leadId);
     }
 }

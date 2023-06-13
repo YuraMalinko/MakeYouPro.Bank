@@ -1,3 +1,4 @@
+using EntityFrameworkCore.EncryptColumn.Attribute;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -48,11 +49,11 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public string Citizenship { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(50)")]
+        [EncryptColumn]
         public string PassportNumber { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(300)")]
+        [EncryptColumn]
         public string Registration { get; set; }
 
         [Column(TypeName = "nvarchar(1000)")]

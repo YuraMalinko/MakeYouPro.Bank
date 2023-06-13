@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
@@ -415,6 +415,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
 
             return result;
+        }
+
+        public async Task DeleteAccountByLeadIdAsync(int leadId)
+        {
+            await _accountRepository.DeleteAccountsByLeadIdAsync(leadId);
         }
     }
 }

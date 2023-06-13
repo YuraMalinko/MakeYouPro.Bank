@@ -1,13 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
-using MakeYouPro.Bourse.CRM.Bll.IServices;
-using ILogger = NLog.ILogger;
 using AutoMapper;
-using System.Net;
-using Swashbuckle.AspNetCore.Annotations;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Bll.Models;
 using FluentValidation;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
+using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Models.Lead.Response;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
+using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {
@@ -17,15 +20,18 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
     {
         private readonly ILeadService _leadService;
 
+        private readonly IAuthServiceClient _authServiceClient;
+
         private readonly IMapper _mapper;
 
         private readonly IValidator<CreateLeadRequest> _validator;
 
         private readonly ILogger _logger;
 
-        public LeadController(ILeadService leadService, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
+        public LeadController(ILeadService leadService, IAuthServiceClient authServiceClient, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
         {
             _leadService = leadService;
+            _authServiceClient = authServiceClient;
             _mapper = mapper;
             _validator = validator;
             _logger = nLogger;
@@ -52,5 +58,65 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Created(new Uri("api/Lead", UriKind.Relative), result);
         }
 
+        [HttpGet(Name = "GetLeadByIdAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseInfo>> GetLeadById(int leadId)
+        {
+            var lead = await _leadService.GetLeadById(leadId);
+            var result = _mapper.Map<LeadResponseInfo>(lead);
+
+            return Ok(result);
+        }
+
+        [HttpDelete(Name = "DeleteLeadByIdAsync")]
+        [SwaggerResponse((int)HttpStatusCode.NoContent)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> DeleteLeadByIdAsync(int leadId)
+        {
+            await _leadService.DeleteLeadByIdAsync(leadId);
+
+            return NoContent();
+        }
+
+        [HttpPut("usingLead", Name = "UpdateLeadUsingLead")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingLeadAsync(UpdateLeadUsingLeadRequest updateRequestLead)
+        {
+            var lead = _mapper.Map<Lead>(updateRequestLead);
+            var updateLead = await _leadService.UpdateLeadUsingLeadAsync(lead);
+            var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
+
+        [HttpPut("usingManager", Name = "UpdateLeadUsingManager")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingManagerAsync(UpdateLeadUsingManagerRequest updateRequestLead, int managerId)
+        {
+            var lead = _mapper.Map<Lead>(updateRequestLead);
+            var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
+            var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
+
+        [HttpPatch("leadRole", Name = "UpdateLeadRoleAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            var lead = await _leadService.UpdateLeadRoleAsync(leadRole, leadId);
+            var result = _mapper.Map<LeadResponseBase>(lead);
+
+            return Ok(result);
+        }
     }
 }

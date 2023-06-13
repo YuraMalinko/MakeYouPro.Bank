@@ -22,7 +22,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
         public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)
         {
             await _context.Leads.AddAsync(lead);
-            //lead.DateCreate = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
             return await _context.Leads
@@ -37,16 +36,17 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                               (l.PassportNumber == lead.PassportNumber && l.Citizenship == lead.Citizenship)
                             || l.Email == lead.Email
                             || l.PhoneNumber == lead.PhoneNumber)
+                            .AsNoTracking()
                             .ToListAsync();
         }
 
-        public async Task<LeadEntity> UpdateLeadStatus(LeadStatusEnum leadStatus, int leadId)
+        public async Task<LeadEntity> UpdateLeadStatusAsync(LeadStatusEnum leadStatus, int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -58,13 +58,31 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> UpdateLead(LeadEntity leadUpdate)
+        public async Task<LeadEntity> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Role = leadRole;
+                await _context.SaveChangesAsync();
+
+                return leadDb;
+            }
+        }
+
+        public async Task<LeadEntity> UpdateLeadAsync(LeadEntity leadUpdate)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadUpdate.Id);
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
                 throw new NotFoundException(leadUpdate.Id, nameof(LeadEntity));
             }
             else
@@ -78,19 +96,21 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 leadDb.PassportNumber = leadUpdate.PassportNumber;
                 leadDb.Registration = leadUpdate.Registration;
                 leadDb.Comment = leadUpdate.Comment;
+                leadDb.Role = leadUpdate.Role;
+                leadDb.Status = leadUpdate.Status;
                 await _context.SaveChangesAsync();
 
                 return leadDb;
             }
         }
 
-        public async Task<LeadEntity> UpdateLeadPhoneNumber(string phoneNumber, int leadId)
+        public async Task<LeadEntity> UpdateLeadPhoneNumberAsync(string phoneNumber, int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -102,64 +122,57 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> ChangeIsDeletedLeadFromTrueToFalse(int leadId)
+        public async Task<LeadEntity> RestoringDeletedStatusAsync(int leadId)
+
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Debug, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
             {
-                //leadDb.IsDeleted = false;
+                leadDb.Status = LeadStatusEnum.Active;
                 await _context.SaveChangesAsync();
 
                 return leadDb;
             }
         }
 
-
-        //public async Task<List<LeadEntity>> GetLeadsByEmail(string email)
-        //{
-        //    string emailWithoutWhitespace = email.Replace(" ", String.Empty);
-
-        //    return await _context.Leads
-        //                .Where(l =>l.Email.Replace(" ", String.Empty) == emailWithoutWhitespace)
-        //                .ToListAsync();
-        //}
-
-        //public async Task<List<LeadEntity>> GetLeadsByPhoneNumber(string phoneNumber)
-        //{
-        //    string phoneNumbertWithoutWhitespace = phoneNumber
-        //                                                .Replace(" ", String.Empty)
-        //                                                .Replace("-", String.Empty)
-        //                                                .Replace("+", String.Empty);
-
-        //    return await _context.Leads
-        //                            .Where(l => l.PhoneNumber
-        //                            .Replace(" ", String.Empty)
-        //                            .Replace("-", String.Empty)
-        //                            .Replace("+", "") == phoneNumbertWithoutWhitespace)
-        //                            .ToListAsync();
-        //}
-
-        //public async Task<List<LeadEntity>> GetLeadsByPassport(string passport)
-        //{
-        //    string passportWithoutWhitespace = passport.Replace(" ","");
-
-        //    return await _context.Leads
-        //                .Where(l => l.PassportNumber.Replace(" ","") == passportWithoutWhitespace)
-        //                .ToListAsync();
-        //}
-
-        public async Task<LeadEntity> GetLeadAsync(int id)
+        public async Task<LeadEntity> GetLeadByIdAsync(int leadId)
         {
-            return (await _context.Leads
-                .Where(l => l.Id == id)
-                .Include(l => l.Accounts)
-                .SingleOrDefaultAsync(l => l.Id == id))!;
+            var leadDB = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDB == null)
+            {
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                return await _context.Leads
+                        .Include(l => l.Accounts)
+                        .AsNoTracking()
+                        .SingleAsync(l => l.Id == leadId);
+            }
+        }
+
+        public async Task DeleteLeadByIdAsync(int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                leadDb.Status = LeadStatusEnum.Deleted;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +16,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             _context = context;
             _logger = logger;
         }
-
         public async Task<AccountEntity> CreateAccountAsync(AccountEntity account)
         {
             await _context.Accounts.AddAsync(account);
@@ -106,6 +105,21 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 .ToListAsync();
 
             return result;
+        }
+
+        public async Task DeleteAccountsByLeadIdAsync(int leadId)
+        {
+            var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
+            if (leadDb == null)
+            {
+                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                throw new NotFoundException(leadId, nameof(LeadEntity));
+            }
+            else
+            {
+                await _context.Accounts.Where(a => a.LeadId == leadId).ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

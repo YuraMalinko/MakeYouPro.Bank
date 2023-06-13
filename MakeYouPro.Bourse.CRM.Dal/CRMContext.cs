@@ -1,3 +1,7 @@
+
+using EntityFrameworkCore.EncryptColumn.Extension;
+using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,27 +13,32 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         public DbSet<LeadEntity> Leads { get; set; }
 
+        private readonly IEncryptionProvider _provider;
+
+        //public CRMContext()
+        //{
+        //    _provider = new GenerateEncryptionProvider("encryptKey7/P+2-");
+        //}
+
+        public CRMContext(string encryptKey)
+        {
+            _provider = new GenerateEncryptionProvider(encryptKey);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
+            //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.UseEncryption(_provider);
+
             foreach (var foreignKey in modelBuilder.Model.GetEntityTypes().SelectMany(m => m.GetForeignKeys()))
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.NoAction;
-            }
-
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var isDeletedProp = entityType.FindProperty("IsDeleted");
-                if (isDeletedProp != null)
-                {
-                    isDeletedProp.SetDefaultValue(false);
-                }
             }
 
             modelBuilder.Entity<LeadEntity>()
@@ -39,6 +48,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
+
         }
     }
 }
