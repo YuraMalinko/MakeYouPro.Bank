@@ -33,7 +33,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error " + ex.Message });
                 context.Response.StatusCode = 400;

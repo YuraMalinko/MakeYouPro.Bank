@@ -1,4 +1,5 @@
 using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             return account!;
         }
 
-        public async Task<AccountEntity> GetAnyAccountAsync(int accountId)
+        public async Task<AccountEntity> GetAccountAsync(int accountId)
         {
             var result = await _context.Accounts
                 .Include(a => a.Lead)
@@ -66,7 +67,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             return result!;
         }
 
-        public async Task<List<AccountEntity>> GetAnyAccountsAsync(AccountFilterEntity? filter)
+        public async Task<List<AccountEntity>> GetAccountsAsync(AccountFilterEntity? filter)
         {
             IQueryable<AccountEntity> accounts = _context.Accounts;
 
@@ -112,7 +113,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
             if (leadDb == null)
             {
-                _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                _logger.Warn($"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else

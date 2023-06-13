@@ -152,6 +152,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
+                _logger.Debug($"Successfully checked the presence of the - {leadDB}.");
                 return await _context.Leads
                         .Include(l => l.Accounts)
                         .AsNoTracking()

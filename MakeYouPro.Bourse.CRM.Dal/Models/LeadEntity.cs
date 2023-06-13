@@ -60,5 +60,10 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public string? Comment { get; set; }
 
         public List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
+
+        public override string ToString()
+        {
+            return $"ID:{Id} Name: {Name} {MiddleName} {Surname}";
+        }
     }
 }

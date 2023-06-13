@@ -36,16 +36,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Account> CreateOrRestoreAccountAsync(Account account)
         {
             _logger.Debug($"Request execution process started.");
-            var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadAsync(account.LeadId));
-
-            if (lead == null)
-            {
-                var ex = new NotFoundException(account.LeadId, nameof(Lead));
-                _logger.Warn(ex.Message);
-                throw ex;
-            }
-
-            _logger.Debug($"Successfully checked the presence of the - {lead}.");
+            var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadByIdAsync(account.LeadId));
 
             if (!await CheckActiveStatusLead(lead))
             {
@@ -153,7 +144,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<bool> DeleteAccountAsync(int accountId)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(accountId));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(accountId));
 
             if (account == null)
             {
@@ -208,7 +199,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Account> ChangeAccountStatusAsync(Account updateAccount)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(updateAccount.Id));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
@@ -257,7 +248,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<Account> UpdateAccountAsync(Account updateAccount)
         {
             _logger.Debug($"Request execution process started.");
-            var account = _mapper.Map<Account>(await _accountRepository.GetAnyAccountAsync(updateAccount.Id));
+            var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
@@ -299,7 +290,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Account> GetAccountAsync(int accountId)
         {
-            var account = await _accountRepository.GetAnyAccountAsync(accountId);
+            var account = await _accountRepository.GetAccountAsync(accountId);
 
             if (account == null)
             {
@@ -316,7 +307,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         public async Task<List<Account>> GetAccountsAsync(AccountFilter? filter)
         {
             _logger.Debug($"Request execution process started.");
-            var accountsEntity = await _accountRepository.GetAnyAccountsAsync(_mapper.Map<AccountFilterEntity>(filter));
+            var accountsEntity = await _accountRepository.GetAccountsAsync(_mapper.Map<AccountFilterEntity>(filter));
 
             if (accountsEntity is not null)
             {
@@ -397,7 +388,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             bool result = true;
 
-            if (lead.Role == LeadRoleEnum.StandardLead && !_currencySetting.CurrencyStandart.Contains(currency))
+            if  (lead.Role == LeadRoleEnum.StandardLead && !_currencySetting.CurrencyStandart.Contains(currency))
             {
                 result = false;
             }
