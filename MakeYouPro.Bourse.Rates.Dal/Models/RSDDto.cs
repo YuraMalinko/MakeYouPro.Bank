@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class RSDDto
+    public class RSDDto: IRsdRepository
     {
         [Key]
         [Required]

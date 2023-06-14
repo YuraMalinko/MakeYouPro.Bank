@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class RURDto
+    public class RURDto: IRurRepository
     {
         [Key]
         [Required]
