@@ -36,7 +36,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public string Surname { get; set; }
 
         [Required]
-        public DateOnly Birtday { get; set; }
+        public DateOnly Birthday { get; set; }
 
         [Required]
         [Column(TypeName = "nvarchar(30)")]

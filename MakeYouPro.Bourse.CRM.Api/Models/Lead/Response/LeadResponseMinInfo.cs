@@ -16,6 +16,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Response
 
         public string Surname { get; set; }
 
-        public DateOnly Birtday { get; set; }
+        public DateOnly Birthday { get; set; }
     }
 }

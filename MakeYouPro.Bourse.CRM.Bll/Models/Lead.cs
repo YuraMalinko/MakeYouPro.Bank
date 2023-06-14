@@ -18,7 +18,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Models
 
         public string Surname { get; set; }
 
-        public DateOnly Birtday { get; set; }
+        public DateOnly Birthday { get; set; }
 
         public string PhoneNumber { get; set; }
 
