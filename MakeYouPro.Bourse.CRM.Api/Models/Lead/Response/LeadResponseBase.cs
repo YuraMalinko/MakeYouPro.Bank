@@ -17,6 +17,8 @@ namespace MakeYouPro.Bourse.CRM.Models.Lead.Response
 
         public string Surname { get; set; }
 
+        public DateOnly Birtday { get; set; }
+
         public List<AccountResponse> Accounts { get; set; }
     }
 }

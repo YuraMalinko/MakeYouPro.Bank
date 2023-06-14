@@ -4,6 +4,8 @@ using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.ComponentModel;
 
 namespace MakeYouPro.Bourse.CRM.Dal
 {
@@ -15,11 +17,6 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         private readonly IEncryptionProvider _provider;
 
-        //public CRMContext()
-        //{
-        //    _provider = new GenerateEncryptionProvider("encryptKey7/P+2-");
-        //}
-
         public CRMContext(string encryptKey)
         {
             _provider = new GenerateEncryptionProvider(encryptKey);
@@ -28,6 +25,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRM11;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,7 +46,21 @@ namespace MakeYouPro.Bourse.CRM.Dal
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
+        }
 
+        protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+        {
+            builder.Properties<DateOnly>()
+                   .HaveConversion<DateOnlyConverter>()
+                   .HaveColumnType("date");
+        }
+
+        public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+        {
+            public DateOnlyConverter() : base(
+                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateOnly.FromDateTime(d))
+            { }
         }
     }
 }
