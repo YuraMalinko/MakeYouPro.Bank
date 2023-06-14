@@ -118,7 +118,11 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                await _context.Accounts.Where(a => a.LeadId == leadId).ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
+                await _context.Accounts.Where(
+                    a => a.LeadId == leadId
+                    && a.Status != AccountStatusEnum.Deactive && a.Status != AccountStatusEnum.Deleted)
+                    .ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
+
                 await _context.SaveChangesAsync();
             }
         }
