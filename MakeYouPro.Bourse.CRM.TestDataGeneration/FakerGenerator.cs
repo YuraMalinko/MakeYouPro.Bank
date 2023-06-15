@@ -10,10 +10,10 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private readonly Random _random = new Random();
         private readonly Faker<AccountEntity> _accountFaker;
         private readonly Faker<LeadEntity> _leadFaker;
-        private readonly Dictionary<string, HashSet<string>> _roleToCurrencies = new()
+        private readonly Dictionary<LeadRoleEnum, HashSet<string>> _roleToCurrencies = new()
         {
             {
-                LeadRoleEnum.VipLead.ToString(),  new HashSet<string>
+                LeadRoleEnum.VipLead,  new HashSet<string>
                 {
                     "RUB",
                     "USD",
@@ -26,7 +26,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 }
             },
             {
-                LeadRoleEnum.StandardLead.ToString(),  new HashSet<string>
+                LeadRoleEnum.StandardLead,  new HashSet<string>
                 {
                     "RUB",
                     "USD",
@@ -58,7 +58,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             foreach(var lead in leads)
             {
                 _currentLeadRole = lead.Role;
-                _currentCurrencies = new HashSet<string>(_roleToCurrencies[_currentLeadRole.ToString()]);
+                _currentCurrencies = new HashSet<string>(_roleToCurrencies[_currentLeadRole]);
                 _currentLeadId = lead.Id;
                 var accCount = _random.Next(1, _currentCurrencies.Count);
                 result.AddRange(_accountFaker.Generate(accCount));
@@ -76,7 +76,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 .RuleFor(x => x.MiddleName, f => f.Name.LastName())
                 .RuleFor(x => x.Surname, f => f.Name.LastName())
                 .RuleFor(x => x.Birthday, f => DateOnly.FromDateTime(f.Date.Between(new DateTime(1950, 01, 01), new DateTime(2000, 01, 01))))
-                .RuleFor(x => x.Email, f => $"{f.IndexFaker}@mail.com")
+                .RuleFor(x => x.Email, f => $"{f.IndexFaker}@gmail.com")
                 .RuleFor(x => x.Citizenship, f => f.Random.ListItem(new List<string>
                 {
                     "RU",
@@ -86,7 +86,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                     "GR"
                 }))
                 .RuleFor(x => x.PassportNumber, f => f.Random.AlphaNumeric(10))
-                .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber())
+                .RuleFor(x => x.PhoneNumber, f => f.Random.Digits(11, 0, 9).ToString())
                 .RuleFor(x => x.Registration, f => f.Random.Words(15))
                 .RuleFor(x => x.Comment, f => f.Random.Words(15))
                 //.RuleFor(x => x.Accounts, f =>
