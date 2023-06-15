@@ -35,8 +35,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             }
         };
 
-        private int _currentLeadId;
         private LeadRoleEnum _currentLeadRole;
+        private LeadEntity _currentLead;
         private HashSet<string> _currentCurrencies = new();
 
         public FakerGenerator()
@@ -55,11 +55,11 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         {
             var result = new List<AccountEntity>();
 
-            foreach(var lead in leads)
+            foreach (var lead in leads)
             {
                 _currentLeadRole = lead.Role;
+                _currentLead = lead;
                 _currentCurrencies = new HashSet<string>(_roleToCurrencies[_currentLeadRole]);
-                _currentLeadId = lead.Id;
                 var accCount = _random.Next(1, _currentCurrencies.Count);
                 result.AddRange(_accountFaker.Generate(accCount));
             }
@@ -69,9 +69,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private Faker<LeadEntity> GetLeadFaker()
         {
             return new Faker<LeadEntity>("ru")
-                //.RuleFor(x => x.Id, f => _currentLeadId = f.IndexFaker)
                 .RuleFor(x => x.Status, f => LeadStatusEnum.Active)
-                .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2021, 01, 01), new DateTime(2023, 06, 01)))
+                .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2019, 01, 01), new DateTime(2021, 01, 01)))
                 .RuleFor(x => x.Name, f => f.Name.FirstName())
                 .RuleFor(x => x.MiddleName, f => f.Name.LastName())
                 .RuleFor(x => x.Surname, f => f.Name.LastName())
@@ -89,21 +88,24 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 .RuleFor(x => x.PhoneNumber, f => f.Random.Digits(11, 0, 9).ToString())
                 .RuleFor(x => x.Registration, f => f.Random.Words(15))
                 .RuleFor(x => x.Comment, f => f.Random.Words(15))
-                //.RuleFor(x => x.Accounts, f =>
-                //{
-                //    _currentCurrencies = new HashSet<string>(_roleToCurrencies[_currentLeadRole.ToString()]);
-                //    var accCount = f.Random.Number(1, _currentCurrencies.Count);
-                //    return _accountFaker.Generate(accCount).ToList();
-                //})
                 .RuleFor(x => x.Role, f => _currentLeadRole);
         }
 
         private Faker<AccountEntity> GetAccountFaker()
         {
             return new Faker<AccountEntity>("ru")
-                //.RuleFor(x => x.Id, f => f.IndexFaker)
-                .RuleFor(x => x.LeadId, f => _currentLeadId)
-                .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2021, 01, 01), new DateTime(2023, 06, 01)))
+                .RuleFor(x => x.LeadId, f => _currentLead.Id)
+                .RuleFor(x => x.DateCreate, f =>
+                {
+                    if (_currentCurrencies.Contains(DefaultCurrency))
+                    {
+                        return _currentLead.DateCreate;
+                    }
+                    else
+                    {
+                        return f.Date.Between(_currentLead.DateCreate, new DateTime(2023, 06, 01));
+                    }
+                })
                 .RuleFor(x => x.Status, f => AccountStatusEnum.Active)
                 .RuleFor(x => x.Comment, f => f.Random.Words(10))
                 .RuleFor(x => x.Currency, f =>
