@@ -1,17 +1,17 @@
 ﻿using ReportingService.Dal.Models.CRM;
 using ReportingService.Bll.IServices;
-using ReportingService.Api.FinalRabbitMQ;
 using Newtonsoft.Json;
+using ReportingService.Api.MessageBroker.Interfaces;
 
 namespace ReportingService.Api.FinalRabbitMQ.MessageHandler
 {
     internal class MessageHandler : IMessageHandler
     {
         private readonly IRecordingServices _recordingServices;
-        private readonly IRabbitMqService _rabbitMqService;
+        private readonly IRabbitMqPublisher _rabbitMqService;
         private readonly string create = "Create";
         private readonly string update = "Update";
-        public MessageHandler(IRecordingServices recordingServices, IRabbitMqService rabbitMqService)
+        public MessageHandler(IRecordingServices recordingServices, IRabbitMqPublisher rabbitMqService)
         {
             _recordingServices = recordingServices;
             _rabbitMqService = rabbitMqService;
@@ -20,13 +20,13 @@ namespace ReportingService.Api.FinalRabbitMQ.MessageHandler
         public async Task SendMessageForCreateAsync(object message)
         {
             var text = JsonConvert.SerializeObject(message);
-            await _rabbitMqService.SendMessageAsync(text, create);
+            //await _rabbitMqService.SendMessageAsync(text, create);
         }
 
         public async Task SendMessageForUpdateAsync(object message)
         {
             var text = JsonConvert.SerializeObject(message);
-            await _rabbitMqService.SendMessageAsync(text, update);
+            //await _rabbitMqService.SendMessageAsync(text, update);
         }
 
         public async void GetModelForRecordAsync(object message, string routingKey)
@@ -75,6 +75,11 @@ namespace ReportingService.Api.FinalRabbitMQ.MessageHandler
             //{
             //    throw new ArgumentException("Unnknow record type");
             //}
+        }
+
+        public void Handle(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

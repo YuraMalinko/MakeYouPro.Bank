@@ -34,7 +34,7 @@ namespace ReportingService.Api.FinalRabbitMQ
                 var text = Encoding.UTF8.GetString(body);
                 var routingKey = ea.RoutingKey; 
                 var message = JsonConvert.DeserializeObject<Object>(text);
-                _handler.GetModelForRecordAsync(message, routingKey);
+                // _handler.GetModelForRecordAsync(message, routingKey);
             };
 
             _channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);

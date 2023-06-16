@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ReportingService.Api.FinalRabbitMQ;
+using ReportingService.Api.MessageBroker.Configuration;
+using ReportingService.Api.MessageBroker.Interfaces;
+using ReportingService.Dal.Models.CRM;
 
 namespace ReportingService.Api.Controllers
 {
@@ -7,20 +9,26 @@ namespace ReportingService.Api.Controllers
     [ApiController]
     public class RabbitMqController : ControllerBase
     {
-        private readonly IRabbitMqService _mqService;
+        private readonly IRabbitMqPublisher _mqPublisher;
+        private readonly LeadServiceSettings _settings;
 
-        public RabbitMqController(IRabbitMqService mqService)
+        public RabbitMqController(IRabbitMqPublisher mqPublisher, LeadServiceSettings settings)
         {
-            _mqService = mqService;
+            _mqPublisher = mqPublisher;
+            _settings = settings;
         }
 
-        [Route("[action]/{message}")]
-        [HttpGet]
-        public IActionResult SendMessage(string message)
+        [HttpPost]
+        public async Task<IActionResult> SendMessage(LeadEntity message)
         {
-            //_mqService.SendMessageAsync(message);
-
+            await _mqPublisher.PublishMessageAsync(message, _settings.CreateLeadRoutingKey);
             return Ok("Сообщение отправлено");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReadAllMessages()
+        {
+            return Ok();
         }
     }
 }
