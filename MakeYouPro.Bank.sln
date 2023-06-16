@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
@@ -19,11 +18,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Api.Auth", "MakeYouPro.Bank.Auth\MakeYouPro.Bank.Api.Auth.csproj", "{C16FF821-1213-40D8-A25B-2B15679BF2DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.Api.Auth", "MakeYouPro.Bank.Auth\MakeYouPro.Bank.Api.Auth.csproj", "{C16FF821-1213-40D8-A25B-2B15679BF2DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Dal.Auth", "MakeYouPro.Bank.Dal.Auth\MakeYouPro.Bank.Dal.Auth.csproj", "{06BB5504-3B71-4709-9676-74B096EECA65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.Dal.Auth", "MakeYouPro.Bank.Dal.Auth\MakeYouPro.Bank.Dal.Auth.csproj", "{06BB5504-3B71-4709-9676-74B096EECA65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bank.Service.Auth", "MakeYouPro.Bank.Service.Auth\MakeYouPro.Bank.Service.Auth.csproj", "{82956627-C304-4DEE-B54E-43BD333D196B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakeYouPro.Bank.Service.Auth", "MakeYouPro.Bank.Service.Auth\MakeYouPro.Bank.Service.Auth.csproj", "{82956627-C304-4DEE-B54E-43BD333D196B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakeYouPro.Bourse.CRM.TestDataGeneration", "MakeYouPro.Bourse.CRM.TestDataGeneration\MakeYouPro.Bourse.CRM.TestDataGeneration.csproj", "{3E87D5F2-FF98-4278-85BE-F3AF7E134917}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +64,10 @@ Global
 		{82956627-C304-4DEE-B54E-43BD333D196B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82956627-C304-4DEE-B54E-43BD333D196B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82956627-C304-4DEE-B54E-43BD333D196B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E87D5F2-FF98-4278-85BE-F3AF7E134917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E87D5F2-FF98-4278-85BE-F3AF7E134917}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E87D5F2-FF98-4278-85BE-F3AF7E134917}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E87D5F2-FF98-4278-85BE-F3AF7E134917}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +81,7 @@ Global
 		{C16FF821-1213-40D8-A25B-2B15679BF2DC} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
 		{06BB5504-3B71-4709-9676-74B096EECA65} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
 		{82956627-C304-4DEE-B54E-43BD333D196B} = {EE6AADB9-0E6E-4D3D-AEF6-8F40C6C26C92}
+		{3E87D5F2-FF98-4278-85BE-F3AF7E134917} = {129ACFF1-2BFF-4B32-814C-2D0180AE0726}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {416A70E5-B624-4A1B-BE9E-EC5BED89FD9F}
