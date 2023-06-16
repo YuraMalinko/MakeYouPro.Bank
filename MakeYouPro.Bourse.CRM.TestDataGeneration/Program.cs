@@ -1,25 +1,59 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MakeYouPro.Bourse.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.TestDataGeneration;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
-Console.WriteLine("Hello, World!");
-
-var dataGenerator = new FakerGenerator();
-
-var encryptKey = Environment.GetEnvironmentVariable("EncryptKey");
-for (int i = 0; i < 1420000; i += 12000)
+string connectionString = TableGenerator.GetConnectionString();
+using (SqlConnection connection =
+           new SqlConnection(connectionString))
 {
-    var dbContext = new CRMContext(encryptKey);
-    using (dbContext)
-    {
-        var leads = dataGenerator.GenerateLeads(10000, LeadRoleEnum.StandardLead);
-        leads.AddRange(dataGenerator.GenerateLeads(2000, LeadRoleEnum.VipLead));
-        dbContext.AddRange(leads);
-        dbContext.SaveChanges();
+    var dataGenerator = new FakerGenerator();
+    var leads = new List<LeadEntity>();
+    var accounts = new List<AccountEntity>();
+    
+    connection.Open();
 
-        var accounts = dataGenerator.GenerateAccountsForLeads(leads);
-        dbContext.AddRange(accounts);
-        dbContext.SaveChanges();
+    for (int i = 0; i < 4000000; i += 120000)
+    {
+        leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandardLead);
+        leads.AddRange(dataGenerator.GenerateLeads(20000, LeadRoleEnum.VipLead));
+        accounts = dataGenerator.GenerateAccountsForLeads(leads);
+
+        DataTable leadsTable = TableGenerator.MakeLeadTable(leads);
+
+        using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+        {
+            bulkCopy.DestinationTableName =
+                "dbo.Leads";
+
+            try
+            {
+                bulkCopy.WriteToServer(leadsTable);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        DataTable accountsTable = TableGenerator.MakeAccountTable(accounts);
+
+        using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+        {
+            bulkCopy.DestinationTableName =
+                "dbo.Accounts";
+
+            try
+            {
+                bulkCopy.WriteToServer(accountsTable);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }
+
