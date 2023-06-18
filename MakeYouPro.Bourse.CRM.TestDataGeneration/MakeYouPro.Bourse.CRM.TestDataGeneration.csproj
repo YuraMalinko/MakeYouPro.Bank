@@ -8,10 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspose.Cells" Version="23.6.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Auth.Dal\MakeYouPro.Bourse.CRM.Auth.Dal.csproj" />
+    <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Core\MakeYouPro.Bourse.CRM.Core.csproj" />
     <ProjectReference Include="..\MakeYouPro.Bourse.CRM.Dal\MakeYouPro.Bourse.CRM.Dal.csproj" />
   </ItemGroup>
 

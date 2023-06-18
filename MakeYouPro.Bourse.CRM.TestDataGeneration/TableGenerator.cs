@@ -1,6 +1,7 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using System.Data;
+using System.Text;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
@@ -107,7 +108,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 row["MiddleName"] = lead.MiddleName;
                 row["Surname"] = lead.Surname;
                 row["Birthday"] = lead.Birthday.ToDateTime(TimeOnly.MinValue);
-                row["PhoneNumber"] = lead.PhoneNumber;
+                row["PhoneNumber"] = lead.PhoneNumber.ToString();
                 row["Email"] = lead.Email;
                 row["Citizenship"] = lead.Citizenship;
                 row["PassportNumber"] = lead.PassportNumber;
@@ -179,7 +180,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
         internal static string GetConnectionString()
         {
-            return Environment.GetEnvironmentVariable("CrmBourseDB");
+            //return Environment.GetEnvironmentVariable("CrmBourseDB");
+            return Environment.GetEnvironmentVariable("CrmBourseLocalDB");
         }
     }
 }

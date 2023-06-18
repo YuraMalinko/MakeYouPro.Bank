@@ -1,6 +1,6 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.Models;
-using Bogus;
+﻿using Bogus;
 using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
@@ -10,6 +10,12 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private readonly Random _random = new Random();
         private readonly Faker<AccountEntity> _accountFaker;
         private readonly Faker<LeadEntity> _leadFaker;
+        //это я добавил
+        private readonly List<AccountStatusEnum> _accountStatuses = Enum.GetValues(typeof(AccountStatusEnum)).Cast<AccountStatusEnum>().ToList();
+        private readonly List<LeadStatusEnum> _leadStatuses = Enum.GetValues(typeof(LeadStatusEnum)).Cast<LeadStatusEnum>().ToList();
+        private  int _lastIndex = 0;
+        //
+
         private readonly Dictionary<LeadRoleEnum, HashSet<string>> _roleToCurrencies = new()
         {
             {
@@ -57,11 +63,21 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
             foreach (var lead in leads)
             {
-                _currentLeadRole = lead.Role;
+                //
+                //
                 _currentLead = lead;
                 _currentCurrencies = new HashSet<string>(_roleToCurrencies[_currentLeadRole]);
                 var accCount = _random.Next(1, _currentCurrencies.Count);
-                result.AddRange(_accountFaker.Generate(accCount));
+                //и это добавил
+                _currentLeadRole = lead.Role;
+                var accounts = _accountFaker.Generate(accCount);
+                if (lead.Status == LeadStatusEnum.Deleted)
+                {
+                    accounts.FindAll(a => a.Status == AccountStatusEnum.Active)
+                        .Select(a => a.Status = AccountStatusEnum.Deleted);
+                }
+                //
+                result.AddRange(accounts);
             }
             return result;
         }
@@ -69,21 +85,24 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private Faker<LeadEntity> GetLeadFaker()
         {
             return new Faker<LeadEntity>("ru")
-                .RuleFor(x => x.Id, f => f.IndexFaker)
-                .RuleFor(x => x.Status, f => LeadStatusEnum.Active)
+                .RuleFor(x => x.Id, f => _lastIndex+=1)
+                //.RuleFor(x => x.Status, f => LeadStatusEnum.Active)
+                .RuleFor(x => x.Status, f => f.Random.ListItem(_leadStatuses))
                 .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2019, 01, 01), new DateTime(2021, 01, 01)))
                 .RuleFor(x => x.Name, f => f.Name.FirstName())
                 .RuleFor(x => x.MiddleName, f => f.Name.LastName())
                 .RuleFor(x => x.Surname, f => f.Name.LastName())
                 .RuleFor(x => x.Birthday, f => DateOnly.FromDateTime(f.Date.Between(new DateTime(1950, 01, 01), new DateTime(2000, 01, 01))))
-                .RuleFor(x => x.Email, f => $"{f.IndexFaker}@gmail.com")
+                .RuleFor(x => x.Email,(f,x) => $"{x.Id}@gmail.com")
                 .RuleFor(x => x.Citizenship, f => f.Random.ListItem(new List<string>
                 {
-                    "RU",
+                    //мб другие страны засунем?
+                    "RUS",
                     "USA",
-                    "J",
-                    "PL",
-                    "GR"
+                    "JPN",
+                    "POL",
+                    "GRC"
+                    //
                 }))
                 .RuleFor(x => x.PassportNumber, f => f.Random.AlphaNumeric(10))
                 .RuleFor(x => x.PhoneNumber, f => f.Random.Digits(11, 0, 9).ToString())
@@ -107,7 +126,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                         return f.Date.Between(_currentLead.DateCreate, new DateTime(2023, 06, 01));
                     }
                 })
-                .RuleFor(x => x.Status, f => AccountStatusEnum.Active)
+                //.RuleFor(x => x.Status, f => AccountStatusEnum.Active)
+                .RuleFor(x => x.Status, f => f.Random.ListItem(_accountStatuses))
                 .RuleFor(x => x.Comment, f => f.Random.Words(1))
                 .RuleFor(x => x.Currency, f =>
                 {
@@ -119,6 +139,14 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                     _currentCurrencies.Remove(currency);
                     return currency;
                 });
+            //.RuleFor(x => x.Status, (f, x) =>
+            //{
+            //    if (_statusCurrentLead == LeadStatusEnum.Deleted &&
+            //    x.Status == AccountStatusEnum.Active)
+            //    {
+            //        x.Status = AccountStatusEnum.Deleted;
+            //    }
+            //});
         }
     }
 }
