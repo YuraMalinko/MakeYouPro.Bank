@@ -69,8 +69,9 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private Faker<LeadEntity> GetLeadFaker()
         {
             return new Faker<LeadEntity>("ru")
-                .RuleFor(x => x.Id, f => f.IndexFaker)
-                .RuleFor(x => x.Status, f => LeadStatusEnum.Active)
+                .RuleFor(x => x.Id, f => f.IndexFaker+1)
+                //.RuleFor(x => x.Status, f => LeadStatusEnum.Active)
+                .RuleFor(x => x.Status, f => f.Random.Enum<LeadStatusEnum>())
                 .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2019, 01, 01), new DateTime(2021, 01, 01)))
                 .RuleFor(x => x.Name, f => f.Name.FirstName())
                 .RuleFor(x => x.MiddleName, f => f.Name.LastName())
@@ -107,7 +108,22 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                         return f.Date.Between(_currentLead.DateCreate, new DateTime(2023, 06, 01));
                     }
                 })
-                .RuleFor(x => x.Status, f => AccountStatusEnum.Active)
+                //.RuleFor(x => x.Status, f => AccountStatusEnum.Active)
+                .RuleFor(x => x.Status, f =>
+                {
+                    if (_currentCurrencies.Contains(DefaultCurrency) 
+                    &&_currentLead.Status != LeadStatusEnum.Deleted)
+                    {
+                        return AccountStatusEnum.Active;
+                    }
+                    else if (!_currentCurrencies.Contains(DefaultCurrency)
+                    && _currentLead.Status != LeadStatusEnum.Deleted)
+                    {
+                        return f.Random.Enum<AccountStatusEnum>();
+                    }
+
+                    return AccountStatusEnum.Deleted;
+                })
                 .RuleFor(x => x.Comment, f => f.Random.Words(1))
                 .RuleFor(x => x.Currency, f =>
                 {

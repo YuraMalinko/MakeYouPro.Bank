@@ -12,7 +12,7 @@ using (SqlConnection connection =
     var dataGenerator = new FakerGenerator();
     var leads = new List<LeadEntity>();
     var accounts = new List<AccountEntity>();
-    
+
     connection.Open();
 
     for (int i = 0; i < 4000000; i += 120000)
