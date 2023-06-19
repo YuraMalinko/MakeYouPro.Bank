@@ -70,7 +70,6 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         {
             return new Faker<LeadEntity>("ru")
                 .RuleFor(x => x.Id, f => f.IndexFaker+1)
-                //.RuleFor(x => x.Status, f => LeadStatusEnum.Active)
                 .RuleFor(x => x.Status, f => f.Random.Enum<LeadStatusEnum>())
                 .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2019, 01, 01), new DateTime(2021, 01, 01)))
                 .RuleFor(x => x.Name, f => f.Name.FirstName())
@@ -80,14 +79,14 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 .RuleFor(x => x.Email, f => $"{f.IndexFaker}@gmail.com")
                 .RuleFor(x => x.Citizenship, f => f.Random.ListItem(new List<string>
                 {
-                    "RU",
-                    "USA",
-                    "J",
-                    "PL",
-                    "GR"
+                    "RUS",
+                    "ARE",
+                    "MDV",
+                    "GRC",
+                    "BLR"
                 }))
                 .RuleFor(x => x.PassportNumber, f => f.Random.AlphaNumeric(10))
-                .RuleFor(x => x.PhoneNumber, f => f.Random.Digits(11, 0, 9).ToString())
+                .RuleFor(x => x.PhoneNumber, f => (9000000000+f.IndexFaker).ToString())
                 .RuleFor(x => x.Registration, f => f.Random.RandomLocale())
                 .RuleFor(x => x.Comment, f => f.Random.Words(1))
                 .RuleFor(x => x.Role, f => _currentLeadRole);
@@ -108,7 +107,6 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                         return f.Date.Between(_currentLead.DateCreate, new DateTime(2023, 06, 01));
                     }
                 })
-                //.RuleFor(x => x.Status, f => AccountStatusEnum.Active)
                 .RuleFor(x => x.Status, f =>
                 {
                     if (_currentCurrencies.Contains(DefaultCurrency) 

@@ -24,7 +24,9 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
+            //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRMBourse3;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,11 +1,18 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using System.Data;
+using System.Security.Cryptography.Xml;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
     internal static class TableGenerator
     {
+
+        private static readonly IEncryptionProvider _provider = 
+            new GenerateEncryptionProvider(Environment.GetEnvironmentVariable("EncryptKey"));
+
         internal static DataTable MakeLeadTable(IEnumerable<LeadEntity> leads)
         {
             DataTable leadsTable = new DataTable("Leads");
@@ -59,7 +66,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             leadsTable.Columns.Add(birthday);
 
             DataColumn phoneNumber = new DataColumn();
-            phoneNumber.DataType = Type.GetType("System.String");
+            phoneNumber.DataType = typeof(String);
             phoneNumber.ColumnName = "PhoneNumber";
             phoneNumber.AllowDBNull = false;
             leadsTable.Columns.Add(phoneNumber);
@@ -110,8 +117,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 row["PhoneNumber"] = lead.PhoneNumber;
                 row["Email"] = lead.Email;
                 row["Citizenship"] = lead.Citizenship;
-                row["PassportNumber"] = lead.PassportNumber;
-                row["Registration"] = lead.Registration;
+                row["PassportNumber"] = _provider.Encrypt(lead.PassportNumber);
+                row["Registration"] = _provider.Encrypt(lead.Registration);
                 row["Comment"] = lead.Comment;
                 leadsTable.Rows.Add(row);
             }
@@ -179,7 +186,10 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
         internal static string GetConnectionString()
         {
-            return Environment.GetEnvironmentVariable("CrmBourseDB");
+            // return Environment.GetEnvironmentVariable("CrmBourseDB");
+
+            return @"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRMBourse3;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
+
         }
     }
 }

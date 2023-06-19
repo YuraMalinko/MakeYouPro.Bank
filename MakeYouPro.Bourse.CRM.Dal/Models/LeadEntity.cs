@@ -53,7 +53,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
 
         [Required]
         [EncryptColumn]
-        [Column(TypeName = "nvarchar(15)")]
+       // [Column(TypeName = "nvarchar(15)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string PassportNumber { get; set; }
 
         [Required]

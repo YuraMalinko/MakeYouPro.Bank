@@ -15,10 +15,10 @@ using (SqlConnection connection =
 
     connection.Open();
 
-    for (int i = 0; i < 4000000; i += 120000)
+    for (int i = 0; i < 40; i += 12)
     {
-        leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandardLead);
-        leads.AddRange(dataGenerator.GenerateLeads(20000, LeadRoleEnum.VipLead));
+        leads = dataGenerator.GenerateLeads(10, LeadRoleEnum.StandardLead);
+        leads.AddRange(dataGenerator.GenerateLeads(2, LeadRoleEnum.VipLead));
         accounts = dataGenerator.GenerateAccountsForLeads(leads);
 
         DataTable leadsTable = TableGenerator.MakeLeadTable(leads);

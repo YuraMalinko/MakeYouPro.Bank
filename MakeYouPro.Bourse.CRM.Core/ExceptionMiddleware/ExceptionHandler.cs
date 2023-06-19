@@ -24,7 +24,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AlreadyExistException ex)
             {
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 var result = JsonSerializer.Serialize(new { Error = "AlreadyExistException Error " + ex.Message });
                 context.Response.StatusCode = 409;
@@ -34,7 +34,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (NotFoundException ex)
             {
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 var result = JsonSerializer.Serialize(new { Error = "NotFoundException Error: " + ex.EntityName });
                 context.Response.StatusCode = 404;
@@ -44,7 +44,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (ArgumentException ex)
             {
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 var result = JsonSerializer.Serialize(new { Error = "ArgumentException Error " + ex.Message });
                 context.Response.StatusCode = 400;
@@ -59,7 +59,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
                     WriteIndented = true,
                 };
 
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 string result = JsonSerializer.Serialize(new { Error = "AccountArgumentException Error:" + ex.Message }, options);
                 context.Response.StatusCode = 412;
@@ -69,7 +69,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (FileNotFoundException ex)
             {
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 var result = JsonSerializer.Serialize(new { Error = "FileNotFoundException Error:" + ex.Message });
                 context.Response.StatusCode = 404;
@@ -79,7 +79,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
             }
             catch (AccountUnknownException ex)
             {
-                _logger.Error(ex, ex.StackTrace);
+                _logger.Error(ex.Message + ex.StackTrace);
 
                 var result = JsonSerializer.Serialize(new { Error = "AccountUnknownException Error:" + ex.Message });
                 context.Response.StatusCode = 500;
