@@ -23,10 +23,8 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public double JPY_BGN { get; set; }
         public double JPY_ARS { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(DateTimeId))]
-        public DateTimeDto DateTime { get; set; }
 
-        public int DateTimeId { get; set; }
+        [Required]
+        public DateTime dateTime { get; set; }
     }
 }

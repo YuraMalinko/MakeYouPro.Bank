@@ -23,10 +23,8 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public double RSD_BGN { get; set; }
         public double RSD_ARS { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(DateTimeId))]
-        public DateTimeDto DateTime { get; set; }
 
-        public int DateTimeId { get; set; }
+        [Required]
+        public DateTime dateTime { get; set; }
     }
 }

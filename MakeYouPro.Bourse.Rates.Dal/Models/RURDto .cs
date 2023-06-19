@@ -24,11 +24,9 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public double RUR_BGN { get; set; }
         public double RUR_ARS { get; set; }
 
-        [Required]
-        [ForeignKey(nameof(DateTimeId))]
-        public DateTimeDto DateTime { get; set; }
 
-        public int DateTimeId { get; set; }
+        [Required]
+        public DateTime dateTime { get; set; }
 
     }
 }
