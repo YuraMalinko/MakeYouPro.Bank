@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using CoreRS.Enums;
+using Microsoft.EntityFrameworkCore;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Models.CRM;
 
@@ -21,6 +21,24 @@ namespace ReportingService.Dal.Repository.CRM
 
             return (await _context.Accounts
                 .SingleOrDefaultAsync(a => a.Id == account.Id))!;
+        }
+
+        public async Task UpdateAccountAsync(AccountEntity accountUpdate)
+        {
+            var account = await _context.Accounts.SingleOrDefaultAsync(a => a.Id == accountUpdate.Id
+            && a.Status != AccountStatusEnum.Deleted);
+
+            if (account is not null)
+            {
+                account.Comment = accountUpdate.Comment;
+                account.Status = accountUpdate.Status;
+                account.IsDeleted = accountUpdate.IsDeleted;
+                account.DateCreate = accountUpdate.DateCreate;
+                account.Balance = accountUpdate.Balance;
+                account.Currency = accountUpdate.Currency;
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

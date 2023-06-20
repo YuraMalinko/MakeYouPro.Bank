@@ -7,5 +7,9 @@ namespace ReportingService.Bll.IServices
         Task CreateLeadInDatabaseAsync(LeadEntity lead);
 
         Task CreateAccountInDatabaseAsync(AccountEntity account);
+
+        Task UpdateLeadInDatebaseAync(LeadEntity lead);
+
+        Task UpdateAccountInDatebaseAync(AccountEntity account);
     }
 }

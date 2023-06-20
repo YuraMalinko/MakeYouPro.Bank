@@ -24,5 +24,14 @@ namespace ReportingService.Bll.Services
         {
             await _accountRepositry.CreateAccountAsync(account);
         }
+
+        public async Task UpdateLeadInDatebaseAync(LeadEntity lead)
+        {
+            await _leadRepositry.UpdateLeadAsync(lead);
+        }
+        public async Task UpdateAccountInDatebaseAync(AccountEntity account)
+        {
+            await _accountRepositry.UpdateAccountAsync(account);
+        }
     }
 }

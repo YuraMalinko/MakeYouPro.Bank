@@ -41,12 +41,13 @@ builder.Services.AddSingleton<IHandlerFactory, HandlerFactory>();
 builder.Services.AddHostedService<RabbitMqListener>();
 
 //builder.Services.AddSingleton<IRabbitMqListener, RabbitMqListener>();
-//builder.Services.AddSingleton<IRecordingServices, RecordingServices>();
-//builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
-//builder.Services.AddSingleton<ILeadRepository, LeadRepository>();
-//builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
-//builder.Services.AddSingleton<Context>();
+builder.Services.AddSingleton<IRecordingServices, RecordingServices>();
+builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
+builder.Services.AddSingleton<ILeadRepository, LeadRepository>();
+builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
+builder.Services.AddSingleton<Context>();
 
+//builder.Services.AddAutoMappe
 //IHost host = Host.CreateDefaultBuilder(args)
 //    .ConfigureServices(services =>
 //    {
@@ -79,6 +80,6 @@ app.Run();
 void CreateFactory(WebApplication app)
 {
     var factory = app.Services.GetRequiredService<IHandlerFactory>();
-    factory.AddHandler("Create", new CreateLeadHandler());
-    factory.AddHandler("Update", new UpdateLeadHandler());
+    factory.AddHandler("Create", new CreateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
+    factory.AddHandler("Update", new UpdateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
 }
