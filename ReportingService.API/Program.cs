@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen();
 
 // inject configuration for Listener and service that uses Publisher
 var rabbitMqPublisherSettings = builder.Configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqSettings>();
-var leadServiceSettings = builder.Configuration.GetSection("LeadServiceConfiguration").Get<LeadServiceSettings>();
+var leadServiceSettings = builder.Configuration.GetSection("LeadServiceConfiguration").Get<RouteServiceSettings>();
 builder.Services.AddSingleton(rabbitMqPublisherSettings);
 builder.Services.AddSingleton(leadServiceSettings);
 

@@ -1,6 +1,6 @@
 ﻿namespace ReportingService.Api.MessageBroker.Configuration
 {
-    public class LeadServiceSettings
+    public class RouteServiceSettings
     {
         public string CreateLeadRoutingKey { get; set; }
 

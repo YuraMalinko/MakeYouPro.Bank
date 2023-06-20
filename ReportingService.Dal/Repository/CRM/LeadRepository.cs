@@ -44,7 +44,6 @@ namespace ReportingService.Dal.Repository.CRM
                 leadDb.Status = leadUpdate.Status;
                 await _context.SaveChangesAsync();
             }
-
         }
     }
 }

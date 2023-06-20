@@ -36,7 +36,6 @@ namespace ReportingService.Dal.Repository.CRM
                 account.DateCreate = accountUpdate.DateCreate;
                 account.Balance = accountUpdate.Balance;
                 account.Currency = accountUpdate.Currency;
-
                 await _context.SaveChangesAsync();
             }
         }

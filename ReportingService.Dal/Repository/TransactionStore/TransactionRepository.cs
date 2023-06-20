@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReportingService.Dal.Models.TransactionStore;
 
 namespace ReportingService.Dal.Repository.TransactionStore
 {
@@ -10,12 +11,26 @@ namespace ReportingService.Dal.Repository.TransactionStore
         {
             _context = context;
         }
-        public async Task<int> CreateTransactionAsync(TransactionEntity transaction)
+        public async Task<TransactionEntity> CreateTransactionAsync(TransactionEntity transaction)
         {
-            //хранимка на добавление в базу с установкой времени;
-            var transactionId = await _context.Database.SqlQuery<int>($"EXEC AddTransaction {transaction.AccountId}, {transaction.Type}, {transaction.Amount}").ToListAsync();
+            await _context.Transactions.AddAsync(transaction);
+            _context.SaveChanges();
 
-            return transactionId[0];
+            return await _context.Transactions
+                .SingleAsync(l => l.Id == transaction.Id);
+        }
+
+        public async Task UpdateTransactionAsync(TransactionEntity transactionUpdate)
+        {
+            var transaction = await _context.Transactions.SingleOrDefaultAsync(t => t.Id == transactionUpdate.Id);
+            if (transaction != null)
+            {
+                transaction.Type = transactionUpdate.Type;
+                transaction.AccountId = transactionUpdate.AccountId;
+                transaction.Amount = transactionUpdate.Amount;
+                transaction.Time = transactionUpdate.Time;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

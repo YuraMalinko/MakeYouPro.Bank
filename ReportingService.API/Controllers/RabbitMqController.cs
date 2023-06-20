@@ -10,9 +10,9 @@ namespace ReportingService.Api.Controllers
     public class RabbitMqController : ControllerBase
     {
         private readonly IRabbitMqPublisher _mqPublisher;
-        private readonly LeadServiceSettings _settings;
+        private readonly RouteServiceSettings _settings;
 
-        public RabbitMqController(IRabbitMqPublisher mqPublisher, LeadServiceSettings settings)
+        public RabbitMqController(IRabbitMqPublisher mqPublisher, RouteServiceSettings settings)
         {
             _mqPublisher = mqPublisher;
             _settings = settings;
