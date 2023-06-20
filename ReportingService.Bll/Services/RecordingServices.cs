@@ -8,8 +8,11 @@ namespace ReportingService.Bll.Services
     {
         private readonly ILeadRepository _leadRepositry;
         private readonly IAccountRepository _accountRepositry;
+        private readonly ITransactionRepository _transactionRepositry;
 
-        public RecordingServices(ILeadRepository leadRepositry, IAccountRepository accountRepositry)
+        public RecordingServices(ILeadRepository leadRepositry,
+                                 IAccountRepository accountRepositry,
+                                 ITransactionRepository transactionRepository)
         {
             _leadRepositry = leadRepositry;
             _accountRepositry = accountRepositry;
@@ -33,5 +36,7 @@ namespace ReportingService.Bll.Services
         {
             await _accountRepositry.UpdateAccountAsync(account);
         }
+
+        public async Task CreateTransactionAsync()
     }
 }

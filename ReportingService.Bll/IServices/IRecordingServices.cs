@@ -1,4 +1,5 @@
 ﻿using ReportingService.Dal.Models.CRM;
+using ReportingService.Dal.Models.TransactionStore;
 
 namespace ReportingService.Bll.IServices
 {
@@ -11,5 +12,9 @@ namespace ReportingService.Bll.IServices
         Task UpdateLeadInDatebaseAync(LeadEntity lead);
 
         Task UpdateAccountInDatebaseAync(AccountEntity account);
+
+        Task CreateTransactionAsync(TransactionEntity transaction);
+
+        Task UpdateTransactionAsync(TransactionEntity transaction);
     }
 }
