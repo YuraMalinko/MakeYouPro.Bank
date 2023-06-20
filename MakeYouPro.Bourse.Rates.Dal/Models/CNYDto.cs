@@ -15,13 +15,13 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         [Required]
         public int Id { get; set; }
 
-        public double CNY_RUR { get; set; }
-        public double CNY_USD { get; set; }
-        public double CNY_EUR { get; set; }
-        public double CNY_JPY { get; set; }
-        public double CNY_RSD { get; set; }
-        public double CNY_BGN { get; set; }
-        public double CNY_ARS { get; set; }
+        public double CNYRUB { get; set; }
+        public double CNYUSD { get; set; }
+        public double CNYEUR { get; set; }
+        public double CNYJPY { get; set; }
+        public double CNYRSD { get; set; }
+        public double CNYBGN { get; set; }
+        public double CNYARS { get; set; }
 
         [Required]
         public DateTime dateTime { get; set; }

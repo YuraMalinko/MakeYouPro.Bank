@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Interfaces
+namespace WebAPIClient
 {
-    public interface IRurRepository
-    {
-    }
+    public record class Repository(string name);
 }

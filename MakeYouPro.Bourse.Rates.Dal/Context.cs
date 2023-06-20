@@ -17,7 +17,7 @@ namespace MakeYouPro.Bourse.Rates.Dal
         public DbSet<ARSDto> MainARS { get; set; }
         public DbSet<BGNDto> MainBGN { get; set; }
         public DbSet<USDDto> MainUSD { get; set; }
-        public DbSet<RURDto> MainRUR { get; set; }
+        public DbSet<RUBDto> MainRUR { get; set; }
         public DbSet<EURDto> MainEUR { get; set; }
         public DbSet<CNYDto> MainCNY { get; set; }
         public DbSet<RSDDto> MainRSD { get; set; }

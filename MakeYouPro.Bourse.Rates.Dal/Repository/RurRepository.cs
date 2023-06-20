@@ -8,14 +8,14 @@ using MakeYouPro.Bourse.Rates.Dal.Models;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Repository
 {
-    public class RurRepository: IRurRepository
+    public class RurRepository: IRubRepository
     {
         private static Context _context;
         public RurRepository()
         {
             _context = new Context();
         }
-        public RURDto AddRur(RURDto rur)
+        public RUBDto AddRur(RUBDto rur)
         {
             _context.MainRUR.Add(rur);
             _context.SaveChanges();
