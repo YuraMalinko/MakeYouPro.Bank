@@ -190,5 +190,127 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
 
             yield return new object[] { leadId, leadEntity };
         }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenCreateLead()
+        {
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "1111 000000",
+                Email = "1@mail.ru",
+                PhoneNumber = "8921002232",
+                Name = "1",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>();
+            LeadEntity addLeadEntity = new LeadEntity
+            {
+                Id = 1,
+                PassportNumber = "1111 000000",
+                Email = "1@mail.ru",
+                PhoneNumber = "8921002232",
+                Name = "1",
+                Citizenship = "RUS"
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "1111 000000",
+                Email = "1@mail.ru",
+                PhoneNumber = "8921002232",
+                Name = "1",
+                Citizenship = "RUS"
+            };
+            Lead expected = new Lead
+            {
+                Id = 1,
+                PassportNumber = "1111 000000",
+                Email = "1@mail.ru",
+                PhoneNumber = "8921002232",
+                Name = "1",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, addLeadEntity, addLead, expected };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSamePasport()
+        {
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "1111 0000002",
+                Email = "12@mail.ru",
+                PhoneNumber = "89210022322",
+                Name = "12",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 30,
+                PassportNumber = "1111 0000002",
+                Email = "1230@mail.ru",
+                PhoneNumber = "89210022330",
+                Name = "1230",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.VipLead
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 30,
+                PassportNumber = "1111 0000002",
+                Email = "1230@mail.ru",
+                PhoneNumber = "89210022330",
+                Name = "1230",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.VipLead
+            };
+            LeadEntity leadEntityDb = new LeadEntity
+            {
+                Id = 30,
+                PassportNumber = "1111 0000002",
+                Email = "1230@mail.ru",
+                PhoneNumber = "89210022330",
+                Name = "1230",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.VipLead
+            };
+            LeadEntity leadUpdateEntity = new LeadEntity
+            {
+                Id = 30,
+                PassportNumber = "1111 0000002",
+                Email = "12@mail.ru",
+                PhoneNumber = "89210022322",
+                Name = "12",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.VipLead
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "1111 0000002",
+                Email = "12@mail.ru",
+                PhoneNumber = "89210022322",
+                Name = "12",
+                Citizenship = "RUS"
+            };
+            Lead expected = new Lead
+            {
+                Id = 30,
+                PassportNumber = "1111 0000002",
+                Email = "12@mail.ru",
+                PhoneNumber = "89210022322",
+                Name = "12",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.VipLead
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, leadEntityDb, leadUpdateEntity, addLead, expected };
+        }
     }
 }
+//LeadEntity leadEntity, List<LeadEntity> leads, Lead leadMatchedDb, LeadEntity leadEntityDb, LeadEntity leadUpdateEntity, Lead addLead, Lead expected

@@ -15,11 +15,6 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         private readonly IEncryptionProvider _provider;
 
-        //public CRMContext()
-        //{
-        //    _provider = new GenerateEncryptionProvider("encryptKey7/P+2-");
-        //}
-
         public CRMContext(string encryptKey)
         {
             _provider = new GenerateEncryptionProvider(encryptKey);
@@ -28,6 +23,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             //builder.UseSqlServer(Environment.GetEnvironmentVariable("ConnectLocalBourseCrmDB"));
+            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRMBourse3;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

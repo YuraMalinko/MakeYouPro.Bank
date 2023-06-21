@@ -189,7 +189,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 var defaultRubAccount = CreateDefaultRubAccount();
                 defaultRubAccount.LeadId = addLeadEntity.Id;
-                var addRubAccount = await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount);
+                await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount);
 
                 var result = _mapper.Map<Lead>(addLeadEntity);
 
