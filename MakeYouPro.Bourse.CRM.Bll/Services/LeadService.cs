@@ -18,17 +18,17 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly IAccountService _accountService;
 
-        private readonly IAuthServiceClient _authServiceClient;
+      //  private readonly IAuthServiceClient _authServiceClient;
 
         private readonly IMapper _mapper;
 
         private readonly ILogger _logger;
 
-        public LeadService(ILeadRepository leadRepository, IAccountService accountService, IAuthServiceClient authServiceClient, IMapper mapper, ILogger nLogger)
+        public LeadService(ILeadRepository leadRepository, IAccountService accountService, IMapper mapper, ILogger nLogger)
         {
             _leadRepository = leadRepository;
             _accountService = accountService;
-            _authServiceClient = authServiceClient;
+           // _authServiceClient = authServiceClient;
             _mapper = mapper;
             _logger = nLogger;
         }
@@ -51,7 +51,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             };
         }
 
-        public async Task<Lead> GetLeadById(int leadId)
+        public async Task<Lead> GetLeadByIdAsync(int leadId)
         {
             var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
 

@@ -7,7 +7,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
     {
         Task<Lead> CreateOrRecoverLeadAsync(Lead addLead);
 
-        Task<Lead> GetLeadById(int leadId);
+        Task<Lead> GetLeadByIdAsync(int leadId);
 
         Task DeleteLeadByIdAsync(int leadId);
 

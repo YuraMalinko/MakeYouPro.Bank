@@ -64,7 +64,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> GetLeadById(int leadId)
         {
-            var lead = await _leadService.GetLeadById(leadId);
+            var lead = await _leadService.GetLeadByIdAsync(leadId);
             var result = _mapper.Map<LeadResponseInfo>(lead);
 
             return Ok(result);
