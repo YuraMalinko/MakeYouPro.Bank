@@ -7,8 +7,15 @@ using ReportingService.Bll.Services;
 using ReportingService.Dal;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Repository.CRM;
+using NLog;
+using ILogger = NLog.ILogger;
+using LogManager = NLog.LogManager;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+var nlog = LogManager.Setup().GetCurrentClassLogger();
+builder.Services.AddSingleton<ILogger>(nlog);
 
 // Add services to the container.
 
@@ -33,6 +40,8 @@ builder.Services.AddSingleton<Context>();
 //        services.AddHostedService<RabbitMqListener>();
 //    })
 //    .Build();
+
+builder.Services.AddAutoMapper(typeof(MapperBLL));
 
 var app = builder.Build();
 

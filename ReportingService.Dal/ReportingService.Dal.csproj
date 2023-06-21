@@ -14,4 +14,8 @@
     <ProjectReference Include="..\CoreRS\CoreRS.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IRepository\Commission\" />
+  </ItemGroup>
+
 </Project>
