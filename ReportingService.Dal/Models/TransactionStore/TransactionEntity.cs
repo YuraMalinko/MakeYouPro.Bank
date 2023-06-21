@@ -9,13 +9,16 @@ namespace ReportingService.Dal.Models.TransactionStore
         [Key]
         public int Id { get; set; }
 
+        [Required]
+        public int IdOutside { get; set; }
+
         public string Type { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(38,4)")]
         public decimal Amount { get; set; }
 
-        public DateTime Time { get; set; }
+        public DateTime DataTime { get; set; }
 
         [Required]
         [ForeignKey(nameof(AccountId))]

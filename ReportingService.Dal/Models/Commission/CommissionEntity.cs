@@ -11,6 +11,9 @@ namespace ReportingService.DAL.ModelsDAL.Commissions
         public int Id { get; set; }
 
         [Required]
+        public string Type { get; set; }
+
+        [Required]
         [Column(TypeName = "decimal(38,4)")]
         public decimal Amount { get; set; }
 

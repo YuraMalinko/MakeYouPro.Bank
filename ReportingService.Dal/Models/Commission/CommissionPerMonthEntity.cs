@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ReportingService.DAL.ModelsDAL.Commissions
 {
-    public class SumCommissionPerDayEntity
+    public class CommissionPerMonthEntity
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
-        [Range(2, 2)]
-        public int OperationDay { get; set; }
+        public string Type { get; set; }
 
         [Required]
         [Range(2, 2)]

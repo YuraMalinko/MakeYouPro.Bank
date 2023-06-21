@@ -7,15 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IRepository\Commission\**" />
+    <EmbeddedResource Remove="IRepository\Commission\**" />
+    <None Remove="IRepository\Commission\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CoreRS\CoreRS.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IRepository\Commission\" />
   </ItemGroup>
 
 </Project>
