@@ -9,6 +9,7 @@ using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using NUnit.Framework;
 using MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource;
 using MakeYouPro.Bourse.CRM.Dal.Models;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Tests
 {
@@ -56,8 +57,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
             _mockAccountService.VerifyNoOtherCalls();
         }
 
-        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.DeleteLeadByIdAsync_WhenLeadStatusIsNotActive_ShouldBeArgumentException))]
-        public async Task DeleteLeadByIdAsyncTest_WhenLeadStatusIsNotActive_ShouldBeArgumentException(int leadId, LeadEntity leadEntity)
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.DeleteLeadByIdAsyncTestCaseSource_WhenLeadStatusIsNotActive_ShouldBeArgumentException))]
+        public void DeleteLeadByIdAsyncTest_WhenLeadStatusIsNotActive_ShouldBeArgumentException(int leadId, LeadEntity leadEntity)
         {
             _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadId)).ReturnsAsync(leadEntity);
 
@@ -71,9 +72,27 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         }
 
         [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.GetLeadByIdAsyncTestCaseSource))]
-        public async Task GetLeadByIdAsync()
+        public async Task GetLeadByIdAsyncTest(int leadId, LeadEntity leadEntity, Lead expected)
         {
+            _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadId)).ReturnsAsync(leadEntity);
 
+           Lead actual =  await _leadService.GetLeadByIdAsync(leadId);
+
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadId), Times.Once);
+            _mockLeadRepo.VerifyNoOtherCalls();
+
+            actual.Should().BeEquivalentTo(expected);
+        }
+
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.GetLeadByIdAsyncTestCaseSource_WhenTeadStatusIsNotActive_ShouldBeArgumentException))]
+        public async Task GetLeadByIdAsyncTest_WhenTeadStatusIsNotActive_ShouldBeArgumentException(int leadId, LeadEntity leadEntity)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadId)).ReturnsAsync(leadEntity);
+
+           Assert.ThrowsAsync<ArgumentException>(async () => await _leadService.GetLeadByIdAsync(leadId));
+
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadId), Times.Once);
+            _mockLeadRepo.VerifyNoOtherCalls();
         }
     }
 }
