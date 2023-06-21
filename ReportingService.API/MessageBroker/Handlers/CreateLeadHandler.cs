@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ReportingService.Api.FinalRabbitMQ.MessageHandler;
+using ReportingService.Api.MessageHandler;
 using ReportingService.Bll.IServices;
 using ReportingService.Dal.Models.CRM;
 

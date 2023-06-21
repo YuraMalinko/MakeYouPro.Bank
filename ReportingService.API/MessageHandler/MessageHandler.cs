@@ -3,7 +3,7 @@ using ReportingService.Bll.IServices;
 using Newtonsoft.Json;
 using ReportingService.Api.MessageBroker.Interfaces;
 
-namespace ReportingService.Api.FinalRabbitMQ.MessageHandler
+namespace ReportingService.Api.MessageHandler
 {
     internal class MessageHandler : IMessageHandler
     {

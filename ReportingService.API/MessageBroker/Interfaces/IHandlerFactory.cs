@@ -1,4 +1,4 @@
-﻿using ReportingService.Api.FinalRabbitMQ.MessageHandler;
+﻿using ReportingService.Api.MessageHandler;
 
 namespace ReportingService.Api.MessageBroker.Interfaces
 {

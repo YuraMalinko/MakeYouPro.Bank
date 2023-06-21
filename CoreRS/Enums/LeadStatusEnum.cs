@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoreRS.Enums
+﻿namespace CoreRS.Enums
 {
-    internal class LeadStatusEnum
+    public enum LeadStatusEnum
     {
+        Active,
+        Deactive,
+        Deleted
     }
 }

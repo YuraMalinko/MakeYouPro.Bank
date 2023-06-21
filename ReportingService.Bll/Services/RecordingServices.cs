@@ -1,6 +1,7 @@
 ﻿using ReportingService.Bll.IServices;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Models.CRM;
+using ReportingService.Dal.Models.TransactionStore;
 
 namespace ReportingService.Bll.Services
 {
@@ -16,6 +17,7 @@ namespace ReportingService.Bll.Services
         {
             _leadRepositry = leadRepositry;
             _accountRepositry = accountRepositry;
+            _transactionRepositry = transactionRepository;
         }
 
         public async Task CreateLeadInDatabaseAsync(LeadEntity lead)
@@ -37,6 +39,14 @@ namespace ReportingService.Bll.Services
             await _accountRepositry.UpdateAccountAsync(account);
         }
 
-        public async Task CreateTransactionAsync()
+        public async Task CreateTransactionAsync(TransactionEntity transaction)
+        {
+            await _transactionRepositry.CreateTransactionAsync(transaction);
+        }
+
+        public async Task UpdateTransactionAsync(TransactionEntity transaction)
+        {
+            await _transactionRepositry.UpdateTransactionAsync(transaction);
+        }
     }
 }

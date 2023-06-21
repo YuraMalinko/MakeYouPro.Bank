@@ -1,10 +1,10 @@
-using ReportingService.Api.FinalRabbitMQ.MessageHandler;
 using ReportingService.Api.InternetRabbitMQ;
 using ReportingService.Api.MessageBroker;
 using ReportingService.Api.MessageBroker.Configuration;
 using ReportingService.Api.MessageBroker.Handlers;
 using ReportingService.Api.MessageBroker.Interfaces;
 using ReportingService.Api.MessageBroker.Serializer;
+using ReportingService.Api.MessageHandler;
 using ReportingService.Bll;
 using ReportingService.Bll.IServices;
 using ReportingService.Bll.Services;
@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen();
 
 // inject configuration for Listener and service that uses Publisher
 var rabbitMqPublisherSettings = builder.Configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqSettings>();
-var leadServiceSettings = builder.Configuration.GetSection("LeadServiceConfiguration").Get<RouteServiceSettings>();
+var leadServiceSettings = builder.Configuration.GetSection("RouteServiceConfiguration").Get<RouteServiceSettings>();
 builder.Services.AddSingleton(rabbitMqPublisherSettings);
 builder.Services.AddSingleton(leadServiceSettings);
 

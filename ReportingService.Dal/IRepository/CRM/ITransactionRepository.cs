@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ReportingService.Dal.Models.TransactionStore;
 
 namespace ReportingService.Dal.IRepository.CRM
 {
-    internal class ITransactionRepository
+    public interface ITransactionRepository
     {
+        Task<TransactionEntity> CreateTransactionAsync(TransactionEntity transaction);
+
+        Task<TransactionEntity> UpdateTransactionAsync(TransactionEntity transaction);
     }
 }
