@@ -234,6 +234,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
 
         public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSamePasport()
         {
+            //1. Случай, когда ВипЛид восстанавливается (по совпадению по паспорту)
             LeadEntity leadEntity = new LeadEntity
             {
                 PassportNumber = "1111 0000002",
@@ -310,7 +311,504 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
             };
 
             yield return new object[] { leadEntity, leads, leadMatchedDb, leadEntityDb, leadUpdateEntity, addLead, expected };
+
+            //2. Случай, когда Лид восстанавливается (по совпадению по паспорту) и его акки остаются удаленными, но ему присваивается новый рублевый акк
+
+            leadEntity = new LeadEntity
+            {
+                PassportNumber = "1111 00000027",
+                Email = "127@mail.ru",
+                PhoneNumber = "892100223227",
+                Name = "127",
+                Citizenship = "RUS",
+                Accounts = new List<AccountEntity>
+                    {
+                        new AccountEntity
+                        {
+                            Id = 99,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "RUB"
+                        },
+                        new AccountEntity
+                        {
+                            Id = 100,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "USD"
+                        },
+                    }
+            };
+            leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 307,
+                PassportNumber = "1111 00000027",
+                Email = "12307@mail.ru",
+                PhoneNumber = "892100223307",
+                Name = "12307",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead,
+                Accounts = new List<AccountEntity>
+                    {
+                        new AccountEntity
+                        {
+                            Id = 99,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "RUB"
+                        },
+                        new AccountEntity
+                        {
+                            Id = 100,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "USD"
+                        },
+                    }
+                }
+            };
+            leadMatchedDb = new Lead
+            {
+                Id = 307,
+                PassportNumber = "1111 00000027",
+                Email = "12307@mail.ru",
+                PhoneNumber = "892100223307",
+                Name = "12307",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead,
+                Accounts = new List<Account>
+                    {
+                        new Account
+                        {
+                            Id = 99,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "RUB"
+                        },
+                        new Account
+                        {
+                            Id = 100,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "USD"
+                        },
+                    }
+            };
+            leadEntityDb = new LeadEntity
+            {
+                Id = 307,
+                PassportNumber = "1111 00000027",
+                Email = "12307@mail.ru",
+                PhoneNumber = "892100223307",
+                Name = "12307",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead,
+                Accounts = new List<AccountEntity>
+                    {
+                        new AccountEntity
+                        {
+                            Id = 99,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "RUB"
+                        },
+                        new AccountEntity
+                        {
+                            Id = 100,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "USD"
+                        },
+                    }
+            };
+            leadUpdateEntity = new LeadEntity
+            {
+                Id = 307,
+                PassportNumber = "1111 00000027",
+                Email = "127@mail.ru",
+                PhoneNumber = "892100223227",
+                Name = "127",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.StandardLead,
+                Accounts = new List<AccountEntity>
+                    {
+                        new AccountEntity
+                        {
+                            Id = 130,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Active,
+                            Currency = "RUB"
+                        }
+                    }
+            };
+            addLead = new Lead
+            {
+                PassportNumber = "1111 00000027",
+                Email = "127@mail.ru",
+                PhoneNumber = "892100223227",
+                Name = "127",
+                Citizenship = "RUS",
+                Accounts = new List<Account>
+                    {
+                        new Account
+                        {
+                            Id = 99,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "RUB"
+                        },
+                        new Account
+                        {
+                            Id = 100,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Deleted,
+                            Currency = "USD"
+                        },
+                    }
+            };
+            expected = new Lead
+            {
+                Id = 307,
+                PassportNumber = "1111 00000027",
+                Email = "127@mail.ru",
+                PhoneNumber = "892100223227",
+                Name = "127",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.StandardLead,
+                Accounts = new List<Account>
+                    {
+                        new Account
+                        {
+                            Id = 130,
+                            LeadId = 307,
+                            Status = AccountStatusEnum.Active,
+                            Currency = "RUB"
+                        }
+                    }
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, leadEntityDb, leadUpdateEntity, addLead, expected };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSameEmail_ShouldBeAlreadyExistException()
+        {
+            // Случай, когда ВипЛид пытается создаться, но в базе уже есть такй емейл
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "1111 00000029",
+                Email = "129@mail.ru",
+                PhoneNumber = "892100223229",
+                Name = "129",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 309,
+                PassportNumber = "9999 88802",
+                Email = "129@mail.ru",
+                PhoneNumber = "892100223999",
+                Name = "12309",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.VipLead
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 309,
+                PassportNumber = "9999 88802",
+                Email = "129@mail.ru",
+                PhoneNumber = "892100223999",
+                Name = "12309",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.VipLead
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "1111 00000029",
+                Email = "129@mail.ru",
+                PhoneNumber = "892100223229",
+                Name = "129",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, addLead };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSameEmailAndPhoneNumber_ShouldBeAlreadyExistException()
+        {
+            // Случай, когда Лид пытается создаться, но в базе уже есть такй емейл и телефон
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "1111 000000290",
+                Email = "1290@mail.ru",
+                PhoneNumber = "8921002232290",
+                Name = "1290",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 3090,
+                PassportNumber = "9999 888020",
+                Email = "1290@mail.ru",
+                PhoneNumber = "8921002232290",
+                Name = "123090",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 3090,
+                PassportNumber = "9999 888020",
+                Email = "1290@mail.ru",
+                PhoneNumber = "8921002232290",
+                Name = "123090",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "1111 000000290",
+                Email = "1290@mail.ru",
+                PhoneNumber = "8921002232290",
+                Name = "1290",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, addLead };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSamePhoneNumber()
+        {
+            // Случай, когда Лид создается, но в базе уже есть удаленный лид с таким же телефоном
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "11133290",
+                Email = "12904@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "12904",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 30904,
+                PassportNumber = "111433290",
+                Email = "12490@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "1230904",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 30904,
+                PassportNumber = "111433290",
+                Email = "12490@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "1230904",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "11133290",
+                Email = "12904@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "12904",
+                Citizenship = "RUS"
+            };
+            LeadEntity addLeadEntity = new LeadEntity
+            {
+                Id = 999,
+                PassportNumber = "11133290",
+                Email = "12904@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "12904",
+                Citizenship = "RUS"
+            };
+            Lead expected = new Lead
+            {
+                Id = 999,
+                PassportNumber = "11133290",
+                Email = "12904@mail.ru",
+                PhoneNumber = "892100224444",
+                Name = "12904",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, addLead, addLeadEntity, expected };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException()
+        {
+            // Случай, когда Юзер(с ролью НеЛид) пытается создаться, но в базе уже есть такой удаленный - ожидаем ошибку
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "111332901",
+                Email = "129041@mail.ru",
+                PhoneNumber = "8921002244441",
+                Name = "129041",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 309041,
+                PassportNumber = "1114332901",
+                Email = "129041@mail.ru",
+                PhoneNumber = "8921001224444",
+                Name = "12309041",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.Manager
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 309041,
+                PassportNumber = "1114332901",
+                Email = "129041@mail.ru",
+                PhoneNumber = "8921001224444",
+                Name = "12309041",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.Manager
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "111332901",
+                Email = "129041@mail.ru",
+                PhoneNumber = "8921002244441",
+                Name = "129041",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, addLead };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadAndStatusIsActive_ShouldBeAlreadyExistException()
+        {
+            // Случай, когда нашелся в базе Юзер с таким же номером телефона и он активный - ожидаем ошибку
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "1113329015",
+                Email = "129041251@mail.ru",
+                PhoneNumber = "87451120000",
+                Name = "1290415",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 3090415,
+                PassportNumber = "11143329015",
+                Email = "12904125@mail.ru",
+                PhoneNumber = "87451120000",
+                Name = "123090415",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.StandardLead
+                }
+            };
+            Lead leadMatchedDb = new Lead
+            {
+                Id = 3090415,
+                PassportNumber = "11143329015",
+                Email = "12904125@mail.ru",
+                PhoneNumber = "87451120000",
+                Name = "123090415",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Active,
+                Role = LeadRoleEnum.StandardLead
+            };
+            Lead addLead = new Lead
+            {
+                PassportNumber = "1113329015",
+                Email = "129041251@mail.ru",
+                PhoneNumber = "87451120000",
+                Name = "1290415",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, leadMatchedDb, addLead };
+        }
+
+        public static IEnumerable CreateOrRecoverLeadAsyncTestCaseSource_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException()
+        {
+            // Случай, когда нашлся в базе два Юзера - 1 с таким же номером телефона, 2 - с таким же емейлом - ожидаем ошибку
+
+            LeadEntity leadEntity = new LeadEntity
+            {
+                PassportNumber = "4",
+                Email = "4@mail.ru",
+                PhoneNumber = "444442222",
+                Name = "129041544",
+                Citizenship = "RUS"
+            };
+            List<LeadEntity> leads = new List<LeadEntity>
+            {
+            new LeadEntity
+                {
+                Id = 30904154,
+                PassportNumber = "111433290154",
+                Email = "129041254@mail.ru",
+                PhoneNumber = "444442222",
+                Name = "1230904154",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+                },
+            new LeadEntity
+                {
+                Id = 6,
+                PassportNumber = "666666666",
+                Email = "4@mail.ru",
+                PhoneNumber = "444442222666",
+                Name = "12309041546666",
+                Citizenship = "RUS",
+                Status = LeadStatusEnum.Deleted,
+                Role = LeadRoleEnum.StandardLead
+                },
+            };
+            int leadMatchedId1 = 30904154;
+            int leadMatchedId2 = 6;
+            Lead addLead = new Lead
+            {
+                PassportNumber = "4",
+                Email = "4@mail.ru",
+                PhoneNumber = "444442222",
+                Name = "129041544",
+                Citizenship = "RUS"
+            };
+
+            yield return new object[] { leadEntity, leads, addLead, leadMatchedId1, leadMatchedId2 };
         }
     }
 }
-//LeadEntity leadEntity, List<LeadEntity> leads, Lead leadMatchedDb, LeadEntity leadEntityDb, LeadEntity leadUpdateEntity, Lead addLead, Lead expected

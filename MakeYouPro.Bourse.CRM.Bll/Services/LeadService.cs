@@ -251,6 +251,17 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
               //  _logger.Log(LogLevel.Warn, "One of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
                 throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
             }
+            else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role != LeadRoleEnum.Manager)
+            {
+                // _logger.Log(LogLevel.Warn, "Only manager can restore deactive lead");
+                throw new ArgumentException("Only manager can restore deactive lead");
+            }
+            else if (leadDb.Status == LeadStatusEnum.Deleted &&
+                    (leadRequest.Role != LeadRoleEnum.StandardLead || leadRequest.Role != LeadRoleEnum.VipLead))
+            {
+                //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
+                throw new ArgumentException("Only Lead can restore deleted lead");
+            }
             else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role == LeadRoleEnum.Manager
                 || leadDb.Status == LeadStatusEnum.Deleted && (leadRequest.Role == LeadRoleEnum.StandardLead || leadRequest.Role == LeadRoleEnum.VipLead))
             {
@@ -278,17 +289,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     return result;
                 }
             }
-            else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role != LeadRoleEnum.Manager)
-            {
-               // _logger.Log(LogLevel.Warn, "Only manager can restore deactive lead");
-                throw new ArgumentException("Only manager can restore deactive lead");
-            }
-            else if (leadDb.Status == LeadStatusEnum.Deleted && 
-                    (leadRequest.Role != LeadRoleEnum.StandardLead || leadRequest.Role != LeadRoleEnum.VipLead))
-            {
-              //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
-                throw new ArgumentException("Only Lead can restore deleted lead");
-            }
+            
 
             throw new ArgumentException();
         }

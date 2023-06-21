@@ -10,6 +10,7 @@ using NUnit.Framework;
 using MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Tests
 {
@@ -76,7 +77,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         {
             _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadId)).ReturnsAsync(leadEntity);
 
-           Lead actual =  await _leadService.GetLeadByIdAsync(leadId);
+            Lead actual = await _leadService.GetLeadByIdAsync(leadId);
 
             _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadId), Times.Once);
             _mockLeadRepo.VerifyNoOtherCalls();
@@ -89,7 +90,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         {
             _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadId)).ReturnsAsync(leadEntity);
 
-           Assert.ThrowsAsync<ArgumentException>(async () => await _leadService.GetLeadByIdAsync(leadId));
+            Assert.ThrowsAsync<ArgumentException>(async () => await _leadService.GetLeadByIdAsync(leadId));
 
             _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadId), Times.Once);
             _mockLeadRepo.VerifyNoOtherCalls();
@@ -99,8 +100,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         public async Task CreateOrRecoverLeadAsyncTest_WhenCreateLead(LeadEntity leadEntity, List<LeadEntity> leads, LeadEntity addLeadEntity,
                                                                        Lead addLead, Lead expected)
         {
-            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => Compare(l, leadEntity)))).ReturnsAsync(leads);
-            _mockLeadRepo.Setup(l => l.CreateLeadAsync(It.Is<LeadEntity>(l => Compare(l , leadEntity)))).ReturnsAsync(addLeadEntity);
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+            _mockLeadRepo.Setup(l => l.CreateLeadAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(addLeadEntity);
 
             Lead actual = await _leadService.CreateOrRecoverLeadAsync(addLead);
 
@@ -120,11 +121,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         public async Task CreateOrRecoverLeadAsyncTest_WhenRecoverLeadWithSamePasport(LeadEntity leadEntity, List<LeadEntity> leads, Lead leadMatchedDb,
                                                                                  LeadEntity leadEntityDb, LeadEntity leadUpdateEntity, Lead addLead, Lead expected)
         {
-            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => Compare(l, leadEntity)))).ReturnsAsync(leads);
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
             _mockLeadRepo.Setup(l => l.GetLeadByIdAsync(leadMatchedDb.Id)).ReturnsAsync(leadEntityDb);
-            _mockLeadRepo.Setup(l => l.UpdateLeadAsync(It.Is<LeadEntity>(l => Compare(l, leadEntityDb)))).ReturnsAsync(leadUpdateEntity);
-
-            //  _mockLeadRepo.Setup(l => l.CreateLeadAsync(It.Is<LeadEntity>(l => Compare(l , leadEntity)))).ReturnsAsync(addLeadEntity);
+            _mockLeadRepo.Setup(l => l.UpdateLeadAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntityDb)))).ReturnsAsync(leadUpdateEntity);
 
             Lead actual = await _leadService.CreateOrRecoverLeadAsync(addLead);
 
@@ -137,17 +136,125 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
             _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Never);
             _mockAccountService.VerifyNoOtherCalls();
 
+            actual.Should().BeEquivalentTo(expected);
+        }
 
-            //_mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
-            //_mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Once);
-            //_mockLeadRepo.Verify(l => l.GetLeadByIdAsync(addLeadEntity.Id), Times.Never);
-            //_mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
-            //_mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(addLeadEntity.Id), Times.Never);
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSameEmail_ShouldBeAlreadyExistException))]
+        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadWithSameEmail_ShouldBeAlreadyExistException(LeadEntity leadEntity, List<LeadEntity> leads,
+                                                                                                            Lead leadMatchedDb, Lead addLead)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+
+            Assert.ThrowsAsync<AlreadyExistException>(async () => await _leadService.CreateOrRecoverLeadAsync(addLead));
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedDb.Id), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedDb.Id), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Never);
+            _mockAccountService.VerifyNoOtherCalls();
+        }
+
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSameEmailAndPhoneNumber_ShouldBeAlreadyExistException))]
+        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadWithSameEmailAndPhoneNumber_ShouldBeAlreadyExistException(LeadEntity leadEntity, List<LeadEntity> leads,
+                                                                                                            Lead leadMatchedDb, Lead addLead)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+
+            Assert.ThrowsAsync<AlreadyExistException>(async () => await _leadService.CreateOrRecoverLeadAsync(addLead));
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedDb.Id), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedDb.Id), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Never);
+            _mockAccountService.VerifyNoOtherCalls();
+        }
+
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadWithSamePhoneNumber))]
+        public async Task CreateOrRecoverLeadAsyncTest_WhenRecoverLeadWithSamePhoneNumber(LeadEntity leadEntity, List<LeadEntity> leads,
+                                                                                    Lead leadMatchedDb, Lead addLead, LeadEntity addLeadEntity, Lead expected)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+            //  _mockLeadRepo.Setup(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id)).Returns();
+            _mockLeadRepo.Setup(l => l.CreateLeadAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(addLeadEntity);
+
+            Lead actual = await _leadService.CreateOrRecoverLeadAsync(addLead);
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedDb.Id), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedDb.Id), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Once);
+            _mockAccountService.VerifyNoOtherCalls();
 
             actual.Should().BeEquivalentTo(expected);
         }
 
-        private bool Compare(LeadEntity l, LeadEntity leadEntity)
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException))]
+        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException(LeadEntity leadEntity, 
+                                                                                    List<LeadEntity> leads, Lead leadMatchedDb, Lead addLead)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+
+            Assert.ThrowsAsync<ArgumentException>(async () => await _leadService.CreateOrRecoverLeadAsync(addLead));
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedDb.Id), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedDb.Id), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Never);
+            _mockAccountService.VerifyNoOtherCalls();
+        }
+
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadAndStatusIsActive_ShouldBeAlreadyExistException))]
+        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadAndStatusIsActive_ShouldBeAlreadyExistException(LeadEntity leadEntity,
+                                                                                   List<LeadEntity> leads, Lead leadMatchedDb, Lead addLead)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+
+            Assert.ThrowsAsync<AlreadyExistException>(async () => await _leadService.CreateOrRecoverLeadAsync(addLead));
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedDb.Id), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedDb.Id), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedDb.Id), Times.Never);
+            _mockAccountService.VerifyNoOtherCalls();
+        }
+
+        [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException))]
+        public void CreateOrRecoverLeadAsyncTest_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException(LeadEntity leadEntity, List<LeadEntity> leads, 
+                                                                                                            Lead addLead, int leadMatchedId1, int leadMatchedId2)
+        {
+            _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
+
+            Assert.ThrowsAsync<ArgumentException>(async () => await _leadService.CreateOrRecoverLeadAsync(addLead));
+
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedId1), Times.Never);
+            _mockLeadRepo.Verify(l => l.RestoringDeletedStatusAsync(leadMatchedId2), Times.Never);
+            _mockAccountService.Verify(a => a.CreateOrRestoreAccountAsync(It.IsAny<Account>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadsByPassportEmailPhoneAsync(It.IsAny<LeadEntity>()), Times.Once);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedId1), Times.Never);
+            _mockLeadRepo.Verify(l => l.GetLeadByIdAsync(leadMatchedId2), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.CreateLeadAsync(It.IsAny<LeadEntity>()), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedId1), Times.Never);
+            _mockLeadRepo.Verify(l => l.UpdateLeadPhoneNumberAsync("0", leadMatchedId2), Times.Never);
+            _mockAccountService.VerifyNoOtherCalls();
+        }
+
+        private bool CompareEntity(LeadEntity l, LeadEntity leadEntity)
         {
             try
             {
