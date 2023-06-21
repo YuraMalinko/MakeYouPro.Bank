@@ -18,6 +18,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public int LeadId { get; set; }
 
         [Required]
+        [Column(TypeName = "datetime")]
         public DateTime DateCreate { get; set; }
 
         [Required]
@@ -27,7 +28,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         [Required]
         public AccountStatusEnum Status { get; set; }
 
-        [Column(TypeName = "nvarchar(1000)")]
+        [Column(TypeName = "nvarchar(200)")]
         public string? Comment { get; set; }
     }
 }

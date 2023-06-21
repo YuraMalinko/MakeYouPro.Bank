@@ -4,6 +4,8 @@ using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.ComponentModel;
 
 namespace MakeYouPro.Bourse.CRM.Dal
 {
@@ -44,7 +46,21 @@ namespace MakeYouPro.Bourse.CRM.Dal
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
+        }
 
+        protected override void ConfigureConventions(ModelConfigurationBuilder builder)
+        {
+            builder.Properties<DateOnly>()
+                   .HaveConversion<DateOnlyConverter>()
+                   .HaveColumnType("date");
+        }
+
+        public class DateOnlyConverter : ValueConverter<DateOnly, DateTime>
+        {
+            public DateOnlyConverter() : base(
+                    d => d.ToDateTime(TimeOnly.MinValue),
+                    d => DateOnly.FromDateTime(d))
+            { }
         }
     }
 }
