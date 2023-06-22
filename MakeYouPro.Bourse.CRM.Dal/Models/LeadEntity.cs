@@ -21,26 +21,29 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
 
 
         [Required]
-        [Column(TypeName = "datetime2")]
+        [Column(TypeName = "datetime")]
         public DateTime DateCreate { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string Name { get; set; }
 
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string? MiddleName { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string Surname { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(30)")]
+        public DateOnly Birthday { get; set; }
+
+        [Required]
+        [Column(TypeName = "nvarchar(20)")]
         public string PhoneNumber { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(20)")]
         public string Email { get; set; }
 
         [Required]
@@ -50,13 +53,16 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
 
         [Required]
         [EncryptColumn]
+       // [Column(TypeName = "nvarchar(15)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string PassportNumber { get; set; }
 
         [Required]
         [EncryptColumn]
+        [Column(TypeName = "nvarchar(50)")]
         public string Registration { get; set; }
 
-        [Column(TypeName = "nvarchar(1000)")]
+        [Column(TypeName = "nvarchar(200)")]
         public string? Comment { get; set; }
 
         public List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();

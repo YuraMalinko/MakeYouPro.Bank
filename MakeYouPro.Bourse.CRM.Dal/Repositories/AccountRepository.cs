@@ -113,12 +113,16 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
             if (leadDb == null)
             {
-                _logger.Warn($"{nameof(LeadEntity)} with id {leadId} not found.");
+               // _logger.Warn($"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
             {
-                await _context.Accounts.Where(a => a.LeadId == leadId).ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
+                await _context.Accounts.Where(
+                    a => a.LeadId == leadId
+                    && a.Status != AccountStatusEnum.Deactive && a.Status != AccountStatusEnum.Deleted)
+                    .ForEachAsync(a => a.Status = AccountStatusEnum.Deleted);
+
                 await _context.SaveChangesAsync();
             }
         }
