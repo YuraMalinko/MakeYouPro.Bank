@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using ReportingService.Dal.Models.CRM;
+using CoreRS.Enums;
 
 namespace ReportingService.Dal.Models.TransactionStore
 {
@@ -12,7 +13,7 @@ namespace ReportingService.Dal.Models.TransactionStore
         [Required]
         public int IdOutside { get; set; }
 
-        public string Type { get; set; }
+        public TransactionType Type { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(38,4)")]
@@ -22,7 +23,7 @@ namespace ReportingService.Dal.Models.TransactionStore
 
         [Required]
         [ForeignKey(nameof(AccountId))]
-        public AccountEntity Account { get; set; }
+        public AccountEntity Accounts { get; set; }
 
         public int AccountId { get; set; }
     }

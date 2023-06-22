@@ -34,7 +34,7 @@ namespace ReportingService.Bll
             CreateMap<LeadDto, LeadEntity>()
                 .ForMember(src => src.BirthdayDay, opt => opt.MapFrom(x => x.Birthday.Day))
                 .ForMember(src => src.BirthdayMonth, opt => opt.MapFrom(x => x.Birthday.Month))
-                .ForMember(src => src.BirthdayDay, opt => opt.MapFrom(x => x.Birthday.Year));
+                .ForMember(src => src.BirthdayYear, opt => opt.MapFrom(x => x.Birthday.Year));
         }
     }
 }

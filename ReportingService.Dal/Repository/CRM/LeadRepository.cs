@@ -45,5 +45,13 @@ namespace ReportingService.Dal.Repository.CRM
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<LeadEntity>> GetLeadsWithANegativeBalance()
+        {
+            var leadsWithANegativeBalance = await _context.Accounts.Where(b => b.Balance < 0)
+                                                                   .Select(l => l.Leads)
+                                                                   .ToListAsync();
+            return leadsWithANegativeBalance;
+        }
     }
 }

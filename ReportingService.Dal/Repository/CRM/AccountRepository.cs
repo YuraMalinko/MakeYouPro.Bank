@@ -1,4 +1,6 @@
-﻿using CoreRS.Enums;
+﻿using System.Linq;
+using System.Security.Cryptography;
+using CoreRS.Enums;
 using Microsoft.EntityFrameworkCore;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Models.CRM;
@@ -49,13 +51,24 @@ namespace ReportingService.Dal.Repository.CRM
             return listAccounts;
         }
 
-        public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int sum)
+        public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int numberOfTransactions)
         {
-            var startDate = DateTime.Now.AddDays(-numberDays);            
-            var listAccounts = await _context.Transactions.Where(t => t.Amount >= sum && t.DataTime >= startDate && t.DataTime <= DateTime.Now)
-                                                    .Select(t => t.Account)
-                                                    .ToListAsync();
+            var startDate = DateTime.Now.AddDays(-numberDays);      
+            
+            var listAccounts = await _context.Accounts
+                .Where(a => a.Transactions.Count() >= numberOfTransactions)
+                .ToListAsync();
+
             return listAccounts;
+        }
+
+        public async Task<List<AccountEntity>> GetAccountsByAmountDifference(int numberDays, int sum)
+        {
+            var startDate = DateTime.Now.AddDays(-numberDays);
+
+            var x = _context.Transactions.Where(t => t.DataTime >= startDate && t.DataTime <= DateTime.Now)
+                .GroupBy(i=>i.AccountId)
+                .Where(t => t.Type == TransactionType.Deposit).Sum(t => t.Amount)
         }
     }
 }

@@ -35,6 +35,9 @@ namespace ReportingService.Dal.Models.CRM
         public string Surname { get; set; }
 
         [Required]
+        public DateOnly Birthday { get; set; }
+
+        [Required]
         public int BirthdayDay { get; set; }
 
         [Required]
