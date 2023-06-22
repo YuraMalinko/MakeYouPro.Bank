@@ -10,6 +10,6 @@ namespace ReportingService.Dal.IRepository.CRM
 
         Task<List<AccountEntity>> GetAccountsByBirthdayLeadsAsync(int numberDays);
 
-        Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int numberOfTransactions);
+        Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriodAsync(int numberDays, int numberOfTransactions);
     }
 }

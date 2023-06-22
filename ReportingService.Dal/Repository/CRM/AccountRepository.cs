@@ -49,7 +49,7 @@ namespace ReportingService.Dal.Repository.CRM
             return listAccounts;
         }
 
-        public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int numberOfTransactions)
+        public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriodAsync(int numberDays, int numberOfTransactions)
         {
             var startDate = DateTime.Now.AddDays(-numberDays);
 

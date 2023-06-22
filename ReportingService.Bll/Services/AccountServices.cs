@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ReportingService.Bll.IServices;
 using ReportingService.Bll.Models.CRM;
 using ReportingService.Dal.IRepository.CRM;
 
