@@ -5,7 +5,7 @@ using ReportingService.Dal.Models.CRM;
 
 namespace ReportingService.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class RabbitMqController : ControllerBase
     {

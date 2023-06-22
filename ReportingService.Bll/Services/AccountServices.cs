@@ -4,12 +4,12 @@ using ReportingService.Dal.IRepository.CRM;
 
 namespace ReportingService.Bll.Services
 {
-    public class AccountServices
+    public class AccountServices : IAccountServices
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _map;
 
-        public AccountServices(IAccountRepository accountRepository,IMapper map)
+        public AccountServices(IAccountRepository accountRepository, IMapper map)
         {
             _accountRepository = accountRepository;
             _map = map;
