@@ -2,5 +2,6 @@
 {
     public interface ITransactionServiceClient
     {
+        Task<decimal> GetAccountBalanceAsync(int accountId);
     }
 }

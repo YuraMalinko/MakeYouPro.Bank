@@ -2,6 +2,7 @@ using MakeYouPro.Bourse.CRM.Api.Extentions;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal;
 using NLog;
@@ -29,8 +30,7 @@ builder.Services.AddValidators();
 builder.Services.AddSettings();
 
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
-
-
+builder.Services.AddScoped<ITransactionServiceClient, TransactionServiceClient>(_ => new TransactionServiceClient(Environment.GetEnvironmentVariable("TransactionServiceUrl")));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

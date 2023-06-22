@@ -27,7 +27,8 @@
       "applicationUrl": "https://localhost:7074;http://localhost:5265",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AuthServiceUrl": "https://localhost:7075/"
+        "AuthServiceUrl": "https://localhost:7075/",
+        "TransactionServiceUrl": "https://localhost:7239/"
 
       }
     },

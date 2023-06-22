@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
 {
@@ -13,6 +16,26 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
         public TransactionServiceClient(string baseUri)
         {
             _client.BaseAddress = new Uri(baseUri);
+        }
+
+        public async Task<decimal> GetAccountBalanceAsync (int accountId)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            query["accountId"] = accountId.ToString();
+            string queryString = query.ToString();
+
+            var response = await _client.GetAsync($"qwe?{queryString}");
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var body = await response.Content.ReadFromJsonAsync<decimal>();
+
+                return body;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
     }
 }

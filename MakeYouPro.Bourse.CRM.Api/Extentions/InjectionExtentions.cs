@@ -23,6 +23,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         {
             services.AddScoped<ILeadService, LeadService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ITransactionService, TransactionService>();
         }
 
         public static void AddValidators(this IServiceCollection services)
