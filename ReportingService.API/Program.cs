@@ -11,9 +11,14 @@ using ReportingService.Bll.Services;
 using ReportingService.Dal;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Repository.CRM;
-using System.Runtime.CompilerServices;
+using NLog;
+using CoreRS.Logger;
+using CoreRS.CustomExceptionMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 
 // Add services to the container.
 
@@ -55,10 +60,9 @@ builder.Services.AddSingleton<Context>();
 //    })
 //    .Build();
 
-var app = builder.Build();
+builder.Services.AddAutoMapper(typeof(MapperBLL));
 
-// Add handlers to factory
-CreateFactory(app);
+var app = builder.Build();
 
 //host.Start();
 
@@ -74,6 +78,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
 
