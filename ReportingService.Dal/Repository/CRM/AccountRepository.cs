@@ -39,5 +39,23 @@ namespace ReportingService.Dal.Repository.CRM
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<List<AccountEntity>> GetAccountsByBirthdayLeads(int numberDays)
+        {
+            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-numberDays));
+            DateOnly nowDate = DateOnly.FromDateTime(DateTime.Now);
+            var listAccounts = await _context.Accounts.Where(d => d.Leads.Birthday >= startDate && d.Leads.Birthday <= nowDate)
+                                                      .ToListAsync();
+            return listAccounts;
+        }
+
+        public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int sum)
+        {
+            var startDate = DateTime.Now.AddDays(-numberDays);            
+            var listAccounts = await _context.Transactions.Where(t => t.Amount >= sum && t.DataTime >= startDate && t.DataTime <= DateTime.Now)
+                                                    .Select(t => t.Account)
+                                                    .ToListAsync();
+            return listAccounts;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using CoreRS.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using ReportingService.Dal.Models.TransactionStore;
 
 namespace ReportingService.Dal.Models.CRM
 {
@@ -12,7 +13,7 @@ namespace ReportingService.Dal.Models.CRM
 
         [Required]
         [ForeignKey(nameof(LeadId))]
-        public virtual LeadEntity Lead { get; set; }
+        public virtual LeadEntity Leads { get; set; }
 
         public int LeadId { get; set; }
 
@@ -35,5 +36,7 @@ namespace ReportingService.Dal.Models.CRM
 
         [Required]
         public bool IsDeleted { get; set; }
+
+        public List<TransactionEntity> Transactions { get; set; } = new List<TransactionEntity>();
     }
 }

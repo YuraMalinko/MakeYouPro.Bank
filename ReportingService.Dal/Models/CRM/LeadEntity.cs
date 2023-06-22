@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CoreRS.Enums;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCore.EncryptColumn.Attribute;
 
 namespace ReportingService.Dal.Models.CRM
 {
@@ -11,34 +13,42 @@ namespace ReportingService.Dal.Models.CRM
         public int Id { get; set; }
 
         [Required]
-        public int Role { get; set; }
+        public LeadRoleEnum Role { get; set; }
 
         [Required]
-        public int Status { get; set; }
+        public LeadStatusEnum Status { get; set; }
+
 
         [Required]
-        [Column(TypeName = "datetime2")]
+        [Column(TypeName = "datetime")]
         public DateTime DateCreate { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string Name { get; set; }
 
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string? MiddleName { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string Surname { get; set; }
 
         [Required]
-        [Phone]
-        [Column(TypeName = "nvarchar(30)")]
+        public int BirthdayDay { get; set; }
+
+        [Required]
+        public int BirthdayMonth { get; set; }
+
+        [Required]
+        public int BirthdayYear { get; set; }
+
+        [Required]
+        [Column(TypeName = "nvarchar(20)")]
         public string PhoneNumber { get; set; }
 
         [Required]
-        [EmailAddress]
-        [Column(TypeName = "nvarchar(100)")]
+        [Column(TypeName = "nvarchar(20)")]
         public string Email { get; set; }
 
         [Required]
@@ -47,16 +57,18 @@ namespace ReportingService.Dal.Models.CRM
         public string Citizenship { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(50)")]
+        [EncryptColumn]
+        [Column(TypeName = "nvarchar(30)")]
         public string PassportNumber { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(300)")]
+        [EncryptColumn]
+        [Column(TypeName = "nvarchar(50)")]
         public string Registration { get; set; }
 
-        [Column(TypeName = "nvarchar(1000)")]
+        [Column(TypeName = "nvarchar(200)")]
         public string? Comment { get; set; }
 
-        public virtual List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
+        public List<AccountEntity> Accounts { get; set; } = new List<AccountEntity>();
     }
 }

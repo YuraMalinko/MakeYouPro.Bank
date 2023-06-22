@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CoreRS.dto;
+using CoreRS.Models;
 using ReportingService.Bll.Models.Commission;
+using ReportingService.Dal.Models.CRM;
 using ReportingService.DAL.ModelsDAL.Commissions;
 
 namespace ReportingService.Bll
@@ -29,6 +31,10 @@ namespace ReportingService.Bll
                 .ForMember(src => src.OperationYear, opt => opt.MapFrom(x => x.OperationYear))
                 .ForMember(src => src.Type, opt => opt.MapFrom(x => x.Type))
                 .ForMember(src => src.AmountCommission, opt => opt.MapFrom(x => x.Amount));
+            CreateMap<LeadDto, LeadEntity>()
+                .ForMember(src => src.BirthdayDay, opt => opt.MapFrom(x => x.Birthday.Day))
+                .ForMember(src => src.BirthdayMonth, opt => opt.MapFrom(x => x.Birthday.Month))
+                .ForMember(src => src.BirthdayDay, opt => opt.MapFrom(x => x.Birthday.Year));
         }
     }
 }
