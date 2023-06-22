@@ -18,7 +18,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                     "RUB",
                     "USD",
                     "EUR",
-                    "PY",
+                    "JPY",
                     "CNY",
                     "RSD",
                     "BGN",
