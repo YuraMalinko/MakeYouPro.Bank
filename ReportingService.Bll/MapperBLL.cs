@@ -2,6 +2,7 @@
 using CoreRS.dto;
 using CoreRS.Models;
 using ReportingService.Bll.Models.Commission;
+using ReportingService.Bll.Models.CRM;
 using ReportingService.Dal.Models.CRM;
 using ReportingService.DAL.ModelsDAL.Commissions;
 
@@ -35,6 +36,7 @@ namespace ReportingService.Bll
                 .ForMember(src => src.BirthdayDay, opt => opt.MapFrom(x => x.Birthday.Day))
                 .ForMember(src => src.BirthdayMonth, opt => opt.MapFrom(x => x.Birthday.Month))
                 .ForMember(src => src.BirthdayYear, opt => opt.MapFrom(x => x.Birthday.Year));
+            CreateMap<AccountEntity, Account>();
         }
     }
 }

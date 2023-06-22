@@ -7,5 +7,7 @@ namespace ReportingService.Dal.IRepository.CRM
         Task<LeadEntity> CreateLeadAsync(LeadEntity lead);
 
         Task UpdateLeadAsync(LeadEntity leadUpdate);
+
+        Task<List<LeadEntity>> GetLeadsWithANegativeBalance();
     }
 }

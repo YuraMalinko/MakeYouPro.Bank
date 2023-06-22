@@ -7,5 +7,9 @@ namespace ReportingService.Dal.IRepository.CRM
         Task<AccountEntity> CreateAccountAsync(AccountEntity account);
 
         Task UpdateAccountAsync(AccountEntity accountUpdate);
+
+        Task<List<AccountEntity>> GetAccountsByBirthdayLeadsAsync(int numberDays);
+
+        Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int numberOfTransactions);
     }
 }

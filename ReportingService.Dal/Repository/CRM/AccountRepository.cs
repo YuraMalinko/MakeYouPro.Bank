@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Security.Cryptography;
-using CoreRS.Enums;
+﻿using CoreRS.Enums;
 using Microsoft.EntityFrameworkCore;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Models.CRM;
@@ -42,7 +40,7 @@ namespace ReportingService.Dal.Repository.CRM
             }
         }
 
-        public async Task<List<AccountEntity>> GetAccountsByBirthdayLeads(int numberDays)
+        public async Task<List<AccountEntity>> GetAccountsByBirthdayLeadsAsync(int numberDays)
         {
             DateOnly startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-numberDays));
             DateOnly nowDate = DateOnly.FromDateTime(DateTime.Now);
@@ -53,10 +51,11 @@ namespace ReportingService.Dal.Repository.CRM
 
         public async Task<List<AccountEntity>> GetAccountsByAmountOfTransactionsForPeriod(int numberDays, int numberOfTransactions)
         {
-            var startDate = DateTime.Now.AddDays(-numberDays);      
-            
+            var startDate = DateTime.Now.AddDays(-numberDays);
+
             var listAccounts = await _context.Accounts
-                .Where(a => a.Transactions.Count() >= numberOfTransactions)
+                .Where(a => a.Transactions
+                .Count(t => t.Type != TransactionType.Withdraw && t.DataTime >= startDate && t.DataTime <= DateTime.Now) >= numberOfTransactions)
                 .ToListAsync();
 
             return listAccounts;
@@ -67,8 +66,9 @@ namespace ReportingService.Dal.Repository.CRM
             var startDate = DateTime.Now.AddDays(-numberDays);
 
             var x = _context.Transactions.Where(t => t.DataTime >= startDate && t.DataTime <= DateTime.Now)
-                .GroupBy(i=>i.AccountId)
-                .Where(t => t.Type == TransactionType.Deposit).Sum(t => t.Amount)
+                .GroupBy(i => i.AccountId);
+            //.Where(s => s.Where(t => t.Type == TransactionType.Deposit).Sum(t => t.Amount));
+            return new List<AccountEntity>();
         }
     }
 }
