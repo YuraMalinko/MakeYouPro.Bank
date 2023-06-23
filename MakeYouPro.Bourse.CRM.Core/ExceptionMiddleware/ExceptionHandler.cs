@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
-using NLog;
 using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
@@ -13,7 +12,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
         public ExceptionHandler(RequestDelegate next, ILogger nLogger)
         {
             _next = next;
-            _logger = nLogger; 
+            _logger = nLogger;
         }
 
         public async Task InvokeAsync(HttpContext context)

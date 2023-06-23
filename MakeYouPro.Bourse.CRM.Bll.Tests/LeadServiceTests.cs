@@ -1,16 +1,15 @@
 using AutoMapper;
+using FluentAssertions;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.Mappings;
+using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Bll.Services;
+using MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 using Moq;
 using NLog;
-using FluentAssertions;
-using MakeYouPro.Bourse.CRM.Bll.Mappings;
-using NUnit.Framework;
-using MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource;
-using MakeYouPro.Bourse.CRM.Dal.Models;
-using MakeYouPro.Bourse.CRM.Bll.Models;
-using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Tests
 {
@@ -198,7 +197,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         }
 
         [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException))]
-        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException(LeadEntity leadEntity, 
+        public void CreateOrRecoverLeadAsyncTest_WhenRecoverLeadAndStatusIsDeletedButRoleIsNotLead_ShouldBeArgumentException(LeadEntity leadEntity,
                                                                                     List<LeadEntity> leads, Lead leadMatchedDb, Lead addLead)
         {
             _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);
@@ -234,7 +233,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
         }
 
         [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.CreateOrRecoverLeadAsyncTestCaseSource_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException))]
-        public void CreateOrRecoverLeadAsyncTest_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException(LeadEntity leadEntity, List<LeadEntity> leads, 
+        public void CreateOrRecoverLeadAsyncTest_WhenInDbTwoMatchesWithReqestLesd_ShouldBeArgumentException(LeadEntity leadEntity, List<LeadEntity> leads,
                                                                                                             Lead addLead, int leadMatchedId1, int leadMatchedId2)
         {
             _mockLeadRepo.Setup(l => l.GetLeadsByPassportEmailPhoneAsync(It.Is<LeadEntity>(l => CompareEntity(l, leadEntity)))).ReturnsAsync(leads);

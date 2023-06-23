@@ -1,11 +1,5 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
@@ -19,7 +13,7 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             _client.BaseAddress = new Uri(baseUri);
         }
 
-        public async Task<decimal> GetAccountBalanceAsync (int accountId)
+        public async Task<decimal> GetAccountBalanceAsync(int accountId)
         {
             var query = HttpUtility.ParseQueryString(string.Empty);
             query["accountId"] = accountId.ToString();
@@ -39,7 +33,23 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             }
         }
 
-        public async Task<int> CreateTransactionAsync(WithdrawDtoRequest transaction)
+        public async Task<int> CreateWithdrawTransactionAsync(WithdrawRequest transaction)
+        {
+            var response = await _client.PostAsJsonAsync("kek", transaction);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var body = await response.Content.ReadFromJsonAsync<int>();
+
+                return body;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public async Task<int> CreateDepositTransactionAsync(DepositRequest transaction)
         {
             var response = await _client.PostAsJsonAsync("kek", transaction);
 

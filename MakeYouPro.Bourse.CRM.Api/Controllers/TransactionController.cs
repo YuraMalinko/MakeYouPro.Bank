@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
-using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
-using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
-using MakeYouPro.Bourse.CRM.Bll.Services;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -59,6 +55,23 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("Deposit", Name = "CreateDepositAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<int>> CreateDepositAsync(TransactionRequest transactionRequest)
+        {
+            var validationResult = await _validator.ValidateAsync(transactionRequest);
 
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var transaction = _mapper.Map<Transaction>(transactionRequest);
+
+            var result = await _transactionService.CreateDepositAsync(transaction);
+
+            return Ok(result);
+        }
     }
 }

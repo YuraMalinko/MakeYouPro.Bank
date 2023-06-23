@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models
 {
-    public class WithdrawDtoRequest
+    public class DepositRequest
     {
         public int AccountId { get; set; }
 

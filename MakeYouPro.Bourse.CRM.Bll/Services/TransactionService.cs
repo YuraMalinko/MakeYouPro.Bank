@@ -5,12 +5,6 @@ using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -51,13 +45,13 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
                     var commissionPercentage = decimal.Parse(Environment.GetEnvironmentVariable("WithdrawCommissionPercentage"));
                     var amountWithCommission = transaction.Amount + (commissionPercentage * transaction.Amount / 100);
-                   // СЮДА ДОПИСАТЬ ПОДПИСКУ
+                    // СЮДА ДОПИСАТЬ ПОДПИСКУ
 
                     if (balance >= amountWithCommission)
                     {
                         transaction.Amount = amountWithCommission;
-                        var withdraw = _mapper.Map<WithdrawDtoRequest>(transaction);
-                        var transactionId = await _transactionServiceClient.CreateTransactionAsync(withdraw);
+                        var withdraw = _mapper.Map<WithdrawRequest>(transaction);
+                        var transactionId = await _transactionServiceClient.CreateWithdrawTransactionAsync(withdraw);
 
                         return transactionId;
                     }
@@ -65,6 +59,35 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     {
                         throw new InsufficientFundsException();
                     }
+                }
+                else
+                {
+                    throw new UnsuitableCurrencyException(account.Currency);
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Lead not found with such an active account");
+            }
+        }
+
+        public async Task<int> CreateDepositAsync(Transaction transaction)
+        {
+            if (await GetAndCheckAccountBelongsToLeadAsync(transaction.LeadId, transaction.AccountId))
+            {
+                var account = await _accountService.GetAccountAsync(transaction.AccountId);
+
+                if (account.Currency == "RUB" || account.Currency == "USD")
+                {
+                    var commissionPercentage = decimal.Parse(Environment.GetEnvironmentVariable("DepositCommissionPercentage"));
+                    var amountWithCommission = transaction.Amount + (commissionPercentage * transaction.Amount / 100);
+                    // СЮДА ДОПИСАТЬ ПОДПИСКУ
+
+                        transaction.Amount = amountWithCommission;
+                        var deposit = _mapper.Map<DepositRequest>(transaction);
+                        var transactionId = await _transactionServiceClient.CreateDepositTransactionAsync(deposit);
+
+                    return transactionId;
                 }
                 else
                 {

@@ -1,6 +1,6 @@
-﻿using MakeYouPro.Bourse.CRM.Dal.Models;
-using Bogus;
+﻿using Bogus;
 using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Dal.Models;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
@@ -69,7 +69,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         private Faker<LeadEntity> GetLeadFaker()
         {
             return new Faker<LeadEntity>("ru")
-                .RuleFor(x => x.Id, f => f.IndexFaker+1)
+                .RuleFor(x => x.Id, f => f.IndexFaker + 1)
                 .RuleFor(x => x.Status, f => f.Random.Enum<LeadStatusEnum>())
                 .RuleFor(x => x.DateCreate, f => f.Date.Between(new DateTime(2019, 01, 01), new DateTime(2021, 01, 01)))
                 .RuleFor(x => x.Name, f => f.Name.FirstName())
@@ -86,7 +86,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                     "BLR"
                 }))
                 .RuleFor(x => x.PassportNumber, f => f.Random.AlphaNumeric(10))
-                .RuleFor(x => x.PhoneNumber, f => (9000000000+f.IndexFaker).ToString())
+                .RuleFor(x => x.PhoneNumber, f => (9000000000 + f.IndexFaker).ToString())
                 .RuleFor(x => x.Registration, f => f.Random.RandomLocale())
                 .RuleFor(x => x.Comment, f => f.Random.Words(1))
                 .RuleFor(x => x.Role, f => _currentLeadRole);
@@ -109,8 +109,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 })
                 .RuleFor(x => x.Status, f =>
                 {
-                    if (_currentCurrencies.Contains(DefaultCurrency) 
-                    &&_currentLead.Status != LeadStatusEnum.Deleted)
+                    if (_currentCurrencies.Contains(DefaultCurrency)
+                    && _currentLead.Status != LeadStatusEnum.Deleted)
                     {
                         return AccountStatusEnum.Active;
                     }

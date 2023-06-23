@@ -1,16 +1,14 @@
 ﻿using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
-using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using System.Data;
-using System.Security.Cryptography.Xml;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
     internal static class TableGenerator
     {
 
-        private static readonly IEncryptionProvider _provider = 
+        private static readonly IEncryptionProvider _provider =
             new GenerateEncryptionProvider(Environment.GetEnvironmentVariable("EncryptKey"));
 
         internal static DataTable MakeLeadTable(IEnumerable<LeadEntity> leads)

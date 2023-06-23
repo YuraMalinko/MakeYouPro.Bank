@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MakeYouPro.Bourse.CRM.Bll.Models
+﻿namespace MakeYouPro.Bourse.CRM.Bll.Models
 {
     public class Transaction
     {

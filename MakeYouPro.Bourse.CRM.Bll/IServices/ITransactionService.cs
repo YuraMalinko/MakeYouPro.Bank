@@ -9,5 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
         Task<decimal> GetAccountBalanceAsync(int accountId);
 
         Task<int> CreateWithdrawAsync(Transaction transaction);
+
+        Task<int> CreateDepositAsync(Transaction transaction);
     }
 }

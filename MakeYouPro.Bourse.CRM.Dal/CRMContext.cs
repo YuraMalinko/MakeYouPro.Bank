@@ -5,7 +5,6 @@ using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.ComponentModel;
 
 namespace MakeYouPro.Bourse.CRM.Dal
 {

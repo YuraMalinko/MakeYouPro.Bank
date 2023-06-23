@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Mappings
 {
@@ -13,8 +8,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Mappings
     {
         public MapperClientTransactionProfile()
         {
-            CreateMap<Transaction, WithdrawDtoRequest>()
+            CreateMap<Transaction, WithdrawRequest>()
                 .ForMember(dest => dest.Amount, opt => opt.MapFrom(src => -src.Amount));
+            CreateMap<Transaction, DepositRequest>();
         }
     }
 }

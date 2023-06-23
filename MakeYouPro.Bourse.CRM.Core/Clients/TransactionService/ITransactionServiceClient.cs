@@ -6,6 +6,8 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
     {
         Task<decimal> GetAccountBalanceAsync(int accountId);
 
-        Task<int> CreateTransactionAsync(WithdrawDtoRequest transaction);
+        Task<int> CreateWithdrawTransactionAsync(WithdrawRequest transaction);
+
+        Task<int> CreateDepositTransactionAsync(DepositRequest transaction);
     }
 }

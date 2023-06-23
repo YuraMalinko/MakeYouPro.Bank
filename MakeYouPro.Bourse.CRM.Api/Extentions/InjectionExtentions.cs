@@ -19,7 +19,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddScoped<ILeadRepository, LeadRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
         }
-        
+
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<ILeadService, LeadService>();

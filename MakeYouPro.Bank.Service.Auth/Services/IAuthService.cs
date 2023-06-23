@@ -1,5 +1,4 @@
-﻿using MakeYouPro.Bank.Dal.Auth.Models;
-using MakeYouPro.Bank.Service.Auth.Models;
+﻿using MakeYouPro.Bank.Service.Auth.Models;
 
 namespace MakeYouPro.Bank.Service.Auth.Services
 {
