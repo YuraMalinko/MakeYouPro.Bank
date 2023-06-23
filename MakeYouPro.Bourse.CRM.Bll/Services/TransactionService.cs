@@ -3,6 +3,7 @@ using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
+using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 
@@ -18,12 +19,16 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly IMapper _mapper;
 
-        public TransactionService(ITransactionServiceClient transactionServiceClient, ILeadService leadService, IAccountService accountService, IMapper mapper)
+        private readonly ICommissionSettings _commissionSettings;
+
+        public TransactionService(ITransactionServiceClient transactionServiceClient, ILeadService leadService, 
+                                  IAccountService accountService, IMapper mapper, ICommissionSettings commissionSettings)
         {
             _transactionServiceClient = transactionServiceClient;
             _leadService = leadService;
             _accountService = accountService;
             _mapper = mapper;
+            _commissionSettings = commissionSettings;
         }
 
         public async Task<decimal> GetAccountBalanceAsync(int accountId)
@@ -42,9 +47,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 if (account.Currency == "RUB" || account.Currency == "USD")
                 {
                     var balance = await _transactionServiceClient.GetAccountBalanceAsync(transaction.AccountId);
-
-                    var commissionPercentage = decimal.Parse(Environment.GetEnvironmentVariable("WithdrawCommissionPercentage"));
-                    var amountWithCommission = transaction.Amount + (commissionPercentage * transaction.Amount / 100);
+                    var amountWithCommission = transaction.Amount + (_commissionSettings.WithdrawCommissionPercentage * transaction.Amount / 100);
                     // СЮДА ДОПИСАТЬ ПОДПИСКУ
 
                     if (balance >= amountWithCommission)
@@ -79,13 +82,12 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
                 if (account.Currency == "RUB" || account.Currency == "USD")
                 {
-                    var commissionPercentage = decimal.Parse(Environment.GetEnvironmentVariable("DepositCommissionPercentage"));
-                    var amountWithCommission = transaction.Amount + (commissionPercentage * transaction.Amount / 100);
+                    var amountWithCommission = transaction.Amount + (_commissionSettings.DepositCommissionPercentage * transaction.Amount / 100);
                     // СЮДА ДОПИСАТЬ ПОДПИСКУ
 
-                        transaction.Amount = amountWithCommission;
-                        var deposit = _mapper.Map<DepositRequest>(transaction);
-                        var transactionId = await _transactionServiceClient.CreateDepositTransactionAsync(deposit);
+                    transaction.Amount = amountWithCommission;
+                    var deposit = _mapper.Map<DepositRequest>(transaction);
+                    var transactionId = await _transactionServiceClient.CreateDepositTransactionAsync(deposit);
 
                     return transactionId;
                 }

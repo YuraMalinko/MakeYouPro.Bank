@@ -39,6 +39,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         {
             services.AddScoped<ICurrencySetting, CurrencySetting>();
             services.AddScoped<IAccountSetting, AccountSetting>();
+            services.AddScoped<ICommissionSettings, CommissionSettings>();
         }
     }
 }
