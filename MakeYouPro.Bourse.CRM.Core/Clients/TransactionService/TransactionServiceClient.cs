@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -29,6 +30,22 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var body = await response.Content.ReadFromJsonAsync<decimal>();
+
+                return body;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public async Task<int> CreateTransactionAsync(WithdrawDtoRequest transaction)
+        {
+            var response = await _client.PostAsJsonAsync("kek", transaction);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var body = await response.Content.ReadFromJsonAsync<int>();
 
                 return body;
             }

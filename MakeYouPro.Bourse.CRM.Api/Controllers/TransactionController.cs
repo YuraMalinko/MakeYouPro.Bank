@@ -1,4 +1,6 @@
-﻿using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+﻿using AutoMapper;
+using FluentValidation;
+using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Response;
@@ -17,12 +19,18 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
     {
         private readonly ITransactionService _transactionService;
 
-        public TransactionController(ITransactionService transactionService)
+        private readonly IValidator<TransactionRequest> _validator;
+
+        private readonly IMapper _mapper;
+
+        public TransactionController(ITransactionService transactionService, IValidator<TransactionRequest> validator, IMapper mapper)
         {
             _transactionService = transactionService;
+            _validator = validator;
+            _mapper = mapper;
         }
 
-        [HttpPost(Name = "GetBalance")]
+        [HttpGet(Name = "GetBalance")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<decimal>> GetBalanceAsync(int accountId)
@@ -32,26 +40,24 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpPost(Name = "CreateWithdrawAsync")]
-        ////[SwaggerResponse((int)HttpStatusCode.Created)]
-        ////[SwaggerResponse((int)HttpStatusCode.Conflict)]
-        ////[SwaggerResponse((int)HttpStatusCode.BadRequest)]
-        ////[SwaggerResponse((int)HttpStatusCode.NotFound)]
-        //public async Task<ActionResult<TransactionResponse>> CreateWithdrawAsync(TransactionRequest transaction)
-        //{
-        //    //var validationResult = await _validator.ValidateAsync(addLead);
+        [HttpPost("Withdraw", Name = "CreateWithdrawAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<int>> CreateWithdrawAsync(TransactionRequest transactionRequest)
+        {
+            var validationResult = await _validator.ValidateAsync(transactionRequest);
 
-        //    //if (!validationResult.IsValid)
-        //    //{
-        //    //    return BadRequest(validationResult.Errors);
-        //    //}
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
 
-        //    var leadBll = _mapper.Map<Lead>(addLead);
-        //    var addLeadBll = await _leadService.CreateOrRecoverLeadAsync(leadBll);
-        //    var result = _mapper.Map<LeadResponseInfo>(addLeadBll);
+            var transaction = _mapper.Map<Transaction>(transactionRequest);
 
-        //    return Created(new Uri("api/Lead", UriKind.Relative), result);
-        //}
+            var result = await _transactionService.CreateWithdrawAsync(transaction);
+
+            return Ok(result);
+        }
 
 
     }

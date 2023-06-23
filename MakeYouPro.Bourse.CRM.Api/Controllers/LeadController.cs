@@ -20,7 +20,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
     {
         private readonly ILeadService _leadService;
 
-        private readonly IAuthServiceClient _authServiceClient;
+       // private readonly IAuthServiceClient _authServiceClient;
 
         private readonly IMapper _mapper;
 
@@ -28,10 +28,10 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
         private readonly ILogger _logger;
 
-        public LeadController(ILeadService leadService, IAuthServiceClient authServiceClient, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
+        public LeadController(ILeadService leadService,  IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
         {
             _leadService = leadService;
-            _authServiceClient = authServiceClient;
+          //  _authServiceClient = authServiceClient;
             _mapper = mapper;
             _validator = validator;
             _logger = nLogger;

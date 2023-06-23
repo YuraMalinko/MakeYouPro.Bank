@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Account.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
+using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Api.Validations;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Services;
@@ -31,6 +32,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddScoped<IValidator<AccountCreateRequest>, CreateAccountValidator>();
             services.AddScoped<IValidator<AccountFilterRequest>, AccountFilterValidation>();
             services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
+            services.AddScoped<IValidator<TransactionRequest>, TransactionValidator>();
         }
 
         public static void AddSettings(this IServiceCollection services)

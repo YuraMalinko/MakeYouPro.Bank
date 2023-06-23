@@ -87,6 +87,26 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (UnsuitableCurrencyException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "UnsuitableCurrencyException Error: " + ex.CurrencyName });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (InsufficientFundsException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "InsufficientFundsException Error: " });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
         }
     }
 }

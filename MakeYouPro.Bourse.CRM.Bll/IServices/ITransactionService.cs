@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+
+using MakeYouPro.Bourse.CRM.Bll.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
     public interface ITransactionService
     {
         Task<decimal> GetAccountBalanceAsync(int accountId);
+
+        Task<int> CreateWithdrawAsync(Transaction transaction);
     }
 }

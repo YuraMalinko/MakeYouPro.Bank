@@ -18,7 +18,8 @@ var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
 
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
-    typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
+                                typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile),
+                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile));
 
 builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddRepositories();
