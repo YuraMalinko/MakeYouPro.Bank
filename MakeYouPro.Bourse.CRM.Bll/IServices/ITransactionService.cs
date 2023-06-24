@@ -11,5 +11,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
         Task<int> CreateWithdrawAsync(Transaction transaction);
 
         Task<int> CreateDepositAsync(Transaction transaction);
+
+        Task<List<int>> CreateTransferTransactionAsync(TransferTransaction transaction);
     }
 }

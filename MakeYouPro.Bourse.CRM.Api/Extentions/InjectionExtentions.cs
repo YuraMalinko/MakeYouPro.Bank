@@ -33,13 +33,14 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddScoped<IValidator<AccountFilterRequest>, AccountFilterValidation>();
             services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
             services.AddScoped<IValidator<TransactionRequest>, TransactionValidator>();
+            services.AddScoped<IValidator<TransferTransactionRequest>, TransferTransactionValidator>();
         }
 
         public static void AddSettings(this IServiceCollection services)
         {
             services.AddScoped<ICurrencySetting, CurrencySetting>();
             services.AddScoped<IAccountSetting, AccountSetting>();
-            services.AddScoped<ICommissionSettings, CommissionSettings>();
+            services.AddSingleton<ICommissionSettings, CommissionSettings>();
         }
     }
 }

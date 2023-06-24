@@ -1,6 +1,7 @@
 ﻿using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
+using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using System.Net;
 using System.Net.Http.Json;
-using System.Web;
 
 namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
 {
@@ -15,13 +16,13 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
 
         public async Task<decimal> GetAccountBalanceAsync(int accountId)
         {
-            var query = HttpUtility.ParseQueryString(string.Empty);
-            query["accountId"] = accountId.ToString();
-            string queryString = query.ToString();
+            //var query = HttpUtility.ParseQueryString(string.Empty);
+            //query["accountId"] = accountId.ToString();
+            //string queryString = query.ToString();
 
-            var response = await _client.GetAsync($"qwe?{queryString}");
+            var response = await _client.GetAsync($"balanse/{accountId}");
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 var body = await response.Content.ReadFromJsonAsync<decimal>();
 
@@ -29,15 +30,15 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             }
             else
             {
-                throw new ArgumentException();
+                throw new TransactionException();
             }
         }
 
         public async Task<int> CreateWithdrawTransactionAsync(WithdrawRequest transaction)
         {
-            var response = await _client.PostAsJsonAsync("kek", transaction);
+            var response = await _client.PostAsJsonAsync(string.Empty, transaction);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 var body = await response.Content.ReadFromJsonAsync<int>();
 
@@ -45,15 +46,15 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             }
             else
             {
-                throw new ArgumentException();
+                throw new TransactionException();
             }
         }
 
         public async Task<int> CreateDepositTransactionAsync(DepositRequest transaction)
         {
-            var response = await _client.PostAsJsonAsync("kek", transaction);
+            var response = await _client.PostAsJsonAsync(string.Empty, transaction);
 
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 var body = await response.Content.ReadFromJsonAsync<int>();
 
@@ -61,7 +62,23 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
             }
             else
             {
-                throw new ArgumentException();
+                throw new TransactionException();
+            }
+        }
+
+        public async Task<List<int>> CreateTransferTransactionAsync(TransferRequest transaction)
+        {
+            var response = await _client.PostAsJsonAsync("transfer", transaction);
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                var body = await response.Content.ReadFromJsonAsync<List<int>>();
+
+                return body;
+            }
+            else
+            {
+                throw new TransactionException();
             }
         }
     }

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MakeYouPro.Bourse.CRM.Core.Configurations.ISettings
+﻿namespace MakeYouPro.Bourse.CRM.Core.Configurations.ISettings
 {
     public interface ICommissionSettings
     {
-        decimal WithdrawCommissionPercentage { get; set; } 
+        decimal WithdrawCommissionPercentage { get; }
 
-        decimal DepositCommissionPercentage { get; set; }
+        decimal DepositCommissionPercentage { get; }
+
+        decimal TransferTransactionCommissionPercentage { get; }
+
+        decimal ExtraTransferTransactionCommissionPercentage { get; }
     }
 }

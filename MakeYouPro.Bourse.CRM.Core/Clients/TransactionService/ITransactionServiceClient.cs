@@ -9,5 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
         Task<int> CreateWithdrawTransactionAsync(WithdrawRequest transaction);
 
         Task<int> CreateDepositTransactionAsync(DepositRequest transaction);
+
+        Task<List<int>> CreateTransferTransactionAsync(TransferRequest transaction);
     }
 }

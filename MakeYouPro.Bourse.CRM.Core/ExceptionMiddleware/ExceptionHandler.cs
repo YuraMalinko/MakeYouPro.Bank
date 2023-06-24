@@ -106,6 +106,16 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (TransactionException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "TransactionException Error: " + ex.Message });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
         }
     }
 }

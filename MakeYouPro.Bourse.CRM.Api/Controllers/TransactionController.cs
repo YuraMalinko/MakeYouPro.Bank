@@ -17,12 +17,16 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
         private readonly IValidator<TransactionRequest> _validator;
 
+        private readonly IValidator<TransferTransactionRequest> _transferValidator;
+
         private readonly IMapper _mapper;
 
-        public TransactionController(ITransactionService transactionService, IValidator<TransactionRequest> validator, IMapper mapper)
+        public TransactionController(ITransactionService transactionService, IValidator<TransactionRequest> validator,
+                                     IValidator<TransferTransactionRequest> transferValidator, IMapper mapper)
         {
             _transactionService = transactionService;
             _validator = validator;
+            _transferValidator = transferValidator;
             _mapper = mapper;
         }
 
@@ -70,6 +74,25 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             var transaction = _mapper.Map<Transaction>(transactionRequest);
 
             var result = await _transactionService.CreateDepositAsync(transaction);
+
+            return Ok(result);
+        }
+
+        [HttpPost("TransferTransaction", Name = "CreateTransferTransactionAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<List<int>>> CreateTransferTransactionAsync(TransferTransactionRequest transactionRequest)
+        {
+            var validationResult = await _transferValidator.ValidateAsync(transactionRequest);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            var transaction = _mapper.Map<TransferTransaction>(transactionRequest);
+
+            var result = await _transactionService.CreateTransferTransactionAsync(transaction);
 
             return Ok(result);
         }

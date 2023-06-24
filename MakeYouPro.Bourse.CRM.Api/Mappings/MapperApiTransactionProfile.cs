@@ -11,6 +11,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
         {
             CreateMap<TransactionRequest, Transaction>();
             CreateMap<Transaction, TransactionResponse>();
+            CreateMap<TransferTransactionRequest, TransferTransaction>();
         }
     }
 }
