@@ -15,16 +15,16 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         [Required]
         public int Id { get; set; }
 
-        public double ARSRUB { get; set; }
-        public double ARSUSD { get; set; }
-        public double ARSEUR { get; set; }
-        public double ARSCNY { get; set; }
-        public double ARSRSD { get; set; }
-        public double ARSBGN { get; set; }
-        public double ARSJPY { get; set; }
+        public decimal ARSRUB { get; set; }
+        public decimal ARSUSD { get; set; }
+        public decimal ARSEUR { get; set; }
+        public decimal ARSCNY { get; set; }
+        public decimal ARSRSD { get; set; }
+        public decimal ARSBGN { get; set; }
+        public decimal ARSJPY { get; set; }
+        
 
-
-        [Required]
+                [Required]
         public DateTime dateTime { get; set; }
     }
 }

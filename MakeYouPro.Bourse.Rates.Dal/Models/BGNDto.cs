@@ -15,13 +15,13 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         [Required]
         public int Id { get; set; }
 
-        public double BGNRUB { get; set; }
+        public decimal BGNRUB { get; set; }
         public double BGNUSD { get; set; }
-        public double BGNEUR { get; set; }
-        public double BGNCNY { get; set; }
-        public double BGNRSD { get; set; }
-        public double BGNJPY { get; set; }
-        public double BGNARS { get; set; }
+        public decimal BGNEUR { get; set; }
+        public decimal BGNCNY { get; set; }
+        public decimal BGNRSD { get; set; }
+        public decimal BGNJPY { get; set; }
+        public decimal BGNARS { get; set; }
 
 
         [Required]
