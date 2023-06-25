@@ -19,6 +19,7 @@ namespace MakeYouPro.Bourse.Rates.Dal.Repository
         {
             _context.MainRSD.Add(rsd);
             _context.SaveChanges();
+          
 
             return rsd;
         }
