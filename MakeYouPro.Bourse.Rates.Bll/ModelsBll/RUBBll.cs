@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using MakeYouPro.Bourse.Rates.Dal.Interfaces;
+using MakeYouPro.Bourse.Rates.Bll;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Models
+namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
 {
-    public class RUBDto: IRatesRepository
+    public class RUBBll
     {
         [Key]
         [Required]
@@ -23,8 +23,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public double RUBRSD { get; set; }
         public double RUBBGN { get; set; }
         public double RUBARS { get; set; }
-
-
         [Required]
         public DateTime dateTime { get; set; }
 

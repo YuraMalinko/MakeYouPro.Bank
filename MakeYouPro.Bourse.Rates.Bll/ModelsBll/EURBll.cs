@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
-
-namespace MakeYouPro.Bourse.Rates.Dal.Models
+namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
 {
-    public class EURDto: IRatesRepository
+    public class EURBll
     {
         [Key]
         [Required]
@@ -23,8 +21,8 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal EURRSD { get; set; }
         public decimal EURBGN { get; set; }
         public decimal EURARS { get; set; }
-
         [Required]
         public DateTime dateTime { get; set; }
+
     }
 }

@@ -25,7 +25,6 @@ namespace WebAPIClient
                 decimal value = Convert.ToDecimal(preRates[++i].Replace('.', ','));
                 rates.Add(key, value);
             }
-            Console.WriteLine();
             return rates;
         }
         public static void DeserializeJson (string json)
@@ -34,7 +33,10 @@ namespace WebAPIClient
             string jsonForDeserialize = "{" + cuttedJson[2] + "}";
             Console.WriteLine(jsonForDeserialize);
             var model = JsonConvert.DeserializeObject<ModelRates>(jsonForDeserialize);
-            
+            model.dateTime = DateTime.Now;
+            Console.WriteLine(model.BGNRUB);
+            Console.WriteLine(model.dateTime);
+
         }
 
     }

@@ -38,6 +38,7 @@ namespace WebAPIClient
         public decimal RSDEUR { get; set; }
         public decimal EURBGN { get; set; }
         public decimal BGNEUR { get; set; }
+        public DateTime ? dateTime { get; set; }
 
     }
 }

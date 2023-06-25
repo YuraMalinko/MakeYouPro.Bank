@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MakeYouPro.Bourse.Rates.Dal.Interfaces;
+using MakeYouPro.Bourse.Rates.Bll;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Models
+namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
 {
-    public class USDDto: IRatesRepository
+    public class USDBll
     {
         [Key]
         [Required]
@@ -22,8 +21,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal USDRSD { get; set; }
         public decimal USDBGN { get; set; }
         public decimal USDARS { get; set; }
-
-
         [Required]
         public DateTime dateTime { get; set; }
 

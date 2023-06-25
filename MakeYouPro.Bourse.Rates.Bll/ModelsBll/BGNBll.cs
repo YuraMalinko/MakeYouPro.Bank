@@ -5,11 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Models
+namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
 {
-    public class BGNDto: IRatesRepository
+    public class BGNBll
     {
         [Key]
         [Required]
@@ -22,9 +21,7 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal BGNRSD { get; set; }
         public decimal BGNJPY { get; set; }
         public decimal BGNARS { get; set; }
-
-
-        [Required]
         public DateTime dateTime { get; set; }
+
     }
 }
