@@ -9,7 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Validations
         {
             RuleFor(t => t.Amount)
                 .GreaterThan(0)
-                .WithMessage("Amount must be greater than 0");
+                .WithMessage("CommissionAmount must be greater than 0");
         }
     }
 }

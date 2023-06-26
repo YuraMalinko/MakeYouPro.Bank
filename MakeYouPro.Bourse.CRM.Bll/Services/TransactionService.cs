@@ -6,6 +6,8 @@ using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService.Models;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
 {
@@ -21,14 +23,22 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly ICommissionSettings _commissionSettings;
 
-        public TransactionService(ITransactionServiceClient transactionServiceClient, ILeadService leadService,
-                                  IAccountService accountService, IMapper mapper, ICommissionSettings commissionSettings)
+        private readonly IProduser<CommissionMessage> _produser;
+
+        public TransactionService(
+            ITransactionServiceClient transactionServiceClient,
+            ILeadService leadService,
+            IAccountService accountService,
+            IMapper mapper,
+            ICommissionSettings commissionSettings,
+            IProduser<CommissionMessage> produser)
         {
             _transactionServiceClient = transactionServiceClient;
             _leadService = leadService;
             _accountService = accountService;
             _mapper = mapper;
             _commissionSettings = commissionSettings;
+            _produser = produser;
         }
 
         public async Task<decimal> GetAccountBalanceAsync(int accountId)
@@ -46,14 +56,20 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             if (account.Currency == "RUB" || account.Currency == "USD")
             {
                 var balance = await _transactionServiceClient.GetAccountBalanceAsync(transaction.AccountId);
-                var amountWithCommission = transaction.Amount + (_commissionSettings.WithdrawCommissionPercentage * transaction.Amount / 100);
-                // СЮДА ДОПИСАТЬ ПОДПИСКУ
+                var commissionAmount = _commissionSettings.WithdrawCommissionPercentage * transaction.Amount / 100;
+                var amountWithCommission = transaction.Amount + commissionAmount;
 
                 if (balance >= amountWithCommission)
                 {
                     transaction.Amount = amountWithCommission;
                     var withdraw = _mapper.Map<WithdrawRequest>(transaction);
                     var transactionId = await _transactionServiceClient.CreateWithdrawTransactionAsync(withdraw);
+                    var message = new CommissionMessage
+                    {
+                        TransactionId = transactionId,
+                        CommissionAmount = commissionAmount
+                    };
+                    _produser.Publish(message);
 
                     return transactionId;
                 }
