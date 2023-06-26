@@ -4,7 +4,6 @@ namespace WebAPIClient
 {
     public static class RateStorage
     {
-        private  static ModelRates _model;
         public static Dictionary <string,decimal> ModifyJsonToDictionaty(string json)
         {
             string[] cuttedJson = json.Split('{', '}');
