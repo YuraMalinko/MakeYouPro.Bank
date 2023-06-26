@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
 {
@@ -22,6 +16,5 @@ namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
         public decimal BGNJPY { get; set; }
         public decimal BGNARS { get; set; }
         public DateTime DateTime { get; set; }
-
     }
 }

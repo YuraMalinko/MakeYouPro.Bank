@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using MakeYouPro.Bourse.Rates.Dal.Models;
-using Microsoft.Data.SqlClient;
-using System.Diagnostics.Metrics;
-
 
 namespace MakeYouPro.Bourse.Rates.Dal
 {
@@ -31,8 +28,6 @@ namespace MakeYouPro.Bourse.Rates.Dal
             {
                 fkey.DeleteBehavior = DeleteBehavior.NoAction;
             }
-
         }
-
     }
 }

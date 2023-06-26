@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text.Json;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace WebAPIClient
-
 {
     public static class RateStorage
     {
@@ -11,11 +8,6 @@ namespace WebAPIClient
         public static Dictionary <string,decimal> ModifyJsonToDictionaty(string json)
         {
             string[] cuttedJson = json.Split('{', '}');
-            //string ratesForM = cuttedJson[2];
-            //string ratesForModel = "{"+ratesForM/*.Replace('.', ',')*/+"}";
-            //Console.WriteLine(ratesForModel);
-
-            //WriteRatesToModel(ratesForModel);
             string[] preRates = cuttedJson[2].Split('"', ':', ',');
             preRates = preRates.Where(x => !string.IsNullOrEmpty(x)).ToArray();
             Dictionary<string, decimal> rates = new Dictionary<string, decimal>();
@@ -36,8 +28,6 @@ namespace WebAPIClient
             model.DateTime = DateTime.Now;
             Console.WriteLine(model.BGNRUB);
             Console.WriteLine(model.DateTime);
-
         }
-
     }
 }

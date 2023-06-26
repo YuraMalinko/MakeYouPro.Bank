@@ -1,9 +1,6 @@
 ﻿using MakeYouPro.Bourse.Rates.Dal.Models;
 using MakeYouPro.Bourse.Rates.Dal;
-using MakeYouPro.Bourse.Rates.Bll;
 using MakeYouPro.Bourse.Rates.Dal.Interfaces;
-using MakeYouPro.Bourse.Rates.Dal.Models;
-using MakeYouPro.Bourse.Rates.Dal;
 using MakeYouPro.Bourse.Rates.Bll.ModelsBll;
 
 namespace MakeYouPro.Bourse.Rates.Bll
@@ -22,7 +19,7 @@ namespace MakeYouPro.Bourse.Rates.Bll
 
         public RatesManagerBll()
         {
-            _arsRepository = new ARSRepo();
+           _arsRepository = new ARSRepo();
            _bgnRepository = new BGNRepo();
            _cnyRepository = new CNYRepo();
            _eurRepository = new EURRepo();
@@ -31,7 +28,6 @@ namespace MakeYouPro.Bourse.Rates.Bll
            _rubRepository = new RUBRepo();
            _usdRepository = new USDRepo();
         }
-
 
         public void SaveARSRatesToDB(ARSBll rate)
         {
