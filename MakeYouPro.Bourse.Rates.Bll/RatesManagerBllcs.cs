@@ -33,9 +33,37 @@ namespace MakeYouPro.Bourse.Rates.Bll
         }
 
 
-        public void SaveARSRatesToDB(ARSBll arsBll)
+        public void SaveARSRatesToDB(ARSBll rate)
         {
-
+            _arsRepository.AddArsToDb(_instanceMapperBll.MapARSBllToARSDto(rate));
+        }
+        public void SaveBGNRatesToDB (BGNBll rate)
+        {
+            _bgnRepository.AddBgnToDb(_instanceMapperBll.MapBGNBllToBGNDto(rate));
+        }
+        public void SaveCNYRatesToDB (CNYBll rate)
+        {
+            _cnyRepository.AddCnyToDb(_instanceMapperBll.MapCNYBllToCNYDto(rate));
+        }
+        public void SaveEURRatesToDB(EURBll rate)
+        {
+            _eurRepository.AddEurToDb(_instanceMapperBll.MapEURBllToEURDto(rate));
+        }
+        public void SaveJPYRatesToDB(JPYBll rate)
+        {
+            _jpyRepository.AddJpyToDb(_instanceMapperBll.MapJPYBllToJPYDto(rate));
+        }
+        public void SaveRSDRatesToDB(RSDBll rate)
+        {
+            _rsdRepository.AddRsdToDb(_instanceMapperBll.MapRSDBllToRSDDto(rate)); 
+        }
+        public void SaveRUBRatesToDB(RUBBll rate)
+        {
+            _rubRepository.AddRubToDb(_instanceMapperBll.MapRUBBllToRUBDto(rate));
+        }
+        public void SaveUSDRatesToDB(USDBll rate)
+        {
+            _usdRepository.AddUsdToDb(_instanceMapperBll.MapUSDBllToUSDDto(rate));
         }
     }
 }
