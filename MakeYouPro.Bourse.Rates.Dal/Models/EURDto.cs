@@ -10,7 +10,7 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class EURDto: IRatesRepository
+    public class EURDto
     {
         [Key]
         [Required]
@@ -25,6 +25,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal EURARS { get; set; }
 
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

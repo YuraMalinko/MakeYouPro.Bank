@@ -33,9 +33,9 @@ namespace WebAPIClient
             string jsonForDeserialize = "{" + cuttedJson[2] + "}";
             Console.WriteLine(jsonForDeserialize);
             var model = JsonConvert.DeserializeObject<ModelRates>(jsonForDeserialize);
-            model.dateTime = DateTime.Now;
+            model.DateTime = DateTime.Now;
             Console.WriteLine(model.BGNRUB);
-            Console.WriteLine(model.dateTime);
+            Console.WriteLine(model.DateTime);
 
         }
 

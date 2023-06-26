@@ -5,22 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class UsdRepository: IUsdRepository
+    public class EURRepo : IEurRepository
     {
         private static Context _context;
-        public UsdRepository()
+        public EURRepo()
         {
             _context = new Context();
         }
-        public USDDto AddUsd(USDDto usd)
+        public EURDto AddEurToDb(EURDto rate)
         {
-            _context.MainUSD.Add(usd);
+            _context.MainEUR.Add(rate);
             _context.SaveChanges();
 
-            return usd;
+            return rate;
         }
     }
 }
+

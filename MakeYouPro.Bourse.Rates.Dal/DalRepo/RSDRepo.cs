@@ -5,23 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class RsdRepository: IRsdRepository
+    public class RSDRepo : IRsdRepository
     {
         private static Context _context;
-        public RsdRepository()
+        public RSDRepo()
         {
             _context = new Context();
         }
-        public RSDDto AddRsd(RSDDto rsd)
+        public RSDDto AddRsdToDb(RSDDto rate)
         {
-            _context.MainRSD.Add(rsd);
+            _context.MainRSD.Add(rate);
             _context.SaveChanges();
-          
 
-            return rsd;
+            return rate;
         }
     }
 }
+

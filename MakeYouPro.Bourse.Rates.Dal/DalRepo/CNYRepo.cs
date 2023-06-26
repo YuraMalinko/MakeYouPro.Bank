@@ -7,21 +7,21 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class EurRepository: IEurRepository
+    public class CNYRepo : ICnyRepository
     {
         private static Context _context;
-        public EurRepository()
+        public CNYRepo()
         {
             _context = new Context();
         }
-        public EURDto AddEur(EURDto eur)
+        public CNYDto AddCnyToDb(CNYDto rate)
         {
-            _context.MainEUR.Add(eur);
+            _context.MainCNY.Add(rate);
             _context.SaveChanges();
 
-            return eur;
+            return rate;
         }
     }
 }

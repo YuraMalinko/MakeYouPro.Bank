@@ -5,22 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class RurRepository: IRubRepository
+    public class BGNRepo : IBgnRepository
     {
         private static Context _context;
-        public RurRepository()
+        public BGNRepo()
         {
             _context = new Context();
         }
-        public RUBDto AddRur(RUBDto rur)
+        public BGNDto AddBgnToDb(BGNDto rate)
         {
-            _context.MainRUR.Add(rur);
+            _context.MainBGN.Add(rate);
             _context.SaveChanges();
 
-            return rur;
+            return rate;
         }
     }
 }

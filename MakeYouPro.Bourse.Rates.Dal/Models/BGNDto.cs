@@ -9,7 +9,7 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class BGNDto: IRatesRepository
+    public class BGNDto
     {
         [Key]
         [Required]
@@ -25,6 +25,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
 
 
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

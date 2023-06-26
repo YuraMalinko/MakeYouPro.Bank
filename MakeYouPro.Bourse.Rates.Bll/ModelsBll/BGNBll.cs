@@ -21,7 +21,7 @@ namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
         public decimal BGNRSD { get; set; }
         public decimal BGNJPY { get; set; }
         public decimal BGNARS { get; set; }
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }

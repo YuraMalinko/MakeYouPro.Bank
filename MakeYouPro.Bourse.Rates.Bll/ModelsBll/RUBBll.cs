@@ -24,7 +24,7 @@ namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
         public double RUBBGN { get; set; }
         public double RUBARS { get; set; }
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }

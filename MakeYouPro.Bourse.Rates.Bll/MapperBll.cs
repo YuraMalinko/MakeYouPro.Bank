@@ -2,7 +2,6 @@
 using MakeYouPro.Bourse.Rates.Bll.ModelsBll;
 namespace MakeYouPro.Bourse.Rates.Dal.Models;
 
-
 public class MapperBll
 {
     private readonly MapperConfiguration _configuration;
@@ -11,7 +10,7 @@ public class MapperBll
     {
         _configuration = new MapperConfiguration(
             cfg =>
-            {
+            { 
                 cfg.CreateMap<ARSBll, ARSDto>();
                 cfg.CreateMap<BGNBll, BGNDto>();
                 cfg.CreateMap<CNYBll, CNYDto>();
@@ -28,7 +27,6 @@ public class MapperBll
                 cfg.CreateMap<RSDDto, RSDBll>();
                 cfg.CreateMap<RUBDto, RUBBll>();
                 cfg.CreateMap<USDDto, USDBll>();
-
             });
     }
     public static MapperBll getInstance()
@@ -75,7 +73,6 @@ public class MapperBll
         return _configuration.CreateMapper().Map<USDBll>(usdDto);
     }
 
-
     public ARSDto MapARSBllToARSDto(ARSBll arsBll)
     {
         return _configuration.CreateMapper().Map<ARSDto>(arsBll);
@@ -108,5 +105,4 @@ public class MapperBll
     {
         return _configuration.CreateMapper().Map<USDDto>(usdBll);
     }
-
 }

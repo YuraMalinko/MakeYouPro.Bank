@@ -9,7 +9,7 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class CNYDto: IRatesRepository
+    public class CNYDto
     {
         [Key]
         [Required]
@@ -24,6 +24,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal CNYARS { get; set; }
 
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

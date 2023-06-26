@@ -9,7 +9,7 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class ARSDto: IRatesRepository
+    public class ARSDto
     {
         [Key]
         [Required]
@@ -24,6 +24,6 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         public decimal ARSJPY { get; set; }
 
        [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
     }
 }

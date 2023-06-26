@@ -5,22 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class JpyRepository: IJpyRepository
+    public class USDRepo : IUsdRepository
     {
         private static Context _context;
-        public JpyRepository()
+        public USDRepo()
         {
             _context = new Context();
         }
-        public JPYDto AddJPY(JPYDto jpy)
+        public USDDto AddUsdToDb(USDDto rate)
         {
-            _context.MainJPY.Add(jpy);
+            _context.MainUSD.Add(rate);
             _context.SaveChanges();
 
-            return jpy;
+            return rate;
         }
     }
 }

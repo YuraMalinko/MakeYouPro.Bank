@@ -22,7 +22,7 @@ namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
         public decimal EURBGN { get; set; }
         public decimal EURARS { get; set; }
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }

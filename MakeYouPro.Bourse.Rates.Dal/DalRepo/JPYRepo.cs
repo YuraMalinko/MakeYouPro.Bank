@@ -7,21 +7,22 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class ArsRepository: IArsRepository
+    public class JPYRepo : IJpyRepository
     {
         private static Context _context;
-        public ArsRepository()
+        public JPYRepo()
         {
             _context = new Context();
         }
-        public ARSDto AddArs(ARSDto ars)
+        public JPYDto AddJpyToDb(JPYDto rate)
         {
-            _context.MainARS.Add(ars);
+            _context.MainJPY.Add(rate);
             _context.SaveChanges();
 
-            return ars;
+            return rate;
         }
     }
 }
+

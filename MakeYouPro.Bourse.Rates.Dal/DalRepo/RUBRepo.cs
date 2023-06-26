@@ -7,21 +7,22 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 using MakeYouPro.Bourse.Rates.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MakeYouPro.Bourse.Rates.Dal.Repository
+namespace MakeYouPro.Bourse.Rates.Dal
 {
-    public class BgnRepository: IBgnRepository
+    public class RUBRepo : IRubRepository
     {
         private static Context _context;
-        public BgnRepository()
+        public RUBRepo()
         {
             _context = new Context();
         }
-        public BGNDto AddBgn(BGNDto bgn)
+        public RUBDto AddRubToDb(RUBDto rate)
         {
-            _context.MainBGN.Add(bgn);
+            _context.MainRUB.Add(rate);
             _context.SaveChanges();
 
-            return bgn;
+            return rate;
         }
     }
 }
+

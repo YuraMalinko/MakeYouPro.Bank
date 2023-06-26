@@ -22,7 +22,7 @@ namespace MakeYouPro.Bourse.Rates.Bll.ModelsBll
         public decimal RSDBGN { get; set; }
         public decimal RSDARS { get; set; }
         [Required]
-        public DateTime dateTime { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }

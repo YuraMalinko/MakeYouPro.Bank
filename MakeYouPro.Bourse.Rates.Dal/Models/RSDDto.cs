@@ -9,7 +9,7 @@ using MakeYouPro.Bourse.Rates.Dal.Interfaces;
 
 namespace MakeYouPro.Bourse.Rates.Dal.Models
 {
-    public class RSDDto: IRatesRepository
+    public class RSDDto
     {
         [Key]
         [Required]
