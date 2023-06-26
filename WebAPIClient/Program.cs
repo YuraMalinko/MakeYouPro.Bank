@@ -4,6 +4,7 @@ using WebAPIClient;
 
 public class Program
 {
+
     static int maxAttempts = 3;
 
     static void Main(string[] args)

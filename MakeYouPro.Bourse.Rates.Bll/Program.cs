@@ -1,4 +1,7 @@
-﻿namespace MakeYouPro.Bourse.Rates.Bll
+﻿using MakeYouPro.Bourse.Rates.Dal;
+using (Context BourseRates = new Context());
+
+namespace MakeYouPro.Bourse.Rates.Bll
 {
     class TestClass
     {
@@ -6,7 +9,7 @@
         {
             Console.WriteLine(args.Length);
             Console.ReadLine();
-        }
 
+        }
     }
 }
