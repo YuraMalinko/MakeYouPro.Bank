@@ -11,14 +11,14 @@ namespace MakeYouPro.Bourse.Rates.Dal
             builder.UseSqlServer(Environment.GetEnvironmentVariable("BourseRates"));
             ////builder.UseSqlServer(@"Server=localhost;Database=Rates;Trusted_Connection=True;TrustServerCertificate=True;");
         }
-        public DbSet<ARSDto> MainARS { get; set; } = null!;
-        public DbSet<BGNDto> MainBGN { get; set; }=null;
-        public DbSet<USDDto> MainUSD { get; set; }=null;
-        public DbSet<RUBDto> MainRUB { get; set; }=null;
-        public DbSet<EURDto> MainEUR { get; set; }=null;
-        public DbSet<CNYDto> MainCNY { get; set; }=null;
-        public DbSet<RSDDto> MainRSD { get; set; }=null;
-        public DbSet<JPYDto> MainJPY { get; set; } = null;
+        public DbSet<ARSDto> MainARS { get; set; }
+        public DbSet<BGNDto> MainBGN { get; set; }
+        public DbSet<USDDto> MainUSD { get; set; }
+        public DbSet<RUBDto> MainRUB { get; set; }
+        public DbSet<EURDto> MainEUR { get; set; }
+        public DbSet<CNYDto> MainCNY { get; set; }
+        public DbSet<RSDDto> MainRSD { get; set; }
+        public DbSet<JPYDto> MainJPY { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,7 +29,6 @@ namespace MakeYouPro.Bourse.Rates.Dal
                 fkey.DeleteBehavior = DeleteBehavior.NoAction;
             }
         }
+
     }
 }
-
-        //public ApplicationContext() => Database.EnsureCreated();

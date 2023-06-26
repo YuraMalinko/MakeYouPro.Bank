@@ -12,6 +12,7 @@ namespace MakeYouPro.Bourse.Rates.Dal
         }
         public ARSDto AddArsToDb(ARSDto ars)
         {
+
             _context.MainARS.Add(ars);
             _context.SaveChanges();
 

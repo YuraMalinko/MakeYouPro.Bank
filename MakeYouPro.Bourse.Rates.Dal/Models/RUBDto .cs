@@ -8,13 +8,13 @@ namespace MakeYouPro.Bourse.Rates.Dal.Models
         [Required]
         public int Id { get; set; }
 
-        public double RUBUSD { get; set; }
-        public double RUBEUR { get; set; }
-        public double RUBJPY { get; set; }
-        public double RUBCNY { get; set; }
-        public double RUBRSD { get; set; }
-        public double RUBBGN { get; set; }
-        public double RUBARS { get; set; }
+        public decimal? RUBUSD { get; set; }
+        public decimal? RUBEUR { get; set; }
+        public decimal? RUBJPY { get; set; }
+        public decimal? RUBCNY { get; set; }
+        public decimal? RUBRSD { get; set; }
+        public decimal? RUBBGN { get; set; }
+        public decimal? RUBARS { get; set; }
 
 
         [Required]
