@@ -108,7 +108,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             else if (lead.Role == LeadRoleEnum.VipLead)
             {
                 var commissionAmount = _commissionSettings.TransferTransactionCommissionPercentage * transferTransaction.Amount / 100;
-                
+
                 return await CreateTransferTransactionOrThrowAsync(transferTransaction, balance, commissionAmount);
             }
 

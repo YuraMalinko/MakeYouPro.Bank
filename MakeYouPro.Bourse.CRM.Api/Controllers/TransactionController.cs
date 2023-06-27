@@ -3,8 +3,6 @@ using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
-using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
-using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;

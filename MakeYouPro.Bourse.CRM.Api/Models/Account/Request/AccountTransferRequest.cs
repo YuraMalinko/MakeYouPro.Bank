@@ -1,6 +1,4 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
-
-namespace MakeYouPro.Bourse.CRM.Api.Models.Account.Request
+﻿namespace MakeYouPro.Bourse.CRM.Api.Models.Account.Request
 {
     public class AccountTransferRequest
     {

@@ -1,5 +1,4 @@
-﻿using RabbitMQ.Client;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
@@ -27,7 +26,7 @@ namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
         {
             string message = JsonSerializer.Serialize(value);
             var body = Encoding.UTF8.GetBytes(message);
-            _channel.BasicPublish (exchange: _exchangeName,
+            _channel.BasicPublish(exchange: _exchangeName,
                                  routingKey: string.Empty,
                                  basicProperties: null,
                                  body: body);
