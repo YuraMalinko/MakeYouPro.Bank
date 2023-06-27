@@ -1,5 +1,5 @@
 ﻿using MakeYouPro.Bourse.Rates.Dal;
-using (Context BourseRates = new Context());
+//using (Context BourseRates = new Context()) ;
 
 namespace MakeYouPro.Bourse.Rates.Bll
 {
@@ -8,8 +8,7 @@ namespace MakeYouPro.Bourse.Rates.Bll
         static void Main(string[] args)
         {
             Console.WriteLine(args.Length);
-            Console.ReadLine();
-
+        
         }
     }
 }
