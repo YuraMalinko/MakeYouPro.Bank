@@ -49,6 +49,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         {
             services.AddSingleton<IProduser<CommissionMessage>, Produser<CommissionMessage>>(
                 _ => new Produser<CommissionMessage>(Environment.GetEnvironmentVariable("RabbitHostName"), "commissionExchange", "commissionQueue"));
+            services.AddSingleton<IConsumer<CommissionMessage>, Consumer<CommissionMessage>>(
+                _ => new Consumer<CommissionMessage>(Environment.GetEnvironmentVariable("RabbitHostName"), "commissionQueue"));
         }
     }
 }

@@ -1,17 +1,18 @@
-﻿using System.Text;
+﻿using RabbitMQ.Client;
+using System.Text;
 using System.Text.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
 {
     public class Produser<T> : IProduser<T>
     {
-        private string _exchangeName;
+        private readonly string _exchangeName;
 
-        private string _queueName;
+        private readonly string _queueName;
 
-        private IConnection _connection;
+        private readonly IConnection _connection;
 
-        private IModel _channel;
+        private readonly IModel _channel;
 
         public Produser(string hostName, string exchangeName, string queueName)
         {
@@ -39,6 +40,14 @@ namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
             _channel.QueueBind(queue: _queueName,
                               exchange: _exchangeName,
                               routingKey: string.Empty);
+        }
+
+        public void Dispose()
+        {
+            _channel.Close();
+            _channel.Dispose();
+            _connection.Close();
+            _connection.Dispose();
         }
     }
 }
