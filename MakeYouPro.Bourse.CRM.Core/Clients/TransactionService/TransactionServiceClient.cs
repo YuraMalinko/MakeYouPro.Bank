@@ -65,21 +65,5 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
                 throw new TransactionException();
             }
         }
-
-        public async Task<List<int>> CreateTransferTransactionAsync(TransferRequest transaction)
-        {
-            var response = await _client.PostAsJsonAsync("transfer", transaction);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var body = await response.Content.ReadFromJsonAsync<List<int>>();
-
-                return body;
-            }
-            else
-            {
-                throw new TransactionException();
-            }
-        }
     }
 }

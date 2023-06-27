@@ -57,26 +57,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 var balance = await _transactionServiceClient.GetAccountBalanceAsync(transaction.AccountId);
                 var commissionAmount = _commissionSettings.WithdrawCommissionPercentage * transaction.Amount / 100;
-                var amountWithCommission = transaction.Amount + commissionAmount;
 
-                if (balance >= amountWithCommission)
-                {
-                    transaction.Amount = amountWithCommission;
-                    var withdraw = _mapper.Map<WithdrawRequest>(transaction);
-                    var transactionId = await _transactionServiceClient.CreateWithdrawTransactionAsync(withdraw);
-                    var message = new CommissionMessage
-                    {
-                        TransactionId = transactionId,
-                        CommissionAmount = commissionAmount
-                    };
-                    _produser.Publish(message);
-
-                    return transactionId;
-                }
-                else
-                {
-                    throw new InsufficientFundsException();
-                }
+                return await AddWithdrawOrThrowAsync(transaction, commissionAmount, balance);
             }
             else
             {
@@ -91,14 +73,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (account.Currency == "RUB" || account.Currency == "USD")
             {
-                var amountWithCommission = transaction.Amount + (_commissionSettings.DepositCommissionPercentage * transaction.Amount / 100);
-                // СЮДА ДОПИСАТЬ ПОДПИСКУ
-
+                var commissionAmount = _commissionSettings.DepositCommissionPercentage * transaction.Amount / 100;
+                var amountWithCommission = transaction.Amount + commissionAmount;
                 transaction.Amount = amountWithCommission;
-                var deposit = _mapper.Map<DepositRequest>(transaction);
-                var transactionId = await _transactionServiceClient.CreateDepositTransactionAsync(deposit);
 
-                return transactionId;
+                return await AddDepositAsync(transaction, commissionAmount);
             }
             else
             {
@@ -106,32 +85,30 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        public async Task<List<int>> CreateTransferTransactionAsync(TransferTransaction transaction)
+        public async Task<List<int>> CreateTransferTransactionAsync(TransferTransaction transferTransaction)
         {
-            var lead = await GetOrThrowAccountBelongsToLeadAsync(transaction.AccountSource.LeadId,
-                                                                new List<int> { transaction.AccountSource.AccountId, transaction.AccountDestination.AccountId });
-            var balance = await _transactionServiceClient.GetAccountBalanceAsync(transaction.AccountSource.AccountId);
+            var lead = await GetOrThrowAccountBelongsToLeadAsync(transferTransaction.AccountSource.LeadId,
+                                                                new List<int> { transferTransaction.AccountSource.AccountId, transferTransaction.AccountDestination.AccountId });
+            var balance = await _transactionServiceClient.GetAccountBalanceAsync(transferTransaction.AccountSource.AccountId);
 
             if (lead.Role != LeadRoleEnum.VipLead && lead.Role != LeadRoleEnum.Manager)
             {
-                if (transaction.AccountDestination.Currency == "RUB")
+                if (transferTransaction.AccountDestination.Currency == "RUB")
                 {
-                    var amountWithCommission = transaction.Amount + (_commissionSettings.ExtraTransferTransactionCommissionPercentage * transaction.Amount / 100);
-                    // СЮДА ДОПИСАТЬ ПОДПИСКУ
+                    var commissionAmount = _commissionSettings.ExtraTransferTransactionCommissionPercentage * transferTransaction.Amount / 100;
 
-                    return await CheckBalanceAndCreateTransferTransactionOrThrowAsync(transaction, balance, amountWithCommission);
+                    return await CreateTransferTransactionOrThrowAsync(transferTransaction, balance, commissionAmount);
                 }
                 else
                 {
-                    throw new ArgumentException("As long as you do not receive the status of a VipLid, you can carry out a transfer transaction only to a RUB Account");
+                    throw new ArgumentException("As long as you do not receive the status of a VipLid, you can carry out a transfer transferTransaction only to a RUB Account");
                 }
             }
             else if (lead.Role == LeadRoleEnum.VipLead)
             {
-                var amountWithCommission = transaction.Amount + (_commissionSettings.TransferTransactionCommissionPercentage * transaction.Amount / 100);
-                // СЮДА ДОПИСАТЬ ПОДПИСКУ
-
-                return await CheckBalanceAndCreateTransferTransactionOrThrowAsync(transaction, balance, amountWithCommission);
+                var commissionAmount = _commissionSettings.TransferTransactionCommissionPercentage * transferTransaction.Amount / 100;
+                
+                return await CreateTransferTransactionOrThrowAsync(transferTransaction, balance, commissionAmount);
             }
 
             throw new ArgumentException("Lead does not have a suitable role");
@@ -152,20 +129,61 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             return lead;
         }
 
-        private async Task<List<int>> CheckBalanceAndCreateTransferTransactionOrThrowAsync(TransferTransaction transaction, decimal balance, decimal amountWithCommission)
+        private async Task<int> AddWithdrawOrThrowAsync(Transaction transaction, decimal commissionAmount, decimal balance)
         {
+            var amountWithCommission = transaction.Amount + commissionAmount;
+
             if (balance >= amountWithCommission)
             {
                 transaction.Amount = amountWithCommission;
-                var transferTransaction = _mapper.Map<TransferRequest>(transaction);
-                var transactionsId = await _transactionServiceClient.CreateTransferTransactionAsync(transferTransaction);
+                var withdraw = _mapper.Map<WithdrawRequest>(transaction);
+                var transactionId = await _transactionServiceClient.CreateWithdrawTransactionAsync(withdraw);
+                var message = new CommissionMessage
+                {
+                    TransactionId = transactionId,
+                    CommissionAmount = commissionAmount
+                };
+                _produser.Publish(message);
 
-                return transactionsId;
+                return transactionId;
             }
             else
             {
                 throw new InsufficientFundsException();
             }
+        }
+
+        private async Task<int> AddDepositAsync(Transaction transaction, decimal commissionAmount)
+        {
+            var deposit = _mapper.Map<DepositRequest>(transaction);
+            var transactionId = await _transactionServiceClient.CreateDepositTransactionAsync(deposit);
+            var message = new CommissionMessage
+            {
+                TransactionId = transactionId,
+                CommissionAmount = commissionAmount
+            };
+            _produser.Publish(message);
+
+            return transactionId;
+        }
+
+        private async Task<List<int>> CreateTransferTransactionOrThrowAsync(TransferTransaction transferTransaction, decimal balance, decimal commissionAmount)
+        {
+            var withdrawTransaction = new Transaction
+            {
+                AccountId = transferTransaction.AccountSource.AccountId,
+                Amount = transferTransaction.Amount
+            };
+            var withdrawId = await AddWithdrawOrThrowAsync(withdrawTransaction, commissionAmount, balance);
+
+            var depositTransaction = new Transaction
+            {
+                AccountId = transferTransaction.AccountDestination.AccountId,
+                Amount = transferTransaction.Amount
+            };
+            var depositId = await AddDepositAsync(depositTransaction, 0);
+
+            return new List<int> { withdrawId, depositId };
         }
     }
 }

@@ -30,6 +30,8 @@ builder.Services.AddValidators();
 
 builder.Services.AddSettings();
 
+builder.Services.AddRabbitMQ();
+
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
 builder.Services.AddScoped<ITransactionServiceClient, TransactionServiceClient>(_ => new TransactionServiceClient(Environment.GetEnvironmentVariable("TransactionServiceUrl")));
 

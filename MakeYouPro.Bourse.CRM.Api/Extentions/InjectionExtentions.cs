@@ -7,6 +7,8 @@ using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Services;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Configurations.Settings;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
 
@@ -41,6 +43,12 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddScoped<ICurrencySetting, CurrencySetting>();
             services.AddScoped<IAccountSetting, AccountSetting>();
             services.AddSingleton<ICommissionSettings, CommissionSettings>();
+        }
+
+        public static void AddRabbitMQ(this IServiceCollection services)
+        {
+            services.AddSingleton<IProduser<CommissionMessage>, Produser<CommissionMessage>>(
+                _ => new Produser<CommissionMessage>("hostName", "commissionExchange", "commissionQueue"));
         }
     }
 }
