@@ -28,9 +28,10 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
             }
 
             _whriter.WhriteUsers(result);
+
             foreach (var r in result)
             {
-                var password = BCrypt.Net.BCrypt.HashPassword(r.Password);
+                var password = (BCrypt.Net.BCrypt.HashPassword(r.Password)).ToString();
                 r.Password=password;
             }
 
@@ -40,7 +41,6 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
         private Faker<UserEntity> GetUserFaker()
         {
             return new Faker<UserEntity>("en")
-                .RuleFor(u => u.Id, f => _currentLead.Id)
                 .RuleFor(u => u.Email, f => _currentLead.Email)
                 .RuleFor(u => u.Password, f => f.Internet.Password(4))
                 .RuleFor(u => u.Role, f => _currentLead.Role)

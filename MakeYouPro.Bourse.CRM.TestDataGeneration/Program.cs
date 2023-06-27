@@ -22,11 +22,10 @@ using (SqlConnection connection =
 
     connection.Open();
 
-    for (int i = 0; i < /*4000000*/4000; i += /*120000*/120)
+    for (int i = 0; i < 40; i += 12)
     {
-        sw.Start();
-        leads = dataGenerator.GenerateLeads(/*100000*/100, LeadRoleEnum.StandardLead);
-        leads.AddRange(dataGenerator.GenerateLeads(/*20000*/20, LeadRoleEnum.VipLead));
+        leads = dataGenerator.GenerateLeads(10, LeadRoleEnum.StandartLead);
+        leads.AddRange(dataGenerator.GenerateLeads(2, LeadRoleEnum.VipLead));
         accounts = dataGenerator.GenerateAccountsForLeads(leads);
 
         DataTable leadsTable = TableGenerator.MakeLeadTable(leads);
@@ -35,6 +34,7 @@ using (SqlConnection connection =
         {
             bulkCopy.DestinationTableName =
                 "dbo.Leads";
+
             try
             {
                 bulkCopy.WriteToServer(leadsTable);
@@ -44,7 +44,6 @@ using (SqlConnection connection =
                 Console.WriteLine(ex.Message);
             }
         }
-
 
         DataTable accountsTable = TableGenerator.MakeAccountTable(accounts);
 

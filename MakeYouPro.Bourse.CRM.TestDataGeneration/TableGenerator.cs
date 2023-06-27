@@ -1,12 +1,16 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Enums;
+﻿using EntityFrameworkCore.EncryptColumn.Interfaces;
+using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using System.Data;
-using System.Text;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 {
     internal static class TableGenerator
     {
+
+        private static readonly IEncryptionProvider _provider =
+            new GenerateEncryptionProvider(Environment.GetEnvironmentVariable("EncryptKey"));
+
         internal static DataTable MakeLeadTable(IEnumerable<LeadEntity> leads)
         {
             DataTable leadsTable = new DataTable("Leads");
@@ -60,7 +64,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             leadsTable.Columns.Add(birthday);
 
             DataColumn phoneNumber = new DataColumn();
-            phoneNumber.DataType = Type.GetType("System.String");
+            phoneNumber.DataType = typeof(String);
             phoneNumber.ColumnName = "PhoneNumber";
             phoneNumber.AllowDBNull = false;
             leadsTable.Columns.Add(phoneNumber);
@@ -78,7 +82,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             leadsTable.Columns.Add(citizenship);
 
             DataColumn passportNumber = new DataColumn();
-            passportNumber.DataType = Type.GetType("System.String");
+            //passportNumber.DataType = Type.GetType("System.String");
+            passportNumber.DataType = typeof(String);
             passportNumber.ColumnName = "PassportNumber";
             passportNumber.AllowDBNull = false;
             leadsTable.Columns.Add(passportNumber);
@@ -108,11 +113,11 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 row["MiddleName"] = lead.MiddleName;
                 row["Surname"] = lead.Surname;
                 row["Birthday"] = lead.Birthday.ToDateTime(TimeOnly.MinValue);
-                row["PhoneNumber"] = lead.PhoneNumber.ToString();
+                row["PhoneNumber"] = lead.PhoneNumber;
                 row["Email"] = lead.Email;
                 row["Citizenship"] = lead.Citizenship;
-                row["PassportNumber"] = lead.PassportNumber;
-                row["Registration"] = lead.Registration;
+                row["PassportNumber"] = _provider.Encrypt(lead.PassportNumber);
+                row["Registration"] = _provider.Encrypt(lead.Registration);
                 row["Comment"] = lead.Comment;
                 leadsTable.Rows.Add(row);
             }
