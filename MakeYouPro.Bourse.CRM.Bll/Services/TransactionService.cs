@@ -31,7 +31,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             IAccountService accountService,
             IMapper mapper,
             ICommissionSettings commissionSettings,
-            IProduser<CommissionMessage> produser)
+            IProduser<CommissionMessage> produser
+            )
         {
             _transactionServiceClient = transactionServiceClient;
             _leadService = leadService;

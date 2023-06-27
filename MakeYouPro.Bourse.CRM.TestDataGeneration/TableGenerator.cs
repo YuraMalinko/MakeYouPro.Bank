@@ -184,10 +184,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
         internal static string GetConnectionString()
         {
-            // return Environment.GetEnvironmentVariable("CrmBourseDB");
-
-            return @"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRMBourse3;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
-
+             return Environment.GetEnvironmentVariable("CrmBourseDB");
         }
     }
 }

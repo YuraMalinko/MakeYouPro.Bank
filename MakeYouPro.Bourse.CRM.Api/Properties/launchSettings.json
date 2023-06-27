@@ -28,8 +28,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "AuthServiceUrl": "https://localhost:7075/",
-        "TransactionServiceUrl": "https://localhost:7239/"
-
+        "TransactionServiceUrl": "https://localhost:7239/",
+        "RabbitHostName": "localhost"
       }
     },
     "IIS Express": {

@@ -3,6 +3,8 @@ using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -96,5 +98,17 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
             return Ok(result);
         }
+
+        //[HttpGet("com", Name = "GetCom")]
+        //public void Get()
+        //{
+        //    var producer = new Produser<CommissionMessage>("localhost", "ex", "que");
+        //    var mes = new CommissionMessage
+        //    {
+        //        CommissionAmount = 100,
+        //        TransactionId = 1
+        //    };
+        //    producer.Publish(mes);
+        //}
     }
 }

@@ -48,7 +48,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         public static void AddRabbitMQ(this IServiceCollection services)
         {
             services.AddSingleton<IProduser<CommissionMessage>, Produser<CommissionMessage>>(
-                _ => new Produser<CommissionMessage>("hostName", "commissionExchange", "commissionQueue"));
+                _ => new Produser<CommissionMessage>(Environment.GetEnvironmentVariable("RabbitHostName"), "commissionExchange", "commissionQueue"));
         }
     }
 }
