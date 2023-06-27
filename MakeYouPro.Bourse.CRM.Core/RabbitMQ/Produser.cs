@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using RabbitMQ.Client;
+using System.Text;
 using System.Text.Json;
 
 namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
