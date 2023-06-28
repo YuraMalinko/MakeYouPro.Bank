@@ -1,4 +1,7 @@
 using System.Text.Json;
+using MakeYouPro.Bourse.CRM.Models.Account.Response;
+using Newtonsoft.Json;
+using ReportingService.Api.MessageBroker;
 
 namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 {
@@ -7,12 +10,15 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
         private readonly ILogger<Worker> _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly RabbitMqPublisher rabbitMqPublisher;
+        private readonly string _routingKey;
 
         public Worker(ILogger<Worker> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
             _httpClient = new HttpClient();
+            _routingKey = "update-lead-status-on-vip";
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -23,9 +29,6 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 
                 if (currentTime.Hour == 20)
                 {
-                    var settings = new Settings();
-                    settings = GetSettings();
-                    Console.WriteLine(settings.PeriodOfTransactionsInDays);
                     await ProcessDataAsync();
                 }
 
@@ -39,22 +42,40 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
             {
                 using (HttpClient client = _httpClient)
                 {
-                    HttpResponseMessage response = await _httpClient.GetAsync("https://api.example.com/data");
+                    var settings = new Settings();
+                    settings = GetSettings();
+                    Console.WriteLine(settings.PeriodOfTransactionsInDays);
 
-                    if (response.IsSuccessStatusCode)
+                    HttpResponseMessage responseAccountsBirth = await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
+                    HttpResponseMessage responseAccountsWithBigTransactions = await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
+
+                    //HttpResponseMessage response = accountsBirth.Union(accountsWithBigTransactions).ToList();
+                    if (responseAccountsBirth.IsSuccessStatusCode & responseAccountsWithBigTransactions.IsSuccessStatusCode)
                     {
-                        string data = await response.Content.ReadAsStringAsync();
+                        string dataAccountsBirth = await responseAccountsBirth.Content.ReadAsStringAsync();
+                        string dataAccountsWithBigTransactions = await responseAccountsWithBigTransactions.Content.ReadAsStringAsync();
+
+                        List<AccountResponse> accountsBirth = JsonConvert.DeserializeObject<List<AccountResponse>>(dataAccountsBirth);
+                        List<AccountResponse> accountsWithBigTransactions = JsonConvert.DeserializeObject<List<AccountResponse>>(dataAccountsWithBigTransactions);
+
+                        var accountsToPublish = accountsBirth.Union(accountsWithBigTransactions).ToList();
+
+                        rabbitMqPublisher.PublishMessageAsync(accountsToPublish, _routingKey);
+                        _logger.LogInformation("Аккаунты Лидов для обновления статуса на Vip отправлены в очередь");
                     }
                     else
                     {
-                        Console.WriteLine($"Ошибка при выполнении GET-запроса: {response.StatusCode}");
+                        if(!responseAccountsBirth.IsSuccessStatusCode)
+                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
+                        if (!responseAccountsWithBigTransactions.IsSuccessStatusCode)
+                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка во время выполнения GET-запроса: {ex.Message}");
+                _logger.LogError($"Ошибка во время выполнения GET-запроса: {ex.Message}");
             }
         }
 
