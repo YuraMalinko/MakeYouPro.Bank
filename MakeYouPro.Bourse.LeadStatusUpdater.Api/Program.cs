@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ISettingsService, SettingsService>();
-builder.Services.AddAutoMapper(typeof(MapperApiSettingsProfile), typeof(MapperBllSettingsProfile));
+builder.Services.AddAutoMapper(typeof(MapperApiSettingsProfile));
 
 
 var app = builder.Build();

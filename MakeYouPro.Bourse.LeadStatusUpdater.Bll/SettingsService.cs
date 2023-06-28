@@ -1,13 +1,22 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace MakeYouPro.Bourse.LeadStatusUpdater.Bll
 {
     public class SettingsService : ISettingsService
     {
+        private readonly IConfiguration _configuration;
+
+        public SettingsService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         public Settings СhangeSettings(Settings settings)
         {
-            using (StreamWriter StreamWriter = new StreamWriter("../MakeYouPro.Bourse.LeadStatusUpdater.Service/MakeYouPro.Bourse.LeadStatusUpdater.Service.Settings.Test.txt"))
+            string _path = _configuration.GetSection("AppSettings:PathToSettings").Value!;
+
+            using (StreamWriter StreamWriter = new StreamWriter(_path))
             {
                 string JsonTablesLis = JsonSerializer.Serialize(settings);
                 StreamWriter.WriteLine(JsonTablesLis);
@@ -17,13 +26,16 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Bll
 
         public Settings GetSettings()
         {
-            using (StreamReader StreamWriter = new StreamReader("../MakeYouPro.Bourse.LeadStatusUpdater.Service/MakeYouPro.Bourse.LeadStatusUpdater.Service.Settings.Test.txt"))
+            string _path = _configuration.GetSection("AppSettings:PathToSettings").Value!;
+
+            using (StreamReader StreamWriter = new StreamReader(_path))
             {
                 var result = new Settings();
                 string jsn = StreamWriter.ReadLine();
                 result = JsonSerializer.Deserialize<Settings>(jsn);
                 return result;
             }
+
         }
     }
 }
