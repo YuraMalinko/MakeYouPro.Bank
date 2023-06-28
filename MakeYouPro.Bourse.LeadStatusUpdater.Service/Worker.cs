@@ -87,7 +87,7 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
             {
                 var result = new Settings();
                 string jsn = StreamWriter.ReadLine();
-                result = JsonSerializer.Deserialize<Settings>(jsn);
+                result = System.Text.Json.JsonSerializer.Deserialize<Settings>(jsn);
                 return result;
             }
 
