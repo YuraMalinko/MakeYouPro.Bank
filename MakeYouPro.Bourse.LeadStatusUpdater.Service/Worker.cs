@@ -12,13 +12,15 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
         private readonly HttpClient _httpClient;
         private readonly RabbitMqPublisher rabbitMqPublisher;
         private readonly string _routingKey;
+        private readonly string _path;
 
         public Worker(ILogger<Worker> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
             _httpClient = new HttpClient();
-            _routingKey = "update-lead-status-on-vip";
+            _routingKey = _configuration.GetSection("AppSettings:RoutingKey").Value!;
+            _path = _configuration.GetSection("AppSettings:PathToSettings").Value!;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,7 +29,7 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
             {
                 DateTime currentTime = DateTime.Now;
 
-                if (currentTime.Hour == 20)
+                if (currentTime.Hour == 2 && currentTime.Minute == 00)
                 {
                     await ProcessDataAsync();
                 }
@@ -81,8 +83,6 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 
         private Settings GetSettings()
         {
-            string _path = _configuration.GetSection("AppSettings:PathToSettings").Value!;
-
             using (StreamReader StreamWriter = new StreamReader(_path))
             {
                 var result = new Settings();
