@@ -36,7 +36,6 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                 if (response.IsSuccessStatusCode)
                 {
                     string data = await response.Content.ReadAsStringAsync();
-
                 }
                 else
                 {
