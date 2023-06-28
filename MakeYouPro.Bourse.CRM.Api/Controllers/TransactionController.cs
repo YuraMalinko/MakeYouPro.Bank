@@ -3,6 +3,8 @@ using FluentValidation;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -18,16 +20,19 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         private readonly IValidator<TransactionRequest> _validator;
 
         private readonly IValidator<TransferTransactionRequest> _transferValidator;
+        private readonly IProduser<CommissionMessage> _producer;
 
         private readonly IMapper _mapper;
 
         public TransactionController(ITransactionService transactionService, IValidator<TransactionRequest> validator,
-                                     IValidator<TransferTransactionRequest> transferValidator, IMapper mapper)
+                                     IValidator<TransferTransactionRequest> transferValidator, IMapper mapper,
+                                     IProduser<CommissionMessage> producer)
         {
             _transactionService = transactionService;
             _validator = validator;
             _transferValidator = transferValidator;
             _mapper = mapper;
+            _producer = producer;
         }
 
         [HttpGet(Name = "GetBalance")]
@@ -97,16 +102,16 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("com", Name = "GetCom")]
-        //public void Get()
-        //{
-        //    var producer = new Produser<CommissionMessage>("localhost", "ex", "que");
-        //    var mes = new CommissionMessage
-        //    {
-        //        CommissionAmount = 100,
-        //        TransactionId = 1
-        //    };
-        //    producer.Publish(mes);
-        //}
+        [HttpGet("com", Name = "GetCom")]
+        public void Get()
+        {
+            //var producer = new Produser<CommissionMessage>("localhost", "commissionExchange", "commissionQueue");
+            var mes = new CommissionMessage
+            {
+                CommissionAmount = 100,
+                TransactionId = 1
+            };
+            _producer.Publish(mes);
+        }
     }
 }

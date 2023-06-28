@@ -4,6 +4,7 @@ using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Api.Validations;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
+using MakeYouPro.Bourse.CRM.Bll.RabbitMQ;
 using MakeYouPro.Bourse.CRM.Bll.Services;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Configurations.Settings;
@@ -11,6 +12,7 @@ using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
 using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
+using RabbitMQ.Client;
 
 namespace MakeYouPro.Bourse.CRM.Api.Extentions
 {
@@ -49,10 +51,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
 
         public static void AddRabbitMQ(this IServiceCollection services)
         {
+            //todo переделать
+            services.AddSingleton(_ => new ConnectionFactory { HostName = Environment.GetEnvironmentVariable("RabbitHostName") }.CreateConnection());
+
             services.AddSingleton<IProduser<CommissionMessage>, Produser<CommissionMessage>>(
-                _ => new Produser<CommissionMessage>(Environment.GetEnvironmentVariable("RabbitHostName"), "commissionExchange", "commissionQueue"));
-            services.AddSingleton<IConsumer<CommissionMessage>, Consumer<CommissionMessage>>(
-                _ => new Consumer<CommissionMessage>(Environment.GetEnvironmentVariable("RabbitHostName"), "commissionQueue"));
+                s => new Produser<CommissionMessage>(s.GetRequiredService<IConnection>(), "commissionExchange", "commissionQueue"));
+            services.AddSingleton<IConsumer<CommissionMessage>, CommissionConsumer>(
+                s => new CommissionConsumer(s.GetRequiredService<IConnection>(), "commissionQueue", s.GetRequiredService<NLog.ILogger>()));
         }
     }
 }

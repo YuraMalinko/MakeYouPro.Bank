@@ -113,7 +113,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
             if (leadDb == null)
             {
-                // _logger.Warn($"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else

@@ -4,6 +4,8 @@ using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
+using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Dal;
 using NLog;
 using ILogger = NLog.ILogger;
@@ -55,5 +57,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Services.GetRequiredService<IConsumer<CommissionMessage>>();
 
 app.Run();
