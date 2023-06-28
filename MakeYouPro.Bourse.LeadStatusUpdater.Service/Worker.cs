@@ -1,7 +1,6 @@
-using System.Text.Json;
-using MakeYouPro.Bourse.CRM.Models.Account.Response;
+using MakeYouPro.Bourse.LeadStatusUpdater.Service.Models;
+using MakeYouPro.Bourse.LeadStatusUpdater.Service.RabbitMq;
 using Newtonsoft.Json;
-using ReportingService.Api.MessageBroker;
 
 namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 {
@@ -51,14 +50,13 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     HttpResponseMessage responseAccountsBirth = await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
                     HttpResponseMessage responseAccountsWithBigTransactions = await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
 
-                    //HttpResponseMessage response = accountsBirth.Union(accountsWithBigTransactions).ToList();
                     if (responseAccountsBirth.IsSuccessStatusCode & responseAccountsWithBigTransactions.IsSuccessStatusCode)
                     {
                         string dataAccountsBirth = await responseAccountsBirth.Content.ReadAsStringAsync();
                         string dataAccountsWithBigTransactions = await responseAccountsWithBigTransactions.Content.ReadAsStringAsync();
 
-                        List<AccountResponse> accountsBirth = JsonConvert.DeserializeObject<List<AccountResponse>>(dataAccountsBirth);
-                        List<AccountResponse> accountsWithBigTransactions = JsonConvert.DeserializeObject<List<AccountResponse>>(dataAccountsWithBigTransactions);
+                        List<LeadStatusUpdateModel> accountsBirth = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsBirth);
+                        List<LeadStatusUpdateModel> accountsWithBigTransactions = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithBigTransactions);
 
                         var accountsToPublish = accountsBirth.Union(accountsWithBigTransactions).ToList();
 
