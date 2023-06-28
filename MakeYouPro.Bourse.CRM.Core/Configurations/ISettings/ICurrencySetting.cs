@@ -5,5 +5,7 @@
         List<string> CurrencyStandart { get; set; }
 
         List<string> CurrencyVip { get; set; }
+        
+        HashSet<string> BaseCurrencies { get; set; }
     }
 }

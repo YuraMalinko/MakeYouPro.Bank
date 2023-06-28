@@ -388,7 +388,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             bool result = true;
 
-            if  (lead.Role == LeadRoleEnum.StandardLead && !_currencySetting.CurrencyStandart.Contains(currency))
+            if (lead.Role == LeadRoleEnum.StandardLead && !_currencySetting.CurrencyStandart.Contains(currency))
             {
                 result = false;
             }

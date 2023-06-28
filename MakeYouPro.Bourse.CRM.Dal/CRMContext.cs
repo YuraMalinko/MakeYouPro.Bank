@@ -5,7 +5,6 @@ using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.ComponentModel;
 
 namespace MakeYouPro.Bourse.CRM.Dal
 {
@@ -24,9 +23,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            //  builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
-            builder.UseSqlServer(@"Data Source=DESKTOP-GRG9GQS;Initial Catalog=CRMBourse3;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False");
-
+            builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

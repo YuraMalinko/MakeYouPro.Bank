@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
-using NLog;
 using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
@@ -13,7 +12,7 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
         public ExceptionHandler(RequestDelegate next, ILogger nLogger)
         {
             _next = next;
-            _logger = nLogger; 
+            _logger = nLogger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -83,6 +82,36 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 var result = JsonSerializer.Serialize(new { Error = "AccountUnknownException Error:" + ex.Message });
                 context.Response.StatusCode = 500;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (UnsuitableCurrencyException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "UnsuitableCurrencyException Error: " + ex.CurrencyName });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (InsufficientFundsException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "InsufficientFundsException Error: " });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (TransactionException ex)
+            {
+                _logger.Error(ex.Message + ex.StackTrace);
+
+                var result = JsonSerializer.Serialize(new { Error = "TransactionException Error: " + ex.Message });
+                context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsync(result);
