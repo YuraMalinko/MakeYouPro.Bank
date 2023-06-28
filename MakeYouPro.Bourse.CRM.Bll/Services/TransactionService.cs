@@ -23,6 +23,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly ICommissionSettings _commissionSettings;
 
+        private readonly ICurrencySetting _currencySettings;
+
         private readonly IProduser<CommissionMessage> _produser;
 
         public TransactionService(
@@ -31,6 +33,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             IAccountService accountService,
             IMapper mapper,
             ICommissionSettings commissionSettings,
+            ICurrencySetting currencySettings,
             IProduser<CommissionMessage> produser
             )
         {
@@ -39,6 +42,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             _accountService = accountService;
             _mapper = mapper;
             _commissionSettings = commissionSettings;
+            _currencySettings = currencySettings;
             _produser = produser;
         }
 
@@ -54,7 +58,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             await GetOrThrowAccountBelongsToLeadAsync(transaction.LeadId, new List<int> { transaction.AccountId });
             var account = await _accountService.GetAccountAsync(transaction.AccountId);
 
-            if (account.Currency == "RUB" || account.Currency == "USD")
+            if (_currencySettings.BaseCurrencies.Contains(account.Currency))
             {
                 var balance = await _transactionServiceClient.GetAccountBalanceAsync(transaction.AccountId);
                 var commissionAmount = _commissionSettings.WithdrawCommissionPercentage * transaction.Amount / 100;
@@ -72,7 +76,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             await GetOrThrowAccountBelongsToLeadAsync(transaction.LeadId, new List<int> { transaction.AccountId });
             var account = await _accountService.GetAccountAsync(transaction.AccountId);
 
-            if (account.Currency == "RUB" || account.Currency == "USD")
+            if (_currencySettings.BaseCurrencies.Contains(account.Currency))
             {
                 var commissionAmount = _commissionSettings.DepositCommissionPercentage * transaction.Amount / 100;
                 var amountWithCommission = transaction.Amount + commissionAmount;
