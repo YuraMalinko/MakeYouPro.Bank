@@ -57,7 +57,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
         }
 
-        public async Task<LeadEntity> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        public async Task<LeadEntity> UpdateLeadRoleAsync(int leadRole, int leadId)
         {
             var leadDb = await _context.Leads.SingleOrDefaultAsync(l => l.Id == leadId);
 
@@ -68,7 +68,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             }
             else
             {
-                leadDb.Role = leadRole;
+                leadDb.Role = (LeadRoleEnum)leadRole;
                 await _context.SaveChangesAsync();
 
                 return leadDb;

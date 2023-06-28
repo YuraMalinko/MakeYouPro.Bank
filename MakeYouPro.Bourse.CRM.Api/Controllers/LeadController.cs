@@ -19,21 +19,23 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
     {
         private readonly ILeadService _leadService;
 
-        // private readonly IAuthServiceClient _authServiceClient;
-
         private readonly IMapper _mapper;
 
-        private readonly IValidator<CreateLeadRequest> _validator;
+        private readonly IValidator<CreateLeadRequest> _createValidator;
 
-        private readonly ILogger _logger;
+        private readonly IValidator<UpdateLeadUsingLeadRequest> _updateUsingLeadValidator;
 
-        public LeadController(ILeadService leadService, IMapper mapper, IValidator<CreateLeadRequest> validator, ILogger nLogger)
+        private readonly IValidator<UpdateLeadUsingManagerRequest> _updateUsingManagerValidator;
+
+        public LeadController(ILeadService leadService, IMapper mapper, IValidator<CreateLeadRequest> validator,
+                             IValidator<UpdateLeadUsingLeadRequest> updateUsingLeadValidator, IValidator<UpdateLeadUsingManagerRequest> updateUsingManagerValidator)
         {
             _leadService = leadService;
-            //  _authServiceClient = authServiceClient;
             _mapper = mapper;
-            _validator = validator;
-            _logger = nLogger;
+            _createValidator = validator;
+            _updateUsingLeadValidator = updateUsingLeadValidator;
+            _updateUsingManagerValidator = updateUsingManagerValidator;
+
         }
 
         [HttpPost(Name = "CreateOrRecoverLeadAsync")]
@@ -43,7 +45,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> CreateLeadAsync(CreateLeadRequest addLead)
         {
-            var validationResult = await _validator.ValidateAsync(addLead);
+            var validationResult = await _createValidator.ValidateAsync(addLead);
 
             if (!validationResult.IsValid)
             {
@@ -86,6 +88,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingLeadAsync(UpdateLeadUsingLeadRequest updateRequestLead)
         {
+            var validationResult = await _updateUsingLeadValidator.ValidateAsync(updateRequestLead);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             var lead = _mapper.Map<Lead>(updateRequestLead);
             var updateLead = await _leadService.UpdateLeadUsingLeadAsync(lead);
             var result = _mapper.Map<LeadResponseInfo>(updateLead);
@@ -99,6 +108,13 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<LeadResponseInfo>> UpdateLeadUsingManagerAsync(UpdateLeadUsingManagerRequest updateRequestLead, int managerId)
         {
+            var validationResult = await _updateUsingManagerValidator.ValidateAsync(updateRequestLead);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
             var lead = _mapper.Map<Lead>(updateRequestLead);
             var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
             var result = _mapper.Map<LeadResponseInfo>(updateLead);
@@ -110,7 +126,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(int leadRole, int leadId)
         {
             var lead = await _leadService.UpdateLeadRoleAsync(leadRole, leadId);
             var result = _mapper.Map<LeadResponseBase>(lead);

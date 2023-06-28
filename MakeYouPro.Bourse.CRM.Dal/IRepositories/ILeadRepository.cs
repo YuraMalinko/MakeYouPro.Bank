@@ -21,6 +21,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task DeleteLeadByIdAsync(int leadId);
 
-        Task<LeadEntity> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId);
+        Task<LeadEntity> UpdateLeadRoleAsync(int leadRole, int leadId);
     }
 }

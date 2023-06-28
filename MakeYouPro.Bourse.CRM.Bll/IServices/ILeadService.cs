@@ -15,6 +15,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.IServices
 
         Task<Lead> UpdateLeadUsingManagerAsync(Lead updateLead, int managerId);
 
-        Task<Lead> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId);
+        Task<Lead> UpdateLeadRoleAsync(int leadRole, int leadId);
     }
 }

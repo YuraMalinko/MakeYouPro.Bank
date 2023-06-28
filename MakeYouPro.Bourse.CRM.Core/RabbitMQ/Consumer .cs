@@ -22,19 +22,17 @@ namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
             _channel = _connection.CreateModel();
             _consumer = new EventingBasicConsumer(_channel);
 
-           // _consumer.Received += NewMethod;
+            _consumer.Received += HandleMessage;
             _channel.BasicConsume(queue: _queueName,
                                  autoAck: true,
                                  consumer: _consumer);
         }
 
-        private T NewMethod<T>(object? model, BasicDeliverEventArgs ea)
+        private void HandleMessage(object? model, BasicDeliverEventArgs ea)
         {
             byte[] body = ea.Body.ToArray();
             var messageString = Encoding.UTF8.GetString(body);
             var message = JsonSerializer.Deserialize<T>(messageString);
-
-            return message;
         }
 
         public void Dispose()

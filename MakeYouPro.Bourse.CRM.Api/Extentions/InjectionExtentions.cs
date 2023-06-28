@@ -36,6 +36,8 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddScoped<IValidator<CreateLeadRequest>, RegistrateValidator>();
             services.AddScoped<IValidator<TransactionRequest>, TransactionValidator>();
             services.AddScoped<IValidator<TransferTransactionRequest>, TransferTransactionValidator>();
+            services.AddScoped<IValidator<UpdateLeadUsingLeadRequest>, UpdateUsingLeadValidator>();
+            services.AddScoped<IValidator<UpdateLeadUsingManagerRequest>, UpdateUsingManagerValidator>();
         }
 
         public static void AddSettings(this IServiceCollection services)

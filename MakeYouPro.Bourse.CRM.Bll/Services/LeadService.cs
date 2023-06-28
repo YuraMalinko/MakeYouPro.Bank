@@ -106,7 +106,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             if (leadEntityDb.Status == LeadStatusEnum.Deleted || leadEntityDb.Status == LeadStatusEnum.Deactive)
             {
                 // _logger.Log(LogLevel.Warn, " Lead with id {updateLead.Id} is deleted or is deactive");
-                throw new ArgumentException($"Lead with id {updateLead.Id} is deleted or is deactive");
+                throw new ArgumentException("Lead with this id is deleted or is deactive");
             }
             else
             {
@@ -175,7 +175,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        public async Task<Lead> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        public async Task<Lead> UpdateLeadRoleAsync(int leadRole, int leadId)
         {
             //�������� �������� �� ��������� �������
             // � �������� �� �� ��� �� ����� ������ ������
