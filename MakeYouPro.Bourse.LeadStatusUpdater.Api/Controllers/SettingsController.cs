@@ -19,11 +19,20 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Api.Controllers
         }
 
         [HttpGet(Name = "GetAllSettings")]
-        public ActionResult<List<SettingsResponseDto>> GetSettings()
+        public ActionResult<SettingsResponseDto> GetSettings()
         {
-            var allUsers = _settingsService.GetSettings();
-            //var allUsersResponseDto = _mapper.Map<SettingsResponseDto>(allUsers);
-            return Ok();
+            var SettingsResponse = _settingsService.GetSettings();
+            var SettingsResponseDto = _mapper.Map<SettingsResponseDto>(SettingsResponse);
+            return Ok(SettingsResponseDto);
+        }
+
+        [HttpPost(Name = "GetAllSettings")]
+        public ActionResult<SettingsResponseDto> СhangeSettings(SettingsRequestDto settingsReques)
+        {
+            var settings = _mapper.Map<Settings>(settingsReques);
+            var SettingsResponse = _settingsService.СhangeSettings(settings);
+            var SettingsResponseDto = _mapper.Map<SettingsResponseDto>(SettingsResponse);
+            return Ok(SettingsResponseDto);
         }
     }
 }

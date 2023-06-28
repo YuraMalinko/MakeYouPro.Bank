@@ -1,0 +1,1 @@
+{"PeriodOfTransactionsInDays":2,"CountOfTransactions":2,"PeriodOfFreshMoneyInDays":22,"CountOfFreshMoneyInRUB":333,"PeriodOfBirthdayVIPInDays":1}

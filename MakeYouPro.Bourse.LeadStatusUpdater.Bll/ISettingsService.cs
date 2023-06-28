@@ -3,6 +3,6 @@
     public interface ISettingsService
     {
         Settings GetSettings();
-        //Task<Settings> СhangeSettingsAsync(Settings settings);
+        Settings СhangeSettings(Settings settings);
     }
 }
