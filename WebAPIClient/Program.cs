@@ -1,42 +1,41 @@
-﻿using Polly;
-using Polly.Retry;
+﻿using System.Reflection;
+using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
 using WebAPIClient;
 
 public class Program
 {
-    static int maxAttempts = 2;
+    Dictionary<string, decimal> ratesForRabbit = RateStorage.rateDictionary;
     static void Main(string[] args)
-    {
-        //HttpClient client;
-        int numberOfAttempt = 0;
-        PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
-        AsyncRetryPolicy retryPolicy = Policy.
-             Handle<HttpRequestException>(exeption => { return exeption.Message == "HttpRequestException"; })
-            .Or<Exception>(exeption => { return exeption.Message == "unexpected error"; })
-            .WaitAndRetryAsync(maxAttempts, time => TimeSpan.FromSeconds(2*time));
 
-        retryPolicy.ExecuteAsync(GetAndSaveRates).Wait();
-        //async void CreatingRegularRatesGetting()
-        //{
-        //    while (await timer.WaitForNextTickAsync() && numberOfAttempt <= maxAttempts)
-        //    {
-        //        Console.WriteLine(numberOfAttempt);
-        //        retryPolicy.ExecuteAsync(GetRates);
-        //        numberOfAttempt++;
-        //    }
-        //}
-        //CreatingRegularRatesGetting();
-        //Console.ReadLine();
-    }
-    async static Task GetAndSaveRates()
     {
-        using (var client = new HttpClient())
-        {
-            var json = await client.GetStringAsync("https://currate.ru/api/?get=rates&pairs=RUBUSD,USDRUB,RUBEUR,EURRUB,RUBJPY,JPYRUB,RUBCNY,CNYRUB,RUBRSD,RSDRUB,RUBBGN,BGNRUB,RUBARS,ARSRUB,USDEUR,EURUSD,USDJPY,JPYUSD,USDCNY,CNYUSD,USDRSD,RSDUSD,USDBGN,BGNUSD,USDARS,ARSUSD,EURJPY,JPYEUR,EURCNY,CNYEUR,EURRSD,RSDEUR,EURBGN,BGNEUR,EURARS,ARSEUR,JPYCNY,CNYJPY,JPYRSD,RSDJPY,JPYBGN,BGNJPY,JPYARS,ARSJPY,CNYRSD,RSDCNY,CNYBGN,BGNCNY,CNYARS,ARSCNY,RSDBGN,BGNRSD,RSDARS,ARSRSD,BGNARS,ARSBGN&key=d93cb3151e643d1cbfe60829b8977980");
-            
-            var model = RateStorage.DeserializeJson(json);
-            RateStorage.ConvertClassToDictionary(model);
-            model.data.DateTime = DateTime.Now; 
-        }
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        builder.Services.AddHostedService<TimedBackgroundService>();
+        IHost host = builder.Build();
+        host.Run();
+
+        var factory = new ConnectionFactory { HostName = "main" };
+        using var connection = factory.CreateConnection();
+        using var channel = connection.CreateModel();
+
+
+        channel.QueueDeclare(queue: "ratesProvider",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+        string mail = "test";
+        var body = Encoding.UTF8.GetBytes(mail);
+
+        channel.BasicPublish(exchange: string.Empty,
+                             routingKey: "ratesProvider",
+                             basicProperties: null,
+                             body: body);
+        Console.WriteLine($" [x] Sent ");
+
+        Console.ReadLine();
     }
 }
