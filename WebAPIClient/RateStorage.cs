@@ -1,32 +1,28 @@
-﻿using Newtonsoft.Json;
+﻿using System.Reflection;
+using Newtonsoft.Json;
 
 namespace WebAPIClient
 {
     public static class RateStorage
     {
-        public static Dictionary <string,decimal> ModifyJsonToDictionaty(string json)
+        public static Rootobject DeserializeJson(string json)
         {
-            string[] cuttedJson = json.Split('{', '}');
-            string[] preRates = cuttedJson[2].Split('"', ':', ',');
-            preRates = preRates.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-            Dictionary<string, decimal> rates = new Dictionary<string, decimal>();
-            for (int i = 0; i < preRates.Length; i++)
-            {
-                string key = preRates[i];
-                decimal value = Convert.ToDecimal(preRates[++i].Replace('.', ','));
-                rates.Add(key, value);
-            }
-            return rates;
+            var model = JsonConvert.DeserializeObject<Rootobject>(json);
+            Console.WriteLine(model.data.EURBGN);
+            return model;
         }
-        public static void DeserializeJson (string json)
-        {
-           string[] cuttedJson = json.Split('{', '}');
-            string jsonForDeserialize = "{" + cuttedJson[2] + "}";
-            Console.WriteLine(jsonForDeserialize);
-            var model = JsonConvert.DeserializeObject<ModelRates>(jsonForDeserialize);
-            model.DateTime = DateTime.Now;
-            Console.WriteLine(model.BGNRUB);
-            Console.WriteLine(model.DateTime);
+
+        public static Dictionary<string, decimal> ConvertClassToDictionary(Rootobject model)
+        { 
+        Dictionary<string, decimal> ratesDictionary = new Dictionary<string, decimal>();
+
+        PropertyInfo[] infos = model.data.GetType().GetProperties();
+             
+            foreach (PropertyInfo info in infos)
+            {
+                ratesDictionary.Add(info.Name, Convert.ToDecimal(info.GetValue(model.data, null)) ); 
+            }
+            return ratesDictionary;
         }
     }
 }

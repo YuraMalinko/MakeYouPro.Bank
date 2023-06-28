@@ -7,22 +7,22 @@ namespace WebAPIClient
     {
         public MapperApi()
         {
-            CreateMap<ModelRates, ARSBll>();
-            CreateMap<ModelRates, BGNBll>();
-            CreateMap<ModelRates, CNYBll>();
-            CreateMap<ModelRates, EURBll>();
-            CreateMap<ModelRates, JPYBll>();
-            CreateMap<ModelRates, RSDBll>();
-            CreateMap<ModelRates, RUBBll>();
-            CreateMap<ModelRates, USDBll>();
-            CreateMap<ARSBll, ModelRates>();
-            CreateMap<BGNBll, ModelRates>();
-            CreateMap<CNYBll, ModelRates>();
-            CreateMap<EURBll, ModelRates>();
-            CreateMap<JPYBll, ModelRates>();
-            CreateMap<RSDBll, ModelRates>();
-            CreateMap<RUBBll, ModelRates>();
-            CreateMap<USDBll, ModelRates>();
+            CreateMap<Data, ARSBll>();
+            CreateMap<Data, BGNBll>();
+            CreateMap<Data, CNYBll>();
+            CreateMap<Data, EURBll>();
+            CreateMap<Data, JPYBll>();
+            CreateMap<Data, RSDBll>();
+            CreateMap<Data, RUBBll>();
+            CreateMap<Data, USDBll>();
+            CreateMap<ARSBll, Data>();
+            CreateMap<BGNBll, Data>();
+            CreateMap<CNYBll, Data>();
+            CreateMap<EURBll, Data>();
+            CreateMap<JPYBll, Data>();
+            CreateMap<RSDBll, Data>();
+            CreateMap<RUBBll, Data>();
+            CreateMap<USDBll, Data>();
         }
     }
 }
