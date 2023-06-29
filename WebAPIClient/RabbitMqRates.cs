@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System.Text.Json;
 using RabbitMQ.Client;
 using WebAPIClient;
 
@@ -32,7 +31,6 @@ namespace RabbitMQ
                                         arguments: null);
 
                 var message = "RateStorage.jsonNew";
-                //var body = Encoding.UTF8.GetBytes(message);
                 var body = Encoding.UTF8.GetBytes(RateStorage.jsonNew);
                 _channel.BasicPublish(exchange: "",
                                         routingKey: queueName,
