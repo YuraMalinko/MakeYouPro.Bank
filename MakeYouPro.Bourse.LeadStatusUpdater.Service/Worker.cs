@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.Models;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.RabbitMq;
 using Newtonsoft.Json;
@@ -16,7 +15,7 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
         private readonly string _routingKey;
         private readonly string _path;
 
-        public Worker(ILogger nLogger,, IConfiguration configuration, RabbitMqPublisher rabbitMqPublisher)
+        public Worker(ILogger nLogger, IConfiguration configuration, RabbitMqPublisher rabbitMqPublisher)
         {
             _logger = nLogger;
             _configuration = configuration;
@@ -58,7 +57,7 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     List<LeadStatusUpdateModel> accountsBirth = await ChekResponse(responseAccountsBirth);
                     List<LeadStatusUpdateModel> accountsWithBigTransactions = await ChekResponse(responseAccountsWithBigTransactions);
                     List<LeadStatusUpdateModel> accountsWithFreshMoney = await ChekResponse(responseAccountsWithFreshMoney);
-                                        
+
                     List<LeadStatusUpdateModel> accountsToPublish = await MergeListsAndRemoveDuplicatesAsync(accountsBirth, accountsWithBigTransactions, accountsWithFreshMoney);
 
                     try
