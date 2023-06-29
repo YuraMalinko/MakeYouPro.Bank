@@ -21,7 +21,7 @@ using (SqlConnection connection =
 
     for (int i = 0; i < 4000000; i += 120000)
     {
-        leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandardLead);
+        leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandartLead);
         leads.AddRange(dataGenerator.GenerateLeads(20000, LeadRoleEnum.VipLead));
         accounts = dataGenerator.GenerateAccountsForLeads(leads);
 
