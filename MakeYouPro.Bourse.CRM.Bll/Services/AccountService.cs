@@ -253,7 +253,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
 
             var chandeAccount = _mapper.Map<Account>(changeAccountEntity);
-            //место для запроса баланса
             _logger.Debug($"The process of executing the request is completed");
 
             return _mapper.Map<Account>(chandeAccount);
@@ -268,7 +267,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 throw new FileNotFoundException($"There are no account matching by if {accountId}");
             }
 
-            //здесь место для запроса баланса
 
             _logger.Info($"Account information was uploaded by if {accountId}");
 
@@ -291,28 +289,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             var accounts = _mapper.Map<List<Account>>(accountsEntity);
 
-            if (filter is not null && (filter.FromBalace != null || filter.ToBalace != null))
-            {
-                foreach (var a in accounts)
-                {
-                    //здесь запросы баланса для всех аккаунтов
-                }
-
-                _logger.Info("The balance is recorded for all accounts");
-
-                if (filter.FromBalace != null)
-                {
-                    accounts.RemoveAll(a => a.Balance <= filter.FromBalace);
-                }
-
-                if (filter.ToBalace != null)
-                {
-                    accounts.RemoveAll(a => a.Balance >= filter.ToBalace);
-                }
-
-                _logger.Info("Filter selection is performed");
-            }
-
+            
             if (accounts.Any())
             {
                 _logger.Info($"The information about the accounts was uploaded by the filter");

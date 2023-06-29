@@ -17,15 +17,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
     public class LeadService : ILeadService
     {
         private readonly ILeadRepository _leadRepository;
-
         private readonly IUserRepository _userRepository;
-
         private readonly IAccountService _accountService;
-
-
         private readonly IMapper _mapper;
         private readonly IMapper _huyaper;
-
         private readonly ILogger _logger;
 
         private SqlTransaction _transaction;

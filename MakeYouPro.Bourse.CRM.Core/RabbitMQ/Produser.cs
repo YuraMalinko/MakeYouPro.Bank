@@ -14,12 +14,10 @@ namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
 
         private readonly IModel _channel;
 
-        //public Produser(string hostName, string exchangeName, string queueName)
         public Produser(IConnection connection, string exchangeName, string queueName)
         {
             _exchangeName = exchangeName;
             _queueName = queueName;
-            //_connection = new ConnectionFactory { HostName = hostName }.CreateConnection();
             _connection = connection;
             _channel = _connection.CreateModel();
             Initialize();

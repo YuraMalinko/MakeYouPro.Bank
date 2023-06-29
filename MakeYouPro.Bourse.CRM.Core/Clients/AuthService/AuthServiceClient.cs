@@ -19,8 +19,6 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.AuthService
 
         public async Task<UserRegisterRequest> Login(UserRegisterRequest request)
         {
-            // дописать проверки
-
             var response = await _client.PostAsJsonAsync("login", request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)

@@ -167,16 +167,5 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
                 await context.Response.WriteAsync(result);
             }
         }
-
-        private async Task MakingAnError(HttpContext context, Exception ex, int statusCode)
-        {
-            _logger.Error($"{ex.Message} {ex.StackTrace}");
-
-            var result = JsonSerializer.Serialize(new { Error = "AuthenticationException Error:" + ex.Message });
-            context.Response.StatusCode = statusCode;
-            context.Response.ContentType = "application/json";
-
-            await context.Response.WriteAsync(result);
-        }
     }
 }

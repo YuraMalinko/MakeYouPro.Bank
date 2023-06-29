@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Models
 {
-    //  [Index(nameof(Email), IsUnique = true)]
     [Index("PhoneNumber", "Email", "PassportNumber", "Citizenship", IsUnique = true, Name = "EmailPhonePassportIndex")]
     public class LeadEntity
     {
