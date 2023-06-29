@@ -88,7 +88,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             }
         }
 
-        [Authorize(Roles = "ManagerLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Manager", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPatch("UpdateSatus", Name = "UpdateSatusAccount")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
@@ -160,7 +160,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             }
         }
 
-        [Authorize(Roles = "ManagerLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Manager", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet(Name = "GetAccounts")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]

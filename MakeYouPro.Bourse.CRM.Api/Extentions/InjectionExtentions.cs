@@ -121,7 +121,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
                         || k.User.HasClaim(ClaimTypes.Role, LeadRoleEnum.StandartLead.ToString()));
                 });
 
-                options.AddPolicy("ManagerLead", builder =>
+                options.AddPolicy("Manager", builder =>
                 {
                     builder.RequireAssertion(k => k.User.HasClaim(ClaimTypes.Role, LeadRoleEnum.Manager.ToString()));
 

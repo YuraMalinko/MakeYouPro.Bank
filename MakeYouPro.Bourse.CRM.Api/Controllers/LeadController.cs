@@ -109,7 +109,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "ManagerLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Roles = "Manager", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("usingManager", Name = "UpdateLeadUsingManager")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
