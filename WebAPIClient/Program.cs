@@ -8,7 +8,7 @@ using WebAPIClient;
 
 public class Program
 {
-    Dictionary<string, decimal> ratesForRabbit = RateStorage.rateDictionary;
+  
     static void Main(string[] args)
 
     {
