@@ -7,7 +7,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.TablesGenerator
     {
         internal static string GetConnectionString()
         {
-            return Environment.GetEnvironmentVariable("AuthCrmBourseLocalDB");
+            return Environment.GetEnvironmentVariable("AuthCrmBourseDB");
         }
 
         internal static DataTable MakeUsersTable(IEnumerable<UserEntity> users)

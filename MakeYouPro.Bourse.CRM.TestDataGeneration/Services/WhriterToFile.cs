@@ -14,7 +14,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
         public WhriterToFile()
         {
             _filePath = @$"{Environment.GetEnvironmentVariable("LogFiles")}\Users\";
-            maxCountObject = 1000;
+            maxCountObject = 12000;
         }
 
         public void WhriteUsers(List<UserEntity> users)
@@ -22,7 +22,6 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
             for (int i = 0; i < users.Count(); i += maxCountObject)
             {
                 string filename = $"{_filePath}Users with {users[i].Id} index.xlsx";
-                //var usersToWhrite = 
                 var whriterr = new StreamWriter(filename);
                 whriterr.Close();
                 
@@ -31,9 +30,9 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
                     Worksheet sheet = writer.Worksheets[0];
 
 
-                    if (i + maxCountObject > users.Count())
+                    if (i + maxCountObject >= users.Count())
                     {
-                        var writeUsers = users.GetRange(i, users.Count() - i - 1).ToArray();
+                        var writeUsers = users.GetRange(i, users.Count() - i).ToArray();
                         string serialiseForFile = JsonSerializer.Serialize(writeUsers);
                         JsonLayoutOptions options = new JsonLayoutOptions();
                         options.ArrayAsTable = true;
@@ -42,7 +41,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
                     }
                     else
                     {
-                        var writeUsers = users.GetRange(i, i + maxCountObject).ToArray();
+                        
+                        var writeUsers = users.GetRange(i,maxCountObject).ToArray();
                         string serialiseForFile = JsonSerializer.Serialize(writeUsers);
                         JsonLayoutOptions options = new JsonLayoutOptions();
                         options.ArrayAsTable = true;

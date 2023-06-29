@@ -11,7 +11,6 @@ using System.Diagnostics;
 
 string connectionString = TableGenerator.GetConnectionString();
 string connectAuthString = TableAuthDBGenerator.GetConnectionString();
-var sw = new Stopwatch();
 using (SqlConnection connection =
            new SqlConnection(connectionString))
 {
@@ -22,10 +21,10 @@ using (SqlConnection connection =
 
     connection.Open();
 
-    for (int i = 0; i < 40; i += 12)
+    for (int i = 0; i < 4000000; i += 120000)
     {
-        leads = dataGenerator.GenerateLeads(10, LeadRoleEnum.StandartLead);
-        leads.AddRange(dataGenerator.GenerateLeads(2, LeadRoleEnum.VipLead));
+        leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandartLead);
+        leads.AddRange(dataGenerator.GenerateLeads(20000, LeadRoleEnum.VipLead));
         accounts = dataGenerator.GenerateAccountsForLeads(leads);
 
         DataTable leadsTable = TableGenerator.MakeLeadTable(leads);
@@ -87,9 +86,6 @@ using (SqlConnection connection =
             }
         }
 
-        sw.Stop();
-        Console.WriteLine(sw.Elapsed.ToString());
-        sw.Reset();
     }
 }
 

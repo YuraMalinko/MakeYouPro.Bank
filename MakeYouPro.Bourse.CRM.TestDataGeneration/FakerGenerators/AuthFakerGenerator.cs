@@ -2,6 +2,7 @@
 using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.TestDataGeneration.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
 {
@@ -10,6 +11,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
         private readonly Faker<UserEntity> _userFaker;
         private LeadEntity _currentLead;
         private WhriterToFile _whriter = new WhriterToFile();
+        private string _password;
 
         public AuthFakerGenerator()
         {
@@ -20,6 +22,10 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
         {
             var result = new List<UserEntity>();
 
+            var faker = new Faker();
+
+            _password = faker.Internet.Password();
+
             foreach (var l in leads)
             {
                 _currentLead = l;
@@ -28,12 +34,10 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
             }
 
             _whriter.WhriteUsers(result);
-
-            foreach (var r in result)
-            {
-                var password = (BCrypt.Net.BCrypt.HashPassword(r.Password)).ToString();
-                r.Password=password;
-            }
+            
+            var password = BCrypt.Net.BCrypt.HashPassword(_password).ToString();
+            Console.WriteLine(password);
+            result.Select(u => u.Password = password).ToList();
 
             return result;
         }
@@ -41,8 +45,9 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
         private Faker<UserEntity> GetUserFaker()
         {
             return new Faker<UserEntity>("en")
+                .RuleFor(u => u.Id, f => _currentLead.Id)
                 .RuleFor(u => u.Email, f => _currentLead.Email)
-                .RuleFor(u => u.Password, f => f.Internet.Password(4))
+                .RuleFor(u => u.Password, f => _password)
                 .RuleFor(u => u.Role, f => _currentLead.Role)
                 .RuleFor(u => u.Status, f => _currentLead.Status);
         }

@@ -185,8 +185,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
         internal static string GetConnectionString()
         {
-            //return Environment.GetEnvironmentVariable("CrmBourseDB");
-            return Environment.GetEnvironmentVariable("CrmBourseLocalDB");
+            return Environment.GetEnvironmentVariable("CrmBourseDB");
+            //return Environment.GetEnvironmentVariable("CrmBourseLocalDB");
         }
     }
 }
