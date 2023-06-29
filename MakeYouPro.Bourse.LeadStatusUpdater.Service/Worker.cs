@@ -1,21 +1,23 @@
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.Models;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.RabbitMq;
 using Newtonsoft.Json;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly RabbitMqPublisher rabbitMqPublisher;
         private readonly string _routingKey;
         private readonly string _path;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration)
+        public Worker(ILogger nLogger, IConfiguration configuration)
         {
-            _logger = logger;
+            _logger = nLogger;
             _configuration = configuration;
             _httpClient = new HttpClient();
             _routingKey = _configuration.GetSection("AppSettings:RoutingKey").Value!;
@@ -28,7 +30,7 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
             {
                 DateTime currentTime = DateTime.Now;
 
-                if (currentTime.Hour == 2 && currentTime.Minute == 00)
+                if (currentTime.Hour == 16 && currentTime.Minute == 12)
                 {
                     await ProcessDataAsync();
                 }
@@ -61,21 +63,21 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                         var accountsToPublish = accountsBirth.Union(accountsWithBigTransactions).ToList();
 
                         rabbitMqPublisher.PublishMessageAsync(accountsToPublish, _routingKey);
-                        _logger.LogInformation("Аккаунты Лидов для обновления статуса на Vip отправлены в очередь");
+                        _logger.Log(LogLevel.Info, "Аккаунты Лидов для обновления статуса на Vip отправлены в очередь");
                     }
                     else
                     {
-                        if(!responseAccountsBirth.IsSuccessStatusCode)
-                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
+                        if (!responseAccountsBirth.IsSuccessStatusCode)
+                            _logger.Log(LogLevel.Error, $"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
                         if (!responseAccountsWithBigTransactions.IsSuccessStatusCode)
-                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
+                            _logger.Log(LogLevel.Error, $"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
                     }
 
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Ошибка во время выполнения GET-запроса: {ex.Message}");
+                _logger.Log(LogLevel.Error, $"Ошибка при выполнении GET-запроса: {ex.Message}");
             }
         }
 
@@ -93,13 +95,13 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{nameof(Worker)}: Start");
+            _logger.Log(LogLevel.Info, $"{nameof(Worker)}: Starting");
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{nameof(Worker)} stopping.");
+            _logger.Log(LogLevel.Info, $"{nameof(Worker)}: Stopping");
             return base.StopAsync(cancellationToken);
         }
     }
