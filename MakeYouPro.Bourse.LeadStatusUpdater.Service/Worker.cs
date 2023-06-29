@@ -9,15 +9,16 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
         private readonly ILogger<Worker> _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
-        private readonly RabbitMqPublisher rabbitMqPublisher;
+        private readonly RabbitMqPublisher _rabbitMqPublisher;
         private readonly string _routingKey;
         private readonly string _path;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration)
+        public Worker(ILogger<Worker> logger, IConfiguration configuration, RabbitMqPublisher rabbitMqPublisher)
         {
             _logger = logger;
             _configuration = configuration;
             _httpClient = new HttpClient();
+            _rabbitMqPublisher = rabbitMqPublisher;
             _routingKey = _configuration.GetSection("AppSettings:RoutingKey").Value!;
             _path = _configuration.GetSection("AppSettings:PathToSettings").Value!;
         }
@@ -47,35 +48,60 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     settings = GetSettings();
                     Console.WriteLine(settings.PeriodOfTransactionsInDays);
 
-                    HttpResponseMessage responseAccountsBirth = await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
-                    HttpResponseMessage responseAccountsWithBigTransactions = await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
+                    HttpResponseMessage responseAccountsBirth = await GetResponseAccountsBirthAsync(settings);
+                    HttpResponseMessage responseAccountsWithBigTransactions = await GetResponseAccountsWithALargeNumberOfTransactionsAsync(settings);
+                    HttpResponseMessage responseAccountsWithFreshMoney = await GetResponseAccountsWithAccountsWithFreshMoneyAsync(settings);
 
-                    if (responseAccountsBirth.IsSuccessStatusCode & responseAccountsWithBigTransactions.IsSuccessStatusCode)
+                    List<LeadStatusUpdateModel> accountsBirth = new List<LeadStatusUpdateModel>();
+                    List<LeadStatusUpdateModel> accountsWithBigTransactions = new List<LeadStatusUpdateModel>();
+                    List<LeadStatusUpdateModel> accountsWithFreshMoney = new List<LeadStatusUpdateModel>();
+
+                    if (responseAccountsBirth.IsSuccessStatusCode)
                     {
                         string dataAccountsBirth = await responseAccountsBirth.Content.ReadAsStringAsync();
-                        string dataAccountsWithBigTransactions = await responseAccountsWithBigTransactions.Content.ReadAsStringAsync();
-
-                        List<LeadStatusUpdateModel> accountsBirth = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsBirth);
-                        List<LeadStatusUpdateModel> accountsWithBigTransactions = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithBigTransactions);
-
-                        var accountsToPublish = accountsBirth.Union(accountsWithBigTransactions).ToList();
-
-                        rabbitMqPublisher.PublishMessageAsync(accountsToPublish, _routingKey);
-                        _logger.LogInformation("Аккаунты Лидов для обновления статуса на Vip отправлены в очередь");
+                        accountsBirth = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsBirth);
                     }
                     else
                     {
-                        if(!responseAccountsBirth.IsSuccessStatusCode)
-                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
-                        if (!responseAccountsWithBigTransactions.IsSuccessStatusCode)
-                            _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
+                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
                     }
 
+                    if (responseAccountsWithBigTransactions.IsSuccessStatusCode)
+                    {
+                        string dataAccountsWithBigTransactions = await responseAccountsWithBigTransactions.Content.ReadAsStringAsync();
+                        accountsWithBigTransactions = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithBigTransactions);
+                    }
+                    else
+                    {
+                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
+                    }
+
+                    if (responseAccountsWithFreshMoney.IsSuccessStatusCode)
+                    {
+                        string dataAccountsWithFreshMoney = await responseAccountsWithFreshMoney.Content.ReadAsStringAsync();
+                        accountsWithFreshMoney = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithFreshMoney);
+                    }
+                    else
+                    {
+                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithFreshMoney.StatusCode}");
+                    }
+
+                    List<LeadStatusUpdateModel> accountsToPublish = await MergeListsAndRemoveDuplicatesAsync(accountsBirth, accountsWithBigTransactions, accountsWithFreshMoney);
+
+                    try
+                    {
+                        await _rabbitMqPublisher.PublishMessageAsync(accountsToPublish, _routingKey);
+                        _logger.LogInformation("Аккаунты Лидов для обновления статуса на Vip успешно отправлены в очередь");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Ошибка во время отправки Лидов в очередь: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Ошибка во время выполнения GET-запроса: {ex.Message}");
+                _logger.LogError($"Ошибка во время выполнения ProcessDataAsync: {ex.Message}");
             }
         }
 
@@ -88,7 +114,27 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                 result = System.Text.Json.JsonSerializer.Deserialize<Settings>(jsn);
                 return result;
             }
+        }
 
+        private async Task<HttpResponseMessage> GetResponseAccountsBirthAsync(Settings settings)
+        {
+            return await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
+        }
+
+        private async Task<HttpResponseMessage> GetResponseAccountsWithALargeNumberOfTransactionsAsync(Settings settings)
+        {
+            return await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
+        }
+
+        private async Task<HttpResponseMessage> GetResponseAccountsWithAccountsWithFreshMoneyAsync(Settings settings)
+        {
+            return await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfFreshMoneyInDays}&countOfFreshMoneyInRUB={settings.CountOfFreshMoneyInRUB}");
+        }
+
+        public static async Task<List<T>> MergeListsAndRemoveDuplicatesAsync<T>(List<T> list1, List<T> list2, List<T> list3)
+        {
+            List<T> resultList = await Task.Run(() => list1.Union(list2).Union(list3).ToList());
+            return resultList;
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
