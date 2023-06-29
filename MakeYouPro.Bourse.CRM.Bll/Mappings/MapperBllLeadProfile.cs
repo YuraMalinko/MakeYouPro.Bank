@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MakeYouPro.Bourse.CRM.Auth.Bll.Models;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 
@@ -10,6 +11,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Mappings
         {
             CreateMap<Lead, LeadEntity>();
             CreateMap<LeadEntity, Lead>();
+            CreateMap<Lead, User>().ReverseMap();
         }
     }
 }

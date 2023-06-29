@@ -1,11 +1,16 @@
 using AutoMapper;
+using MakeYouPro.Bourse.CRM.Auth.Bll.Models;
+using MakeYouPro.Bourse.CRM.Auth.Dal.IRepository;
+using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
+using Microsoft.Data.SqlClient;
 using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Bll.Services
@@ -14,21 +19,33 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
     {
         private readonly ILeadRepository _leadRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly IAccountService _accountService;
 
-        //  private readonly IAuthServiceClient _authServiceClient;
 
         private readonly IMapper _mapper;
+        private readonly IMapper _huyaper;
 
         private readonly ILogger _logger;
 
-        public LeadService(ILeadRepository leadRepository, IAccountService accountService, IMapper mapper, ILogger nLogger)
+        private SqlTransaction _transaction;
+
+        public LeadService(ILeadRepository leadRepository,
+            IAccountService accountService,
+            IAuthServiceClient authServiceClient,
+            IMapper mapper,
+            IMapper huyaper,
+            ILogger nLogger,
+            IUserRepository userRepository
+            )
         {
             _leadRepository = leadRepository;
             _accountService = accountService;
-            // _authServiceClient = authServiceClient;
             _mapper = mapper;
             _logger = nLogger;
+            _huyaper = huyaper;
+            _userRepository = userRepository;
         }
 
         public async Task<Lead> CreateOrRecoverLeadAsync(Lead addLead)
@@ -80,8 +97,15 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (leadEntity.Status == LeadStatusEnum.Active)
             {
-                await _leadRepository.DeleteLeadByIdAsync(leadId);
-                await _accountService.DeleteAccountByLeadIdAsync(leadId);
+                if (await UserDelete(leadEntity.Email))
+                {
+                    await _leadRepository.DeleteLeadByIdAsync(leadId);
+                    await _accountService.DeleteAccountByLeadIdAsync(leadId);
+                }
+                else
+                {
+                    throw new WritingDataToServerException("The process failed because the user was not deleted");
+                }
 
                 _logger.Info($"{nameof(LeadService)} end {nameof(DeleteLeadByIdAsync)}");
             }
@@ -90,6 +114,55 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 throw new ArgumentException("You can delete lead only with status-Active");
             }
         }
+
+        private async Task<bool> UserDelete(string email)
+        {
+            _logger.Info($"Start process deleted user by {email}");
+
+            var dbUser = await _userRepository.GetUserByEmailAsync(email);
+            var userInBase = _mapper.Map<User>(dbUser);
+
+            if (userInBase != null && userInBase.Status != LeadStatusEnum.Deleted)
+            {
+                userInBase.Status = LeadStatusEnum.Deleted;
+                var userToBase = _mapper.Map<UserEntity>(userInBase);
+                var updateUser = _mapper.Map<User>(await _userRepository.UpdateUserAsync(userToBase));
+
+                _logger.Info($"Ñompletion process deleted user by {email}");
+
+                return true;
+            }
+            _logger.Error($"Failed completion process deleted user by {email}");
+
+            return false;
+        }
+
+        private async Task<User> UpdateUser(string email,Lead lead)
+        {
+            _logger.Info($"Start process update user {email}");
+
+
+            var userInBase = _mapper.Map<User>(await _userRepository.GetUserByEmailAsync(email));
+
+            if (userInBase != null)
+            {
+                userInBase.Status = lead.Status;
+                userInBase.Role= lead.Role;
+                userInBase.Email= lead.Email;
+
+                var userToBase = _mapper.Map<UserEntity>(userInBase);
+                var updateUser = _mapper.Map<User>(await _userRepository.UpdateUserAsync(userToBase));
+
+                _logger.Info($"Ñompletion process update user by {email}");
+
+                return updateUser;
+            }
+            _logger.Error($"Failed completion process deleted user by {email}");
+
+            return null;
+        }
+
+
 
         public async Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead)
         {
@@ -103,8 +176,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                if (leadEntityDb.Role == LeadRoleEnum.StandardLead || leadEntityDb.Role == LeadRoleEnum.VipLead)
+                if (leadEntityDb.Role == LeadRoleEnum.StandartLead || leadEntityDb.Role == LeadRoleEnum.VipLead)
                 {
+                    
+
                     leadEntityDb.Name = updateLead.Name;
                     leadEntityDb.MiddleName = updateLead.MiddleName;
                     leadEntityDb.Surname = updateLead.Surname;
@@ -140,8 +215,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             else
             {
                 if (managerEntityDb.Role == LeadRoleEnum.Manager
-                    && (leadEntityDb.Role == LeadRoleEnum.VipLead || leadEntityDb.Role == LeadRoleEnum.StandardLead))
+                    && (leadEntityDb.Role == LeadRoleEnum.VipLead || leadEntityDb.Role == LeadRoleEnum.StandartLead))
                 {
+                    //var userInBase = _mapper.Map<User>(await _userRepository.GetUserByEmailAsync(leadEntityDb.Email));
+                    var emailUserInBase = leadEntityDb.Email;
+
                     leadEntityDb.Name = updateLead.Name;
                     leadEntityDb.MiddleName = updateLead.MiddleName;
                     leadEntityDb.Surname = updateLead.Surname;
@@ -151,6 +229,16 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     leadEntityDb.Citizenship = updateLead.Citizenship;
                     leadEntityDb.Registration = updateLead.Registration;
                     leadEntityDb.PassportNumber = updateLead.PassportNumber;
+
+                    var UpdateLeadToBase = _mapper.Map<Lead>(leadEntityDb);
+
+                    var updateUser = await UpdateUser(emailUserInBase, UpdateLeadToBase);
+
+                    if (updateUser == null)
+                    {
+                        throw new WritingDataToServerException($"update user bt email {emailUserInBase} has not been completed");
+                    }
+
                     var updateLeadEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
                     var result = _mapper.Map<Lead>(updateLeadEntity);
 
@@ -181,10 +269,35 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             _logger.Info($"{nameof(LeadService)} start {nameof(CreateLeadAsync)}");
 
+            lead.Role = LeadRoleEnum.StandartLead;
+            lead.Status = LeadStatusEnum.Active;
+
+            var userToBase = new User()
+            {
+                Email = lead.Email,
+                Role = lead.Role,
+                Status = lead.Status,
+                Password = lead.Password!
+            };
+
+            var whriteUser = await AddUser(userToBase);
+
+            if (whriteUser == null)
+            {
+                throw new WritingDataToServerException($"update by email {whriteUser.Email} has not been completed");
+            }
+
+            _logger.Info($"{whriteUser} was created");
+
             var leadEntity = _mapper.Map<LeadEntity>(lead);
-            leadEntity.Role = LeadRoleEnum.StandardLead;
-            leadEntity.Status = LeadStatusEnum.Active;
-            var addLeadEntity = await _leadRepository.CreateLeadAsync(leadEntity);
+
+            var addLeadEntity = _mapper.Map<Lead>(await _leadRepository.CreateLeadAsync(leadEntity));
+
+            if (addLeadEntity == null)
+            {
+                _userRepository.UserDestruction(_mapper.Map<UserEntity>(whriteUser));
+                throw new WritingDataToServerException($"{lead} is not recorded, the previously created {whriteUser} has been deleted");
+            }
 
             if (addLeadEntity != null)
             {
@@ -204,19 +317,30 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
         }
 
-        private UserRegisterRequest CreateUserRegisterReguest(Lead addLead)
+        private async Task<User> AddUser(User user)
         {
-            UserRegisterRequest user = new UserRegisterRequest
-            {
-                Email = addLead.Email,
-                Password = addLead.Password
-            };
+            _logger.Info($"Start the {user} generation process");
 
-            return user;
+            if (!await _userRepository.CheckEmailAsync(user.Email))
+            {
+                string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                user.Password = passwordHash;
+
+                var userToBase = _mapper.Map<UserEntity>(user);
+                var result = _mapper.Map<User>(await _userRepository.AddUserAsync(userToBase));
+
+                _logger.Info($"Ends the {user} generation process");
+                return result;
+            }
+            else
+            {
+                throw new RegistrationException($"User creation creation error due to mail or password");
+            }
         }
 
         private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
+
             _logger.Info($"{nameof(LeadService)} start {nameof(RecoverOrThrowAsync)}");
 
             if (leadDb.Status == LeadStatusEnum.Active)
@@ -228,12 +352,12 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 throw new ArgumentException("Only manager can restore deactive lead");
             }
             else if (leadDb.Status == LeadStatusEnum.Deleted &&
-                    (leadRequest.Role != LeadRoleEnum.StandardLead && leadRequest.Role != LeadRoleEnum.VipLead))
+                    (leadRequest.Role != LeadRoleEnum.StandartLead && leadRequest.Role != LeadRoleEnum.VipLead))
             {
                 throw new ArgumentException("Only Lead can restore deleted lead");
             }
             else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role == LeadRoleEnum.Manager
-                || leadDb.Status == LeadStatusEnum.Deleted && (leadRequest.Role == LeadRoleEnum.StandardLead || leadRequest.Role == LeadRoleEnum.VipLead))
+                || leadDb.Status == LeadStatusEnum.Deleted && (leadRequest.Role == LeadRoleEnum.StandartLead || leadRequest.Role == LeadRoleEnum.VipLead))
             {
                 if (leadDb.PassportNumber == leadRequest.PassportNumber)
                 {
@@ -267,6 +391,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             _logger.Info($"{nameof(LeadService)} start {nameof(UpdateLeadWhenCreateLeadHasSamePassportInDb)}");
 
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(leadDb.Id);
+            var oldEmailLead = leadEntityDb.Email;
 
             leadEntityDb.Name = leadRequest.Name;
             leadEntityDb.MiddleName = leadRequest.MiddleName;
@@ -278,6 +403,15 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             leadEntityDb.Registration = leadRequest.Registration;
             leadEntityDb.PassportNumber = leadRequest.PassportNumber;
             leadEntityDb.Status = LeadStatusEnum.Active;
+
+            var leadTobase = _mapper.Map<Lead>(leadEntityDb);
+
+            var updateUser = await UpdateUser(oldEmailLead, leadTobase);
+
+            if (updateUser == null)
+            {
+                throw new WritingDataToServerException($"update by email {oldEmailLead} has not been completed");
+            }
 
             var leadUpdateEntity = await _leadRepository.UpdateLeadAsync(leadEntityDb);
             await _leadRepository.RestoringDeletedStatusAsync(leadDb.Id);
@@ -312,6 +446,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             var result = _mapper.Map<List<Lead>>(leads);
 
             return result;
+        }
+
+        public async Task<Lead> GetLeadByEmail(string email)
+        {
+            return _mapper.Map<Lead>(await _leadRepository.GetLeadByEmail(email));
         }
     }
 }

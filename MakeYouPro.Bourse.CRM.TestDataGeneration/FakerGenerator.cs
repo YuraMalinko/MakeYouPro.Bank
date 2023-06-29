@@ -26,7 +26,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
                 }
             },
             {
-                LeadRoleEnum.StandardLead,  new HashSet<string>
+                LeadRoleEnum.StandartLead,  new HashSet<string>
                 {
                     "RUB",
                     "USD",

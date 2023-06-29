@@ -24,6 +24,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
+            //builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseLocalDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,6 +41,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
             modelBuilder.Entity<LeadEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
+
 
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)

@@ -4,12 +4,17 @@ using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
+using MakeYouPro.Bourse.CRM.Core.Enums;
+using MakeYouPro.Bourse.CRM.Models.Lead.Response;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 
 namespace MakeYouPro.Bourse.CRM.Api.Controllers
 {
+    [Authorize]
     [Route("/[controller]")]
     [ApiController]
     public class LeadController : ControllerBase
@@ -35,11 +40,16 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
         }
 
+
+        [AllowAnonymous]
         [HttpPost(Name = "CreateOrRecoverLeadAsync")]
         [SwaggerResponse((int)HttpStatusCode.Created)]
         [SwaggerResponse((int)HttpStatusCode.Conflict)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
         [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+        [SwaggerResponse((int)HttpStatusCode.Forbidden)]
+        [SwaggerResponse((int)HttpStatusCode.PreconditionFailed)]
         public async Task<ActionResult<LeadResponseInfo>> CreateLeadAsync(CreateLeadRequest addLead)
         {
             var validationResult = await _createValidator.ValidateAsync(addLead);
@@ -68,6 +78,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
+
         [HttpDelete(Name = "DeleteLeadByIdAsync")]
         [SwaggerResponse((int)HttpStatusCode.NoContent)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
@@ -79,6 +90,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "StandartLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("usingLead", Name = "UpdateLeadUsingLead")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
@@ -99,6 +111,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "ManagerLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("usingManager", Name = "UpdateLeadUsingManager")]
         [SwaggerResponse((int)HttpStatusCode.OK)]
         [SwaggerResponse((int)HttpStatusCode.BadRequest)]
@@ -115,6 +128,19 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             var lead = _mapper.Map<Lead>(updateRequestLead);
             var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
             var result = _mapper.Map<LeadResponseInfo>(updateLead);
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "ManagerLead", AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPatch("leadRole", Name = "UpdateLeadRoleAsync")]
+        [SwaggerResponse((int)HttpStatusCode.OK)]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
+        [SwaggerResponse((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(LeadRoleEnum leadRole, int leadId)
+        {
+            var lead = await _leadService.UpdateLeadRoleAsync(leadRole, leadId);
+            var result = _mapper.Map<LeadResponseBase>(lead);
 
             return Ok(result);
         }

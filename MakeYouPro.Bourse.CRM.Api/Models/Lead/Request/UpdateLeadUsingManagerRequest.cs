@@ -2,12 +2,12 @@
 {
     public class UpdateLeadUsingManagerRequest : UpdateLeadUsingLeadRequest
     {
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
-        public string Citizenship { get; set; }
+        public string? Citizenship { get; set; }
 
-        public string Registration { get; set; }
+        public string? Registration { get; set; }
 
-        public string PassportNumber { get; set; }
+        public string? PassportNumber { get; set; }
     }
 }

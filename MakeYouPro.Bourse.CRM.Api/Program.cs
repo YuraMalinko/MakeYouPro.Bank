@@ -1,5 +1,7 @@
 using MakeYouPro.Bourse.CRM.Api.Extentions;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
+using MakeYouPro.Bourse.CRM.Auth.Bll.Mappings;
+using MakeYouPro.Bourse.CRM.Auth.Dal.Context;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
@@ -21,16 +23,17 @@ builder.Services.AddSingleton<ILogger>(nlog);
 
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
                                 typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile),
-                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile));
+                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile),
+                                typeof(MapperApiUserProfile), typeof(MapperBllUserProfile),
+                                typeof(MapperBllRefreshTokenProfile));
 
 builder.Services.AddTransient<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddRepositories();
-
 builder.Services.AddServices();
-
 builder.Services.AddValidators();
-
 builder.Services.AddSettings();
+builder.Services.AddAuth();
+builder.Services.AddScoped<UserContext>();
 
 builder.Services.AddRabbitMQ();
 
@@ -54,6 +57,7 @@ app.UseMiddleware<ExceptionHandler>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

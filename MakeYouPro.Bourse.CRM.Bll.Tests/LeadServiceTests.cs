@@ -36,11 +36,11 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests
 
             _mockLeadRepo = new Mock<ILeadRepository>();
             _mockAccountService = new Mock<IAccountService>();
-            _leadService = new LeadService(
-                                            _mockLeadRepo.Object,
-                                            _mockAccountService.Object,
-                                            _mapper,
-                                            logger);
+            //_leadService = new LeadService(
+            //                                _mockLeadRepo.Object,
+            //                                _mockAccountService.Object,
+            //                                _mapper,
+            //                                logger);
         }
 
         [TestCaseSource(typeof(LeadServiceTestCaseSource), nameof(LeadServiceTestCaseSource.DeleteLeadByIdAsyncTestCaseSource))]
