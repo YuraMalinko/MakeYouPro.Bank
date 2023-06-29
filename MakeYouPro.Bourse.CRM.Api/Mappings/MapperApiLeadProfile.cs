@@ -35,6 +35,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.FormatEmail()))
                 .ForMember(dest => dest.Citizenship, opt => opt.MapFrom(src => src.Citizenship.FormatCitizenship()))
                 .ForMember(dest => dest.PassportNumber, opt => opt.MapFrom(src => src.PassportNumber.FormatPassportNumber()));
+            CreateMap<Lead, LeadResponseAuth>();
         }
 
         private static string? FormatNameIfNotNull(string? name)
