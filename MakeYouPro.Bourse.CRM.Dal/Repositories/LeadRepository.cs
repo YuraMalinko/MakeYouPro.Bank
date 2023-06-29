@@ -1,9 +1,11 @@
+using MakeYouPro.Bourse.CRM.Auth.Dal.IRepository;
+using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
-using NLog;
+using Microsoft.EntityFrameworkCore.Storage;
 using ILogger = NLog.ILogger;
 
 namespace MakeYouPro.Bourse.CRM.Dal.Repositories
@@ -11,12 +13,15 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
     public class LeadRepository : ILeadRepository
     {
         private static CRMContext _context;
+        private static IUserRepository _authRepository;
+        private static IDbContextTransaction _crmTransaction;
         private readonly ILogger _logger;
 
-        public LeadRepository(CRMContext context, ILogger nLogger)
+        public LeadRepository(CRMContext context, ILogger nLogger, IUserRepository authRepository)
         {
             _context = context;
             _logger = nLogger;
+            _authRepository = authRepository;
         }
 
         public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)
@@ -24,10 +29,24 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             await _context.Leads.AddAsync(lead);
             await _context.SaveChangesAsync();
 
+
             return await _context.Leads
                 .Include(l => l.Accounts)
                 .SingleAsync(l => l.Id == lead.Id);
         }
+
+        //public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead, UserEntity user)
+        //{
+
+        //        await _context.Leads.AddAsync(lead);
+        //        await _context.SaveChangesAsync();
+
+        //        var newLead = await _context.Leads
+        //            .Include(l => l.Accounts)
+        //            .SingleAsync(l => l.Id == lead.Id);
+
+        //        return newLead;
+        //}
 
         public async Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead)
         {
@@ -82,7 +101,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-               // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
+                // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadUpdate.Id} not found.");
                 throw new NotFoundException(leadUpdate.Id, nameof(LeadEntity));
             }
             else
@@ -110,7 +129,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-               // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -129,7 +148,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-               // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -147,12 +166,12 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDB == null)
             {
-               // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
             {
-               // _logger.Debug($"Successfully checked the presence of the - {leadDB}.");
+                // _logger.Debug($"Successfully checked the presence of the - {leadDB}.");
                 return await _context.Leads
                         .Include(l => l.Accounts)
                         .AsNoTracking()
@@ -166,7 +185,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
 
             if (leadDb == null)
             {
-               // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
+                // _logger.Log(LogLevel.Warn, $"{nameof(LeadEntity)} with id {leadId} not found.");
                 throw new NotFoundException(leadId, nameof(LeadEntity));
             }
             else
@@ -174,6 +193,15 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 leadDb.Status = LeadStatusEnum.Deleted;
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<LeadEntity> GetLeadByEmail(string email)
+        {
+            email.ToLower();
+
+            return (await _context.Leads
+                .Include(l => l.Accounts)
+                .SingleOrDefaultAsync(l => l.Email == email))!;
         }
     }
 }

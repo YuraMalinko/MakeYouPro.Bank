@@ -5,7 +5,6 @@ using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using System.ComponentModel;
 
 namespace MakeYouPro.Bourse.CRM.Dal
 {
@@ -25,6 +24,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
+            //builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseLocalDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +41,7 @@ namespace MakeYouPro.Bourse.CRM.Dal
             modelBuilder.Entity<LeadEntity>()
                 .Property(l => l.DateCreate)
                 .HasDefaultValueSql("GETUTCDATE()");
+
 
             modelBuilder.Entity<AccountEntity>()
                 .Property(l => l.DateCreate)

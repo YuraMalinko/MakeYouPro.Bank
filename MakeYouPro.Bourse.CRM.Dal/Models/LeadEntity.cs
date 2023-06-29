@@ -43,7 +43,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
         public string PhoneNumber { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(20)")]
+        [Column(TypeName = "nvarchar(50)")]
         public string Email { get; set; }
 
         [Required]
@@ -53,7 +53,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.Models
 
         [Required]
         [EncryptColumn]
-        [Column(TypeName = "nvarchar(15)")]
+        [Column(TypeName = "nvarchar(30)")]
         public string PassportNumber { get; set; }
 
         [Required]
