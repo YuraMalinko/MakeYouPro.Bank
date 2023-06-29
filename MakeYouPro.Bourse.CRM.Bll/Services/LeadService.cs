@@ -366,7 +366,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 throw new ArgumentException("Only manager can restore deactive lead");
             }
             else if (leadDb.Status == LeadStatusEnum.Deleted &&
-                    (leadRequest.Role != LeadRoleEnum.StandardLead && leadRequest.Role != LeadRoleEnum.VipLead))
+                    (leadRequest.Role != LeadRoleEnum.StandartLead && leadRequest.Role != LeadRoleEnum.VipLead))
             {
                 //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
                 throw new ArgumentException("Only Lead can restore deleted lead");

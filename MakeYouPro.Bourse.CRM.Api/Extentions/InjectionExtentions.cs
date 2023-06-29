@@ -58,7 +58,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         public static void AddSettings(this IServiceCollection services)
         {
             services.AddScoped<ICurrencySetting, CurrencySetting>();
-            services.AddScoped<IAccountSetting, AccountSetting>();
             services.AddSingleton<ICommissionSettings, CommissionSettings>();
         }
 

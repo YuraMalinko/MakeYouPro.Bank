@@ -20,13 +20,10 @@ var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
 
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
-                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile),
-                                typeof(MapperBllUserProfile), 
-                                typeof(MapperBllRefreshTokenProfile));
-    typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile), typeof(MapperBllUserProfile),
-    typeof(MapperBllRefreshTokenProfile));
                                 typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile),
-                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile));
+                                typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile),
+                                typeof(MapperApiUserProfile), typeof(MapperBllUserProfile),
+                                typeof(MapperBllRefreshTokenProfile));
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();
