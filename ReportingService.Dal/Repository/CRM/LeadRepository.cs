@@ -8,12 +8,10 @@ namespace ReportingService.Dal.Repository.CRM
     public class LeadRepository : ILeadRepository
     {
         private static Context _context;
-        private readonly ILogger _logger;
 
-        public LeadRepository(Context context, ILogger nLogger)
+        public LeadRepository(Context context)
         {
             _context = context;
-            _logger = nLogger;
         }
 
         public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)

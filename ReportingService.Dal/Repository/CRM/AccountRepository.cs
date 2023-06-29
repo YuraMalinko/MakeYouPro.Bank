@@ -42,8 +42,8 @@ namespace ReportingService.Dal.Repository.CRM
 
         public async Task<List<AccountEntity>> GetAccountsByBirthdayLeadsAsync(int numberDays)
         {
-            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-numberDays));
-            DateOnly nowDate = DateOnly.FromDateTime(DateTime.Now);
+            var startDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-numberDays));
+            var nowDate = DateOnly.FromDateTime(DateTime.Now);
             var listAccounts = await _context.Accounts.Where(d => d.Leads.Birthday >= startDate && d.Leads.Birthday <= nowDate)
                                                       .ToListAsync();
             return listAccounts;

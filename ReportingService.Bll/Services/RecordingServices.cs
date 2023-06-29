@@ -1,4 +1,5 @@
 ﻿using ReportingService.Bll.IServices;
+using ReportingService.Dal.IRepository;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Models.CRM;
 using ReportingService.Dal.Models.TransactionStore;

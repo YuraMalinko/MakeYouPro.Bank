@@ -4,7 +4,9 @@ namespace ReportingService.Dal.IRepository
 {
     public interface ITransactionRepository
     {
-        Task<TransactionEntity> CreateTransactionAsync(TransactionEntity transaction);
+        Task CreateTransactionAsync(TransactionEntity transaction);
+
+        Task UpdateTransactionAsync(TransactionEntity transaction);
 
         Task<TransactionEntity> GetTransactionByIdOutsideAsync(int transactId);
     }

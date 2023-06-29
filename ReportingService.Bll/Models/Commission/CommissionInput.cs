@@ -1,8 +1,10 @@
-﻿namespace ReportingService.Bll.Models.Commission
+﻿using CoreRS.Enums;
+
+namespace ReportingService.Bll.Models.Commission
 {
     public class CommissionInput
     {
-        public string Type { get; set; }
+        public TransactionType Type { get; set; }
 
         public decimal Amount { get; set; }
 

@@ -1,4 +1,6 @@
-using ReportingService.Api.InternetRabbitMQ;
+using CoreRS.CustomExceptionMiddleware;
+using CoreRS.Logger;
+using NLog;
 using ReportingService.Api.MessageBroker;
 using ReportingService.Api.MessageBroker.Configuration;
 using ReportingService.Api.MessageBroker.Handlers;
@@ -9,11 +11,10 @@ using ReportingService.Bll;
 using ReportingService.Bll.IServices;
 using ReportingService.Bll.Services;
 using ReportingService.Dal;
+using ReportingService.Dal.IRepository;
 using ReportingService.Dal.IRepository.CRM;
 using ReportingService.Dal.Repository.CRM;
-using NLog;
-using CoreRS.Logger;
-using CoreRS.CustomExceptionMiddleware;
+using ReportingService.Dal.Repository.TransactionStore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,11 +26,7 @@ builder.Services.AddSingleton<ILoggerManager, LoggerManager>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddScoped<IRabbitMqServicetest, RabbitMqServicetest>();
-////builder.Services.AddHostedService<RabbitMqListener>();
-//builder.Services.AddSingleton<IRabbitMqService, RabbitMqService>();
-//builder.Services.AddSingleton<IConsumerService, ConsumerService>();
-//builder.Services.AddHostedService<ConsumerHostedService>();
+
 
 // inject configuration for Listener and service that uses Publisher
 var rabbitMqPublisherSettings = builder.Configuration.GetSection("RabbitMqConfiguration").Get<RabbitMqSettings>();
@@ -50,21 +47,12 @@ builder.Services.AddSingleton<IRecordingServices, RecordingServices>();
 builder.Services.AddSingleton<IMessageHandler, MessageHandler>();
 builder.Services.AddSingleton<ILeadRepository, LeadRepository>();
 builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
+builder.Services.AddSingleton<ITransactionRepository, TransactionRepository>();
 builder.Services.AddSingleton<Context>();
-
-//builder.Services.AddAutoMappe
-//IHost host = Host.CreateDefaultBuilder(args)
-//    .ConfigureServices(services =>
-//    {
-//        services.AddHostedService<RabbitMqListener>();
-//    })
-//    .Build();
-
 builder.Services.AddAutoMapper(typeof(MapperBLL));
 
 var app = builder.Build();
 
-//host.Start();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -86,6 +74,8 @@ app.Run();
 void CreateFactory(WebApplication app)
 {
     var factory = app.Services.GetRequiredService<IHandlerFactory>();
-    factory.AddHandler("Create", new CreateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
-    factory.AddHandler("Update", new UpdateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
+    factory.AddHandler("CreateLead", new CreateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
+    factory.AddHandler("UpdateLead", new UpdateLeadHandler(app.Services.GetRequiredService<IRecordingServices>()));
+    factory.AddHandler("CreateAccount", new CreateAccountHandler(app.Services.GetRequiredService<IRecordingServices>()));
+    factory.AddHandler("UpdateAccount", new UpdateAccountHandler(app.Services.GetRequiredService<IRecordingServices>()));
 }

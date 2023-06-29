@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using CoreRS.Enums;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReportingService.Dal.Models.TransactionStore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,7 +12,7 @@ namespace ReportingService.DAL.ModelsDAL.Commissions
         public int Id { get; set; }
 
         [Required]
-        public string Type { get; set; }
+        public TransactionType Type { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(38,4)")]
