@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MakeYouPro.Bank.Service.Auth.Models
+﻿namespace MakeYouPro.Bank.Service.Auth.Models
 {
     public class Message
     {

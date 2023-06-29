@@ -1,4 +1,4 @@
-﻿namespace MakeYouPro.Bourse.CRM.Core.Configurations.ISettings
+namespace MakeYouPro.Bourse.CRM.Core.Configurations.ISettings
 {
     public interface ICurrencySetting
     {
@@ -8,5 +8,6 @@
 
         List<string> CurrencyVip { get;}
 
+        HashSet<string> BaseCurrencies { get; set; }
     }
 }

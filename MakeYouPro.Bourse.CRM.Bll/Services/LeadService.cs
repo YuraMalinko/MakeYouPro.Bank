@@ -5,6 +5,7 @@ using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
+using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
@@ -22,7 +23,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private readonly IAccountService _accountService;
 
-        private readonly IAuthServiceClient _authServiceClient;
+        //  private readonly IAuthServiceClient _authServiceClient;
 
         private readonly IMapper _mapper;
         private readonly IMapper _huyaper;
@@ -42,7 +43,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             _leadRepository = leadRepository;
             _accountService = accountService;
-            _authServiceClient = authServiceClient;
+            // _authServiceClient = authServiceClient;
             _mapper = mapper;
             _logger = nLogger;
             _huyaper = huyaper;
@@ -68,9 +69,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             };
         }
 
-        public async Task<Lead> GetLeadById(int leadId)
+        public async Task<Lead> GetLeadByIdAsync(int leadId)
         {
-            _logger.Info($"{nameof(LeadService)} start {nameof(GetLeadById)}");
+            _logger.Info($"{nameof(LeadService)} start {nameof(GetLeadByIdAsync)}");
 
             var leadEntity = await _leadRepository.GetLeadByIdAsync(leadId);
 
@@ -84,7 +85,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 var accounts = lead.Accounts.Where(a => a.Status != AccountStatusEnum.Deleted).ToList();
                 lead.Accounts = accounts;
 
-                _logger.Info($"{nameof(LeadService)} end {nameof(GetLeadById)}");
+                _logger.Info($"{nameof(LeadService)} end {nameof(GetLeadByIdAsync)}");
 
                 return lead;
             }
@@ -359,6 +360,17 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 //  _logger.Log(LogLevel.Warn, "One of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
                 throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
             }
+            else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role != LeadRoleEnum.Manager)
+            {
+                // _logger.Log(LogLevel.Warn, "Only manager can restore deactive lead");
+                throw new ArgumentException("Only manager can restore deactive lead");
+            }
+            else if (leadDb.Status == LeadStatusEnum.Deleted &&
+                    (leadRequest.Role != LeadRoleEnum.StandardLead && leadRequest.Role != LeadRoleEnum.VipLead))
+            {
+                //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
+                throw new ArgumentException("Only Lead can restore deleted lead");
+            }
             else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role == LeadRoleEnum.Manager
                 || leadDb.Status == LeadStatusEnum.Deleted && (leadRequest.Role == LeadRoleEnum.StandartLead || leadRequest.Role == LeadRoleEnum.VipLead))
             {
@@ -386,17 +398,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     return result;
                 }
             }
-            else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role != LeadRoleEnum.Manager)
-            {
-                // _logger.Log(LogLevel.Warn, "Only manager can restore deactive lead");
-                throw new ArgumentException("Only manager can restore deactive lead");
-            }
-            else if (leadDb.Status == LeadStatusEnum.Deleted &&
-                    (leadRequest.Role != LeadRoleEnum.StandartLead || leadRequest.Role != LeadRoleEnum.VipLead))
-            {
-                //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
-                throw new ArgumentException("Only Lead can restore deleted lead");
-            }
+
 
             throw new ArgumentException();
         }
@@ -434,7 +436,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             var defaultRubAccount = CreateDefaultRubAccount();
             defaultRubAccount.LeadId = result.Id;
-            await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount);
+            result.Accounts = new List<Account>
+            {
+                await _accountService.CreateOrRestoreAccountAsync(defaultRubAccount)
+            };
 
             _logger.Info($"{nameof(LeadService)} end {nameof(UpdateLeadWhenCreateLeadHasSamePassportInDb)}");
 

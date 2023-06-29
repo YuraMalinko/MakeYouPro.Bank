@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MakeYouPro.Bank.Api.Auth.Models.Requests
+﻿namespace MakeYouPro.Bank.Api.Auth.Models.Requests
 {
     public class UserRegisterRequest
     {

@@ -1,4 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
+// See https://aka.ms/new-console-template for more information
 using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
@@ -21,7 +21,7 @@ using (SqlConnection connection =
 
     connection.Open();
 
-    for (int i = 0; i < 4000000; i += 120000)
+    for (int i = 0; i < 40; i += 12)
     {
         leads = dataGenerator.GenerateLeads(100000, LeadRoleEnum.StandartLead);
         leads.AddRange(dataGenerator.GenerateLeads(20000, LeadRoleEnum.VipLead));

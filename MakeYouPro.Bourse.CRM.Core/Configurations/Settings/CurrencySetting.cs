@@ -1,4 +1,4 @@
-﻿using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
+using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 
 namespace MakeYouPro.Bourse.CRM.Core.Configurations.Settings
 {
@@ -9,5 +9,7 @@ namespace MakeYouPro.Bourse.CRM.Core.Configurations.Settings
         public List<string> CurrencyStandart { get;} = new List<string>() { "RUB","USD", "EUR" };
 
         public List<string> CurrencyVip { get;} = new List<string>() { "RUB","USD", "EUR", "JPY", "CNY", "RSD", "BGN", "ARS" };
+
+        public HashSet<string> BaseCurrencies { get; set; } = new HashSet<string>() { "RUB", "USD" };
     }
 }
