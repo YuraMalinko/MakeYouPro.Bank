@@ -1,21 +1,23 @@
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.Models;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.RabbitMq;
 using Newtonsoft.Json;
+using ILogger = NLog.ILogger;
+using LogLevel = NLog.LogLevel;
 
 namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly RabbitMqPublisher _rabbitMqPublisher;
         private readonly string _routingKey;
         private readonly string _path;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration, RabbitMqPublisher rabbitMqPublisher)
+        public Worker(ILogger nLogger,, IConfiguration configuration, RabbitMqPublisher rabbitMqPublisher)
         {
-            _logger = logger;
+            _logger = nLogger;
             _configuration = configuration;
             _httpClient = new HttpClient();
             _rabbitMqPublisher = rabbitMqPublisher;
@@ -61,17 +63,17 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     try
                     {
                         await _rabbitMqPublisher.PublishMessageAsync(accountsToPublish, _routingKey);
-                        _logger.LogInformation("Аккаунты Лидов для обновления статуса на Vip успешно отправлены в очередь");
+                        _logger.Log(LogLevel.Info, "Аккаунты Лидов для обновления статуса на Vip успешно отправлены в очередь");
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError($"Ошибка во время отправки Лидов в очередь: {ex.Message}");
+                        _logger.Log(LogLevel.Error, $"Ошибка во время отправки Лидов в очередь: {ex.Message}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Ошибка во время выполнения ProcessDataAsync: {ex.Message}");
+                _logger.Log(LogLevel.Error, $"Ошибка при выполнении GET-запроса: {ex.Message}");
             }
         }
 
@@ -125,13 +127,13 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{nameof(Worker)}: Start");
+            _logger.Log(LogLevel.Info, $"{nameof(Worker)}: Starting");
             return base.StartAsync(cancellationToken);
         }
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"{nameof(Worker)} stopping.");
+            _logger.Log(LogLevel.Info, $"{nameof(Worker)}: Stopping");
             return base.StopAsync(cancellationToken);
         }
     }

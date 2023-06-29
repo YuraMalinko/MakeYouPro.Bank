@@ -1,8 +1,14 @@
 using MakeYouPro.Bourse.LeadStatusUpdater.Api;
 using MakeYouPro.Bourse.LeadStatusUpdater.Bll;
+using NLog;
+using ILogger = NLog.ILogger;
+using LogManager = NLog.LogManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
+LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
+var nlog = LogManager.Setup().GetCurrentClassLogger();
+builder.Services.AddSingleton<ILogger>(nlog);
 // Add services to the container.
 
 builder.Services.AddControllers();
