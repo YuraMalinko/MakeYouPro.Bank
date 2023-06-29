@@ -99,7 +99,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (leadEntity.Status == LeadStatusEnum.Active)
             {
-                if (!await UserDelete(leadEntity.Email))
+                if (await UserDelete(leadEntity.Email))
                 {
                     await _leadRepository.DeleteLeadByIdAsync(leadId);
                     await _accountService.DeleteAccountByLeadIdAsync(leadId);
@@ -120,7 +120,9 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         private async Task<bool> UserDelete(string email)
         {
             _logger.Info($"Start process deleted user by {email}");
-            var userInBase = _mapper.Map<User>(_userRepository.GetUserByEmailAsync(email));
+
+            var dbUser = await _userRepository.GetUserByEmailAsync(email);
+            var userInBase = _mapper.Map<User>(dbUser);
 
             if (userInBase != null && userInBase.Status != LeadStatusEnum.Deleted)
             {
