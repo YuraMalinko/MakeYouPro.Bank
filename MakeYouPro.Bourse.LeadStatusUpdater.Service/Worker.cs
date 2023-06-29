@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.Models;
 using MakeYouPro.Bourse.LeadStatusUpdater.Service.RabbitMq;
 using Newtonsoft.Json;
@@ -50,9 +51,9 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     settings = GetSettings();
                     Console.WriteLine(settings.PeriodOfTransactionsInDays);
 
-                    HttpResponseMessage responseAccountsBirth = await GetResponseAccountsBirthAsync(settings);
-                    HttpResponseMessage responseAccountsWithBigTransactions = await GetResponseAccountsWithALargeNumberOfTransactionsAsync(settings);
-                    HttpResponseMessage responseAccountsWithFreshMoney = await GetResponseAccountsWithAccountsWithFreshMoneyAsync(settings);
+                    HttpResponseMessage responseAccountsBirth = await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
+                    HttpResponseMessage responseAccountsWithBigTransactions = await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
+                    HttpResponseMessage responseAccountsWithFreshMoney = await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfFreshMoneyInDays}&countOfFreshMoneyInRUB={settings.CountOfFreshMoneyInRUB}");
 
                     List<LeadStatusUpdateModel> accountsBirth = await ChekResponse(responseAccountsBirth);
                     List<LeadStatusUpdateModel> accountsWithBigTransactions = await ChekResponse(responseAccountsWithBigTransactions);
@@ -86,21 +87,6 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                 result = System.Text.Json.JsonSerializer.Deserialize<Settings>(jsn);
                 return result;
             }
-        }
-
-        private async Task<HttpResponseMessage> GetResponseAccountsBirthAsync(Settings settings)
-        {
-            return await _httpClient.GetAsync($"/Account/Accounts/Birthday?numberDays={settings.PeriodOfBirthdayVIPInDays}");
-        }
-
-        private async Task<HttpResponseMessage> GetResponseAccountsWithALargeNumberOfTransactionsAsync(Settings settings)
-        {
-            return await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfTransactionsInDays}&numberOfTransactions={settings.CountOfTransactions}");
-        }
-
-        private async Task<HttpResponseMessage> GetResponseAccountsWithAccountsWithFreshMoneyAsync(Settings settings)
-        {
-            return await _httpClient.GetAsync($"/Account/Accounts?numberDays={settings.PeriodOfFreshMoneyInDays}&countOfFreshMoneyInRUB={settings.CountOfFreshMoneyInRUB}");
         }
 
         public static async Task<List<T>> MergeListsAndRemoveDuplicatesAsync<T>(List<T> list1, List<T> list2, List<T> list3)
