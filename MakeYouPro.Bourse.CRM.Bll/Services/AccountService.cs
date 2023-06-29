@@ -16,76 +16,66 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
-        private readonly IAccountSetting _accountSetting;
         private readonly ICurrencySetting _currencySetting;
 
         public AccountService(ILeadRepository leadRepository,
             IAccountRepository accountRepository,
             IMapper mapper, ILogger logger,
-            IAccountSetting accountSetting,
             ICurrencySetting currencySetting)
         {
             _leadRepository = leadRepository;
             _accountRepository = accountRepository;
             _mapper = mapper;
             _logger = logger;
-            _accountSetting = accountSetting;
             _currencySetting = currencySetting;
         }
 
         public async Task<Account> CreateOrRestoreAccountAsync(Account account)
         {
-            _logger.Debug($"Request execution process started.");
+            _logger.Info($"Request execution process started.");
             var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadByIdAsync(account.LeadId));
 
             if (!await CheckActiveStatusLead(lead))
             {
-                var ex = new AccountArgumentException
+                throw new AccountArgumentException
                     ($"{nameof(Lead)} {lead} unsuitable status - {lead.Status}," +
                     $"for creating an account with a currency {account.Currency}." +
                     $"Need a status {LeadStatusEnum.Active}.");
-                _logger.Warn(ex.Message);
-                throw ex;
             }
 
-            _logger.Debug($"Successfully checked the lead status - {lead.Status}.");
+            _logger.Info($"Successfully checked the lead status - {lead.Status}.");
 
             if (!await CheckRightsCreateStandartAccount(lead, account.Currency))
             {
-                var ex = new AccountArgumentException
+                throw new AccountArgumentException
                     ($"{nameof(Lead)} {lead} unsuitable role - {lead.Role}," +
                     $"for creating an account with a currency {account.Currency}." +
-                    $"Need a Role - {LeadRoleEnum.StandardLead}.");
-                _logger.Warn(ex.Message);
-                throw ex;
+                    $"Need a Role - {LeadRoleEnum.StandartLead}.");
+
             }
             else if (!await CheckRightsCreateVipAccount(lead, account.Currency))
             {
-                var ex = new AccountArgumentException
+                throw new AccountArgumentException
                     ($"{nameof(Lead)} {lead} unsuitable role - {lead.Role}," +
                     $"for creating an account with a currency {account.Currency}." +
-                    $"Need a Role - {LeadRoleEnum.StandardLead}.");
-                _logger.Warn(ex.Message);
-                throw ex;
+                    $"Need a Role - {LeadRoleEnum.StandartLead}.");
             }
 
-            _logger.Debug($"Successfully passed currency {account.Currency} " +
+            _logger.Info($"Successfully passed currency {account.Currency} " +
                 $"and role lead {lead.Role} verification.");
 
             if (!await CheckAccountDublication(lead, account))
             {
-                var ex = new AlreadyExistException($"{nameof(LeadEntity)} {lead} already has an active account with currency {account.Currency}");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AlreadyExistException($"{nameof(LeadEntity)} {lead} already has an active account with currency {account.Currency}");
             }
 
-            _logger.Debug($"Successfully passed verification for existing accounts with currency {account.Currency} of lead {lead}.");
+            _logger.Info($"Successfully passed verification for existing accounts with currency {account.Currency} of lead {lead}.");
 
             var deletedAccount = lead.Accounts.Find(a => a.Currency.Equals(account.Currency) && account.Status.Equals(AccountStatusEnum.Deleted));
 
             if (deletedAccount is not null)
             {
-                _logger.Debug($"Previously deleted account {deletedAccount} with currency {account.Currency} was found, it will be restored.");
+                _logger.Info($"Previously deleted account {deletedAccount} with currency {account.Currency} was found, it will be restored.");
                 var restoredAccount = await RestoreAccountAsync(deletedAccount);
 
                 if (restoredAccount is not null)
@@ -94,17 +84,15 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else
                 {
-                    var ex = new AccountUnknownException($"For some reason, the account {deletedAccount} belonging to lead {lead} Yura was not restored");
-                    _logger.Error(ex.Message);
-                    throw ex;
+                    throw new AccountUnknownException($"For some reason, the account {deletedAccount} belonging to lead {lead} Yura was not restored");
                 }
 
-                _logger.Debug($"The process of executing the request is completed");
+                _logger.Info($"The process of executing the request is completed");
 
                 return restoredAccount!;
             }
 
-            _logger.Debug($"Previously deleted accounts with the currency {account.Currency} were not found, a new one will be created.");
+            _logger.Info($"Previously deleted accounts with the currency {account.Currency} were not found, a new one will be created.");
             var createAccount = await CreateAccountAsync(account);
 
             if (createAccount is not null)
@@ -113,19 +101,17 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                var ex = new AccountUnknownException($"For some reason, an account {account} for lead {lead} was not created");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AccountUnknownException($"For some reason, an account {account} for lead {lead} was not created");
             }
 
-            _logger.Debug($"The process of executing the request is completed");
+            _logger.Info($"The process of executing the request is completed");
 
             return createAccount!;
         }
 
         private async Task<Account> CreateAccountAsync(Account account)
         {
-            account.Status = _accountSetting.StartAccountStatus;
+            account.Status = AccountStatusEnum.Active;
             var createAccountEntity = await _accountRepository.CreateAccountAsync(_mapper.Map<AccountEntity>(account));
             var createAccount = _mapper.Map<Account>(createAccountEntity);
 
@@ -143,39 +129,40 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<bool> DeleteAccountAsync(int accountId)
         {
-            _logger.Debug($"Request execution process started.");
+            _logger.Info($"Request execution process started.");
             var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(accountId));
+            var lead = _mapper.Map<Lead>(await _leadRepository.GetLeadByIdAsync(account.LeadId));
 
             if (account == null)
             {
-                var ex = new NotFoundException(accountId, nameof(Lead));
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new NotFoundException(accountId, nameof(Lead));
             }
 
-            _logger.Debug($"Account {account} availability has been successfully verified.");
+            _logger.Info($"Account {account} availability has been successfully verified.");
 
             if (account.Status != AccountStatusEnum.Active)
             {
-                var ex = new AccountArgumentException($"{nameof(account)} {account} has already been deleted or deactive");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AccountArgumentException($"{nameof(account)} {account} has already been deleted or deactive");
             }
 
-            _logger.Debug($"Account {account} status has been successfully verified.");
+            _logger.Info($"Account {account} status has been successfully verified.");
 
             //здесь место под запрос баланса
 
             if (account.Balance > 0)
             {
-                var ex = new AccountArgumentException($"{nameof(account)} {account} has resources on the account balance - {account.Balance} {account.Currency}.");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AccountArgumentException($"{nameof(account)} {account} has resources on the account balance - {account.Balance} {account.Currency}.");
             }
 
-            _logger.Debug($"The balance check has been successfully completed, account  deletion begins {account}.");
+            if (lead.Status != LeadStatusEnum.Deleted && account.Currency == _currencySetting.CurrencyDefault)
+            {
+                throw new AccountArgumentException($"the main currency account {account} cannot be deleted with the lead status {lead}");
+            }
+
+            _logger.Info($"The balance check has been successfully completed, account  deletion begins {account}.");
             bool result = false;
             account.Status = AccountStatusEnum.Deleted;
+
             var deletedAccount = await _accountRepository.ChangeAccountStatusAsync(_mapper.Map<AccountEntity>(account));
 
             if (deletedAccount is not null)
@@ -186,44 +173,36 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                var ex = new AccountUnknownException($"{nameof(account)} {account} for some reason it was not deleted.");
-                _logger.Error(ex.Message);
-                throw ex;
+                throw new AccountUnknownException($"{nameof(account)} {account} for some reason it was not deleted.");
             }
 
-            _logger.Debug($"The process of executing the request is completed.");
+            _logger.Info($"The process of executing the request is completed.");
 
             return result;
         }
 
         public async Task<Account> ChangeAccountStatusAsync(Account updateAccount)
         {
-            _logger.Debug($"Request execution process started.");
+            _logger.Info($"Request execution process started.");
             var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
-                var ex = new NotFoundException(updateAccount.Id, nameof(Lead));
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new NotFoundException(updateAccount.Id, nameof(Lead));
             }
 
-            _logger.Debug($"Account {account} availability has been successfully verified.");
+            _logger.Info($"Account {account} availability has been successfully verified.");
 
             if (account.Status == AccountStatusEnum.Deleted)
             {
-                var ex = new AccountArgumentException($"{nameof(account)} {account} has already been deleted.");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AccountArgumentException($"{nameof(account)} {account} has already been deleted.");
             }
             else if (updateAccount.Status == account.Status)
             {
-                var ex = new AlreadyExistException(nameof(account.Status));
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AlreadyExistException(nameof(account.Status));
             }
 
-            _logger.Debug($"Account {account} status has been successfully verified.");
+            _logger.Info($"Account {account} status has been successfully verified.");
 
             var changeAccountEntiry = await _accountRepository.ChangeAccountStatusAsync(_mapper.Map<AccountEntity>(updateAccount));
 
@@ -233,40 +212,34 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                var ex = new AccountUnknownException($"For some reason, the account status change {account} failed.");
-                _logger.Error(ex.Message);
-                throw ex;
+                throw new AccountUnknownException($"For some reason, the account status change {account} failed.");
             }
 
             var changeAccount = _mapper.Map<Account>(changeAccountEntiry);
 
-            _logger.Debug($"The process of executing the request is completed");
+            _logger.Info($"The process of executing the request is completed");
 
             return changeAccount;
         }
 
         public async Task<Account> UpdateAccountAsync(Account updateAccount)
         {
-            _logger.Debug($"Request execution process started.");
+            _logger.Info($"Request execution process started.");
             var account = _mapper.Map<Account>(await _accountRepository.GetAccountAsync(updateAccount.Id));
 
             if (account == null)
             {
-                var ex = new NotFoundException(updateAccount.Id, nameof(Lead));
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new NotFoundException(updateAccount.Id, nameof(Lead));
             }
 
-            _logger.Debug($"Account {account} availability has been successfully verified.");
+            _logger.Info($"Account {account} availability has been successfully verified.");
 
             if (account.Status != AccountStatusEnum.Active)
             {
-                var ex = new AccountArgumentException($"{nameof(account)} {account} has already been deleted or deactive");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new AccountArgumentException($"{nameof(account)} {account} has already been deleted or deactive");
             }
 
-            _logger.Debug($"Account {account} status has been successfully verified,update begins..");
+            _logger.Info($"Account {account} status has been successfully verified,update begins..");
 
             var changeAccountEntity = await _accountRepository.UpdateAccountAsync(_mapper.Map<AccountEntity>(updateAccount));
 
@@ -276,9 +249,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                var ex = new AccountUnknownException($"For some reason, the account update {account} failed.");
-                _logger.Error(ex.Message);
-                throw ex;
+                throw new AccountUnknownException($"For some reason, the account update {account} failed.");
             }
 
             var chandeAccount = _mapper.Map<Account>(changeAccountEntity);
@@ -294,10 +265,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (account == null)
             {
-                var ex = new FileNotFoundException($"There are no account matching by if {accountId}");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new FileNotFoundException($"There are no account matching by if {accountId}");
             }
+
+            //здесь место для запроса баланса
 
             _logger.Info($"Account information was uploaded by if {accountId}");
 
@@ -306,18 +277,16 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<List<Account>> GetAccountsAsync(AccountFilter? filter)
         {
-            _logger.Debug($"Request execution process started.");
+            _logger.Info($"Request execution process started.");
             var accountsEntity = await _accountRepository.GetAccountsAsync(_mapper.Map<AccountFilterEntity>(filter));
 
             if (accountsEntity is not null)
             {
-                _logger.Debug("The entire list of accounts has been unloaded from the database");
+                _logger.Info("The entire list of accounts has been unloaded from the database");
             }
             else
             {
-                var ex = new FileNotFoundException($"For some reason, the list of accounts is empty");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new FileNotFoundException($"For some reason, the list of accounts is empty");
             }
 
             var accounts = _mapper.Map<List<Account>>(accountsEntity);
@@ -329,7 +298,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     //здесь запросы баланса для всех аккаунтов
                 }
 
-                _logger.Debug("The balance is recorded for all accounts");
+                _logger.Info("The balance is recorded for all accounts");
 
                 if (filter.FromBalace != null)
                 {
@@ -341,7 +310,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     accounts.RemoveAll(a => a.Balance >= filter.ToBalace);
                 }
 
-                _logger.Debug("Filter selection is performed");
+                _logger.Info("Filter selection is performed");
             }
 
             if (accounts.Any())
@@ -350,12 +319,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                var ex = new FileNotFoundException($"There are no accounts satisfying the filter.");
-                _logger.Warn(ex.Message);
-                throw ex;
+                throw new FileNotFoundException($"There are no accounts satisfying the filter.");
             }
 
-            _logger.Debug($"The process of executing the request is completed.");
+            _logger.Info($"The process of executing the request is completed.");
 
             return accounts;
         }
@@ -388,7 +355,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
         {
             bool result = true;
 
-            if  (lead.Role == LeadRoleEnum.StandardLead && !_currencySetting.CurrencyStandart.Contains(currency))
+            if (lead.Role == LeadRoleEnum.StandartLead && !_currencySetting.CurrencyStandart.Contains(currency))
             {
                 result = false;
             }
