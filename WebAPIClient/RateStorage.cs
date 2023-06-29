@@ -6,7 +6,7 @@ namespace WebAPIClient
     public static class RateStorage
     {
         static bool freshInfo = false;
-        public static Dictionary<string, decimal> rateDictionary { get; set; }
+        public static Dictionary<string, decimal> rateDictionary{ get; set; }
         public static string jsonNew { get; set; }
 
         public async static Task GetAndSaveRates()
