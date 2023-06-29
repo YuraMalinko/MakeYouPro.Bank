@@ -1,5 +1,7 @@
 using MakeYouPro.Bourse.CRM.Api.Extentions;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
+using MakeYouPro.Bourse.CRM.Auth.Bll.Mappings;
+using MakeYouPro.Bourse.CRM.Auth.Dal.Context;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
@@ -17,20 +19,17 @@ var nlog = LogManager.Setup().GetCurrentClassLogger();
 builder.Services.AddSingleton<ILogger>(nlog);
 
 builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLeadProfile),
-    typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile));
+    typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile), typeof(MapperBllUserProfile),
+    typeof(MapperBllRefreshTokenProfile));
 
-builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddRepositories();
-
 builder.Services.AddServices();
-
 builder.Services.AddValidators();
-
 builder.Services.AddSettings();
-
+builder.Services.AddAuth();
+builder.Services.AddScoped<UserContext>();
+builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddScoped<IAuthServiceClient, AuthServiceClient>(_ => new AuthServiceClient(Environment.GetEnvironmentVariable("AuthServiceUrl")));
-
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,6 +48,7 @@ app.UseMiddleware<ExceptionHandler>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
