@@ -22,7 +22,7 @@ public class Program
         using var channel = connection.CreateModel();
 
 
-        channel.QueueDeclare(queue: "ratesProvider",
+        channel.QueueDeclare(queue: "MakeYouPro",
                      durable: false,
                      exclusive: false,
                      autoDelete: false,

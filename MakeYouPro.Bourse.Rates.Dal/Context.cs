@@ -9,7 +9,6 @@ namespace MakeYouPro.Bourse.Rates.Dal
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("BourseRates"));
-            ////builder.UseSqlServer(@"Server=localhost;Database=Rates;Trusted_Connection=True;TrustServerCertificate=True;");
         }
         public DbSet<ARSDto> MainARS { get; set; }
         public DbSet<BGNDto> MainBGN { get; set; }
@@ -28,6 +27,10 @@ namespace MakeYouPro.Bourse.Rates.Dal
             {
                 fkey.DeleteBehavior = DeleteBehavior.NoAction;
             }
+        }
+        public Context()
+        {
+            Database.EnsureCreated();
         }
 
     }

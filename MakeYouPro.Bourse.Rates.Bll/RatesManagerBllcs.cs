@@ -31,7 +31,6 @@ namespace MakeYouPro.Bourse.Rates.Bll
 
         public void SaveARSRatesToDB(ARSBll rate)
         {
-            Console.WriteLine("suc");
             _arsRepository.AddArsToDb(_instanceMapperBll.MapARSBllToARSDto(rate));
         }
         public void SaveBGNRatesToDB (BGNBll rate)

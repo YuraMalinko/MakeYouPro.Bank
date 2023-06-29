@@ -8,7 +8,7 @@ namespace WebAPIClient
     {
         private Timer _timer;
         static int maxAttempt = 2;
-        //int time = 1;
+        static int time = 2;
 
         AsyncRetryPolicy retryPolicy = Policy.
              Handle<HttpRequestException>(exeption => { return true; })
@@ -19,7 +19,7 @@ namespace WebAPIClient
         {
             RateStorage.MarkRatesAsExpires();
             {
-                _timer = new Timer(state => retryPolicy.ExecuteAsync(RateStorage.GetAndSaveRates).Wait(), null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
+                _timer = new Timer(state => retryPolicy.ExecuteAsync(RateStorage.GetAndSaveRates).Wait(), null, TimeSpan.Zero, TimeSpan.FromMinutes(60));
                 return Task.CompletedTask;
             }
         }
