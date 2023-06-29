@@ -2,11 +2,11 @@ namespace MakeYouPro.Bourse.CRM.Core.Configurations.ISettings
 {
     public interface ICurrencySetting
     {
-        string CurrencyDefault { get;}
+        string CurrencyDefault { get; }
 
-        List<string> CurrencyStandart { get;}
+        List<string> CurrencyStandart { get; }
 
-        List<string> CurrencyVip { get;}
+        List<string> CurrencyVip { get; }
 
         HashSet<string> BaseCurrencies { get; set; }
     }

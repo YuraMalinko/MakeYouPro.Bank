@@ -74,13 +74,13 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             if (filter!.FromDateCreate is not null)
             {
                 accounts = accounts.Where(a => a.DateCreate >= filter.FromDateCreate);
-                _logger.Info( $"The data is sorted by filter - FromDateCreate.");
+                _logger.Info($"The data is sorted by filter - FromDateCreate.");
             }
 
             if (filter.ToDateCreate is not null)
             {
                 accounts = accounts.Where(a => a.DateCreate.Date <= filter.ToDateCreate);
-                _logger.Info( $"The data is sorted by filter - ToDateCreate.");
+                _logger.Info($"The data is sorted by filter - ToDateCreate.");
             }
 
             if (filter.LeadsId!.Any())
@@ -92,13 +92,13 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
             if (filter.Currencies!.Any())
             {
                 accounts = accounts.Where(a => filter.Currencies!.Contains(a.Currency));
-                _logger.Info( $"The data is sorted by filter - Currencies.");
+                _logger.Info($"The data is sorted by filter - Currencies.");
             }
 
             if (filter.Statuses!.Any())
             {
                 accounts = accounts.Where(a => filter.Statuses!.Contains(a.Status));
-                _logger.Info( $"The data is sorted by filter - Statuses.");
+                _logger.Info($"The data is sorted by filter - Statuses.");
             }
 
             var result = await accounts.Include(a => a.Lead)

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-namespace MakeYouPro.Bourse.CRM.Auth.Bll.Models
+﻿namespace MakeYouPro.Bourse.CRM.Auth.Bll.Models
 {
     public class AuthResult
     {

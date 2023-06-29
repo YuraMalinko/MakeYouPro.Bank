@@ -2,7 +2,6 @@
 using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using MakeYouPro.Bourse.CRM.TestDataGeneration.Services;
-using Microsoft.IdentityModel.Tokens;
 
 namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
 {
@@ -34,7 +33,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
             }
 
             _whriter.WhriteUsers(result);
-            
+
             var password = BCrypt.Net.BCrypt.HashPassword(_password).ToString();
             Console.WriteLine(password);
             result.Select(u => u.Password = password).ToList();

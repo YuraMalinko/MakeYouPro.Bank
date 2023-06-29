@@ -92,7 +92,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
         }
 
         [HttpPatch("Password", Name = "UpdatePasswordToken")]
-        public async Task<ActionResult> UpdatePasswordToken([FromQuery]UserUpdateRequest user)
+        public async Task<ActionResult> UpdatePasswordToken([FromQuery] UserUpdateRequest user)
         {
             var validateUser = await _validator.ValidateAsync(user);
 

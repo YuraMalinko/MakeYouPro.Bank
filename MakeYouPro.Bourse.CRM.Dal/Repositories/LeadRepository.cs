@@ -1,5 +1,3 @@
-using MakeYouPro.Bourse.CRM.Auth.Dal.IRepository;
-using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
@@ -13,15 +11,13 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
     public class LeadRepository : ILeadRepository
     {
         private static CRMContext _context;
-        private static IUserRepository _authRepository;
         private static IDbContextTransaction _crmTransaction;
         private readonly ILogger _logger;
 
-        public LeadRepository(CRMContext context, ILogger nLogger, IUserRepository authRepository)
+        public LeadRepository(CRMContext context, ILogger nLogger)
         {
             _context = context;
             _logger = nLogger;
-            _authRepository = authRepository;
         }
 
         public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead)
@@ -34,19 +30,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.Repositories
                 .Include(l => l.Accounts)
                 .SingleAsync(l => l.Id == lead.Id);
         }
-
-        //public async Task<LeadEntity> CreateLeadAsync(LeadEntity lead, UserEntity user)
-        //{
-
-        //        await _context.Leads.AddAsync(lead);
-        //        await _context.SaveChangesAsync();
-
-        //        var newLead = await _context.Leads
-        //            .Include(l => l.Accounts)
-        //            .SingleAsync(l => l.Id == lead.Id);
-
-        //        return newLead;
-        //}
 
         public async Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead)
         {

@@ -1,7 +1,5 @@
-using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 {
@@ -25,7 +23,7 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task DeleteLeadByIdAsync(int leadId);
 
-        
+
 
         Task<LeadEntity> GetLeadByEmail(string email);
 

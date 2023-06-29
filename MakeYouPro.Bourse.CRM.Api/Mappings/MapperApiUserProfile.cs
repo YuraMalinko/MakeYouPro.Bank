@@ -6,7 +6,7 @@ using MakeYouPro.Bourse.CRM.Core.Extensions;
 
 namespace MakeYouPro.Bourse.CRM.Api.Mappings
 {
-    public class MapperApiUserProfile:Profile
+    public class MapperApiUserProfile : Profile
     {
         public MapperApiUserProfile()
         {
@@ -14,7 +14,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Mappings
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.FormatEmail()));
             CreateMap<UserUpdateRequest, User>()
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email.FormatEmail()));
-            CreateMap<AuthResult,AuthResultResponse>();
+            CreateMap<AuthResult, AuthResultResponse>();
         }
     }
 }

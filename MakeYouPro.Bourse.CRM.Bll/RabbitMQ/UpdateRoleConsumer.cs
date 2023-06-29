@@ -1,9 +1,6 @@
-﻿using MakeYouPro.Bourse.CRM.Bll.IServices;
-using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
+﻿using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
-using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
-using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using NLog;
 using RabbitMQ.Client;
 

@@ -8,7 +8,7 @@ namespace MakeYouPro.Bourse.CRM.Auth.Bll.Mappings
     {
         public MapperBllRefreshTokenProfile()
         {
-            CreateMap<RefreshToken,RefreshTokenEntity>().ReverseMap();
+            CreateMap<RefreshToken, RefreshTokenEntity>().ReverseMap();
         }
     }
 }

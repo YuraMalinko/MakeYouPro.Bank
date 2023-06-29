@@ -36,11 +36,11 @@ namespace MakeYouPro.Bourse.CRM.Auth.Dal.Models
         public override bool Equals(object? obj)
         {
             return obj is UserEntity user &&
-                Id==user.Id &&
-                Email==user.Email &&
-                Password==user.Password &&
-                Role==user.Role &&
-                Status==user.Status &&
+                Id == user.Id &&
+                Email == user.Email &&
+                Password == user.Password &&
+                Role == user.Role &&
+                Status == user.Status &&
                 RefreshTokens.SequenceEqual(user.RefreshTokens);
         }
     }

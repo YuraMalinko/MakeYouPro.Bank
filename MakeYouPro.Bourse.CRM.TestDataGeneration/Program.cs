@@ -7,7 +7,6 @@ using MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators;
 using MakeYouPro.Bourse.CRM.TestDataGeneration.TablesGenerator;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Diagnostics;
 
 string connectionString = TableGenerator.GetConnectionString();
 string connectAuthString = TableAuthDBGenerator.GetConnectionString();

@@ -15,18 +15,18 @@ using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Bll.Services;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Configurations.Settings;
+using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
 using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
-using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
 using MakeYouPro.Bourse.CRM.Dal.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
-using RabbitMQ.Client;
 
 namespace MakeYouPro.Bourse.CRM.Api.Extentions
 {
@@ -34,9 +34,9 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
     {
         public static void AddRepositories(this IServiceCollection services)
         {
-            
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddTransient<ILeadRepository, LeadRepository>();
             services.AddTransient<IAccountRepository, AccountRepository>();
         }
@@ -64,7 +64,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
         public static void AddSettings(this IServiceCollection services)
         {
             services.AddSingleton<ICurrencySetting, CurrencySetting>();
-            services.AddSingleton<IAccountSetting, AccountSetting>();
             services.AddSingleton<ICommissionSettings, CommissionSettings>();
         }
 
@@ -77,9 +76,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
             services.AddSingleton<IConsumer<UpdateRoleMessage>, UpdateRoleConsumer>(
                 s => new UpdateRoleConsumer(s.GetRequiredService<IConnection>(), "update-lead-status-on-vip",
                                             s.GetRequiredService<ILeadRepository>(), s.GetRequiredService<NLog.ILogger>()));
-            //services.AddHostedService<UpdateRoleConsumer>(
-            //    s => new UpdateRoleConsumer(s.GetRequiredService<IConnection>(), "update-lead-status-on-vip",
-            //                                s.GetRequiredService<ILeadService>(), s.GetRequiredService<NLog.ILogger>()));
         }
 
         public static void AddAuth(this IServiceCollection services)

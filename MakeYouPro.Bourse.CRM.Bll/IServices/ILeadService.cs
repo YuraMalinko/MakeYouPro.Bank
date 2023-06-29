@@ -1,11 +1,8 @@
-﻿using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
-using MakeYouPro.Bourse.CRM.Bll.Models;
-using MakeYouPro.Bourse.CRM.Core.Enums;
-using MakeYouPro.Bourse.CRM.Dal.Models;
+﻿using MakeYouPro.Bourse.CRM.Bll.Models;
 
 namespace MakeYouPro.Bourse.CRM.Bll.IServices
 {
-    public interface ILeadService 
+    public interface ILeadService
     {
         Task<Lead> CreateOrRecoverLeadAsync(Lead addLead);
 

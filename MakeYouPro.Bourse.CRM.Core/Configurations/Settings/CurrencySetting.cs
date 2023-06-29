@@ -6,9 +6,9 @@ namespace MakeYouPro.Bourse.CRM.Core.Configurations.Settings
     {
         public string CurrencyDefault { get; set; } = "RUB";
 
-        public List<string> CurrencyStandart { get;} = new List<string>() { "RUB","USD", "EUR" };
+        public List<string> CurrencyStandart { get; } = new List<string>() { "RUB", "USD", "EUR" };
 
-        public List<string> CurrencyVip { get;} = new List<string>() { "RUB","USD", "EUR", "JPY", "CNY", "RSD", "BGN", "ARS" };
+        public List<string> CurrencyVip { get; } = new List<string>() { "RUB", "USD", "EUR", "JPY", "CNY", "RSD", "BGN", "ARS" };
 
         public HashSet<string> BaseCurrencies { get; set; } = new HashSet<string>() { "RUB", "USD" };
     }

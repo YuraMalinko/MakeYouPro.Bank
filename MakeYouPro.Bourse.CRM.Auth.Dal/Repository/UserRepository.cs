@@ -63,7 +63,7 @@ namespace MakeYouPro.Bourse.CRM.Auth.Dal.Repository
         public async Task<UserEntity> GetUserByEmailAsync(string email)
         {
             return (await _context.Users
-                .Include (u => u.RefreshTokens)
+                .Include(u => u.RefreshTokens)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Email == email))!;
         }

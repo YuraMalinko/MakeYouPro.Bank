@@ -41,7 +41,7 @@ namespace MakeYouPro.Bourse.CRM.Auth.Bll.Models
 
             var userInBase = _mapper.Map<User>(await _userRepository.GetUserByEmailAsync(user.Email));
 
-             if (userInBase != null && await AuthenticationUser(user, userInBase))
+            if (userInBase != null && await AuthenticationUser(user, userInBase))
             {
                 _logger.Info($"{user} has successfully authenticated, we proceed with authorization.");
 

@@ -24,7 +24,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
                 string filename = $"{_filePath}Users with {users[i].Id} index.xlsx";
                 var whriterr = new StreamWriter(filename);
                 whriterr.Close();
-                
+
                 using (var writer = new Workbook(filename))
                 {
                     Worksheet sheet = writer.Worksheets[0];
@@ -41,8 +41,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration.Services
                     }
                     else
                     {
-                        
-                        var writeUsers = users.GetRange(i,maxCountObject).ToArray();
+
+                        var writeUsers = users.GetRange(i, maxCountObject).ToArray();
                         string serialiseForFile = JsonSerializer.Serialize(writeUsers);
                         JsonLayoutOptions options = new JsonLayoutOptions();
                         options.ArrayAsTable = true;

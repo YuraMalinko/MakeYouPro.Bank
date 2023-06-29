@@ -5,7 +5,6 @@ using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
-using MakeYouPro.Bourse.CRM.Core.Clients.AuthService.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Dal.IRepositories;
@@ -137,7 +136,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             return false;
         }
 
-        private async Task<User> UpdateUser(string email,Lead lead)
+        private async Task<User> UpdateUser(string email, Lead lead)
         {
             _logger.Info($"Start process update user {email}");
 
@@ -147,8 +146,8 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             if (userInBase != null)
             {
                 userInBase.Status = lead.Status;
-                userInBase.Role= lead.Role;
-                userInBase.Email= lead.Email;
+                userInBase.Role = lead.Role;
+                userInBase.Email = lead.Email;
 
                 var userToBase = _mapper.Map<UserEntity>(userInBase);
                 var updateUser = _mapper.Map<User>(await _userRepository.UpdateUserAsync(userToBase));
@@ -178,7 +177,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             {
                 if (leadEntityDb.Role == LeadRoleEnum.StandartLead || leadEntityDb.Role == LeadRoleEnum.VipLead)
                 {
-                    
+
 
                     leadEntityDb.Name = updateLead.Name;
                     leadEntityDb.MiddleName = updateLead.MiddleName;
