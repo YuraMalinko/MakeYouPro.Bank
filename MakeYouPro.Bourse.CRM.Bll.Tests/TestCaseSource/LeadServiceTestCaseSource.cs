@@ -345,7 +345,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "12307",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead,
+                Role = LeadRoleEnum.StandartLead,
                 Accounts = new List<AccountEntity>
                     {
                         new AccountEntity
@@ -374,7 +374,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "12307",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead,
+                Role = LeadRoleEnum.StandartLead,
                 Accounts = new List<Account>
                     {
                         new Account
@@ -402,7 +402,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "12307",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead,
+                Role = LeadRoleEnum.StandartLead,
                 Accounts = new List<AccountEntity>
                     {
                         new AccountEntity
@@ -430,7 +430,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "127",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Active,
-                Role = LeadRoleEnum.StandardLead,
+                Role = LeadRoleEnum.StandartLead,
                 Accounts = new List<AccountEntity>
                     {
                         new AccountEntity
@@ -476,7 +476,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "127",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Active,
-                Role = LeadRoleEnum.StandardLead,
+                Role = LeadRoleEnum.StandartLead,
                 Accounts = new List<Account>
                     {
                         new Account
@@ -564,7 +564,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "123090",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
                 }
             };
             Lead leadMatchedDb = new Lead
@@ -576,7 +576,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "123090",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
             };
             Lead addLead = new Lead
             {
@@ -613,7 +613,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "1230904",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
                 }
             };
             Lead leadMatchedDb = new Lead
@@ -625,7 +625,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "1230904",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
             };
             Lead addLead = new Lead
             {
@@ -729,7 +729,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "123090415",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Active,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
                 }
             };
             Lead leadMatchedDb = new Lead
@@ -741,7 +741,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "123090415",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Active,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
             };
             Lead addLead = new Lead
             {
@@ -778,7 +778,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "1230904154",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
                 },
             new LeadEntity
                 {
@@ -789,7 +789,7 @@ namespace MakeYouPro.Bourse.CRM.Bll.Tests.TestCaseSource
                 Name = "12309041546666",
                 Citizenship = "RUS",
                 Status = LeadStatusEnum.Deleted,
-                Role = LeadRoleEnum.StandardLead
+                Role = LeadRoleEnum.StandartLead
                 },
             };
             int leadMatchedId1 = 30904154;

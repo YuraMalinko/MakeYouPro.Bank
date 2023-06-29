@@ -12,7 +12,7 @@ namespace MakeYouPro.Bourse.CRM.Api.Models.Lead.Request
 
         public string PassportNumber { get; set; }
 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         public string Password { get; set; }
     }

@@ -86,6 +86,56 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+            catch (RegistrationException ex)
+            {
+                _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+                var result = JsonSerializer.Serialize(new { Error = "RegistrationException Error:" + ex.Message });
+                context.Response.StatusCode = 412;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (AuthenticationException ex)
+            {
+                _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+                var result = JsonSerializer.Serialize(new { Error = "AuthenticationException Error:" + ex.Message });
+                context.Response.StatusCode = 403;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (AuthorizationException ex)
+            {
+                _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+                var result = JsonSerializer.Serialize(new { Error = "AuthorizationException Error:" + ex.Message });
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (RefreshTokenException ex)
+            {
+                _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+                var result = JsonSerializer.Serialize(new { Error = "RefreshTokenException Error:" + ex.Message });
+                context.Response.StatusCode = 412;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
+            catch (WritingDataToServerException ex)
+            {
+                _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+                var result = JsonSerializer.Serialize(new { Error = "WritingDataToServerException Error:" + ex.Message });
+                context.Response.StatusCode = 400;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(result);
+            }
             catch (UnsuitableCurrencyException ex)
             {
                 _logger.Error(ex.Message + ex.StackTrace);
@@ -116,6 +166,17 @@ namespace MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware
 
                 await context.Response.WriteAsync(result);
             }
+        }
+
+        private async Task MakingAnError(HttpContext context, Exception ex, int statusCode)
+        {
+            _logger.Error($"{ex.Message} {ex.StackTrace}");
+
+            var result = JsonSerializer.Serialize(new { Error = "AuthenticationException Error:" + ex.Message });
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = "application/json";
+
+            await context.Response.WriteAsync(result);
         }
     }
 }

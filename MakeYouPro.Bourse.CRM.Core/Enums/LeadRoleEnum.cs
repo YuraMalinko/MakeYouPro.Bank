@@ -2,7 +2,7 @@
 {
     public enum LeadRoleEnum
     {
-        StandardLead,
+        StandartLead,
         VipLead,
         Manager
     }

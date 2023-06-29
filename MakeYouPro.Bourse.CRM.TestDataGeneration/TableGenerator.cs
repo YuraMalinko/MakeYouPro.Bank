@@ -82,7 +82,8 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             leadsTable.Columns.Add(citizenship);
 
             DataColumn passportNumber = new DataColumn();
-            passportNumber.DataType = Type.GetType("System.String");
+            //passportNumber.DataType = Type.GetType("System.String");
+            passportNumber.DataType = typeof(String);
             passportNumber.ColumnName = "PassportNumber";
             passportNumber.AllowDBNull = false;
             leadsTable.Columns.Add(passportNumber);
@@ -185,6 +186,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
         internal static string GetConnectionString()
         {
             return Environment.GetEnvironmentVariable("CrmBourseDB");
+            //return Environment.GetEnvironmentVariable("CrmBourseLocalDB");
         }
     }
 }
