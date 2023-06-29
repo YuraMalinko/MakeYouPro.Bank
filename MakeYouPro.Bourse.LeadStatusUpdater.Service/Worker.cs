@@ -52,40 +52,10 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
                     HttpResponseMessage responseAccountsWithBigTransactions = await GetResponseAccountsWithALargeNumberOfTransactionsAsync(settings);
                     HttpResponseMessage responseAccountsWithFreshMoney = await GetResponseAccountsWithAccountsWithFreshMoneyAsync(settings);
 
-                    List<LeadStatusUpdateModel> accountsBirth = new List<LeadStatusUpdateModel>();
-                    List<LeadStatusUpdateModel> accountsWithBigTransactions = new List<LeadStatusUpdateModel>();
-                    List<LeadStatusUpdateModel> accountsWithFreshMoney = new List<LeadStatusUpdateModel>();
-
-                    if (responseAccountsBirth.IsSuccessStatusCode)
-                    {
-                        string dataAccountsBirth = await responseAccountsBirth.Content.ReadAsStringAsync();
-                        accountsBirth = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsBirth);
-                    }
-                    else
-                    {
-                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsBirth.StatusCode}");
-                    }
-
-                    if (responseAccountsWithBigTransactions.IsSuccessStatusCode)
-                    {
-                        string dataAccountsWithBigTransactions = await responseAccountsWithBigTransactions.Content.ReadAsStringAsync();
-                        accountsWithBigTransactions = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithBigTransactions);
-                    }
-                    else
-                    {
-                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithBigTransactions.StatusCode}");
-                    }
-
-                    if (responseAccountsWithFreshMoney.IsSuccessStatusCode)
-                    {
-                        string dataAccountsWithFreshMoney = await responseAccountsWithFreshMoney.Content.ReadAsStringAsync();
-                        accountsWithFreshMoney = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsWithFreshMoney);
-                    }
-                    else
-                    {
-                        _logger.LogError($"Ошибка при выполнении GET-запроса: {responseAccountsWithFreshMoney.StatusCode}");
-                    }
-
+                    List<LeadStatusUpdateModel> accountsBirth = await ChekResponse(responseAccountsBirth);
+                    List<LeadStatusUpdateModel> accountsWithBigTransactions = await ChekResponse(responseAccountsWithBigTransactions);
+                    List<LeadStatusUpdateModel> accountsWithFreshMoney = await ChekResponse(responseAccountsWithFreshMoney);
+                                        
                     List<LeadStatusUpdateModel> accountsToPublish = await MergeListsAndRemoveDuplicatesAsync(accountsBirth, accountsWithBigTransactions, accountsWithFreshMoney);
 
                     try
@@ -135,6 +105,22 @@ namespace MakeYouPro.Bourse.LeadStatusUpdater.Service
         {
             List<T> resultList = await Task.Run(() => list1.Union(list2).Union(list3).ToList());
             return resultList;
+        }
+
+        public static async Task<List<LeadStatusUpdateModel>> ChekResponse(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                string dataAccountsBirth = await response.Content.ReadAsStringAsync();
+                List<LeadStatusUpdateModel> accounts = JsonConvert.DeserializeObject<List<LeadStatusUpdateModel>>(dataAccountsBirth);
+
+                return accounts;
+            }
+            else
+            {
+                Console.WriteLine($"Ошибка при выполнении GET-запроса: {response.StatusCode}");
+                return new List<LeadStatusUpdateModel>();
+            }
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
