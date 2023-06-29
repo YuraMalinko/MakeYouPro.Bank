@@ -7,8 +7,6 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
     {
         Task<LeadEntity> CreateLeadAsync(LeadEntity lead);
 
-        //Task<LeadEntity> CreateLeadAsync(LeadEntity lead,UserEntity user);
-
         Task<List<LeadEntity>> GetLeadsByPassportEmailPhoneAsync(LeadEntity lead);
 
         Task<LeadEntity> UpdateLeadStatusAsync(LeadStatusEnum leadStatus, int leadId);
@@ -23,13 +21,8 @@ namespace MakeYouPro.Bourse.CRM.Dal.IRepositories
 
         Task DeleteLeadByIdAsync(int leadId);
 
-
-
         Task<LeadEntity> GetLeadByEmail(string email);
-
-        //Task<Lead> LeadErasure(int leadId);
-
-        //Task<Lead> FullUpdateLead(LeadEntity lead);
+        
         Task<LeadEntity> UpdateLeadRoleAsync(int leadRole, int leadId);
     }
 }

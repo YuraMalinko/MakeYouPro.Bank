@@ -3,7 +3,7 @@ using EntityFrameworkCore.EncryptColumn.Util;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 using System.Data;
 
-namespace MakeYouPro.Bourse.CRM.TestDataGeneration
+namespace MakeYouPro.Bourse.CRM.TestDataGeneration.TablesGenerator
 {
     internal static class TableGenerator
     {
@@ -64,7 +64,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
             leadsTable.Columns.Add(birthday);
 
             DataColumn phoneNumber = new DataColumn();
-            phoneNumber.DataType = typeof(String);
+            phoneNumber.DataType = typeof(string);
             phoneNumber.ColumnName = "PhoneNumber";
             phoneNumber.AllowDBNull = false;
             leadsTable.Columns.Add(phoneNumber);
@@ -83,7 +83,7 @@ namespace MakeYouPro.Bourse.CRM.TestDataGeneration
 
             DataColumn passportNumber = new DataColumn();
             //passportNumber.DataType = Type.GetType("System.String");
-            passportNumber.DataType = typeof(String);
+            passportNumber.DataType = typeof(string);
             passportNumber.ColumnName = "PassportNumber";
             passportNumber.AllowDBNull = false;
             leadsTable.Columns.Add(passportNumber);

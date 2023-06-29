@@ -2,7 +2,6 @@
 using MakeYouPro.Bourse.CRM.Auth.Dal.Models;
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
-using MakeYouPro.Bourse.CRM.TestDataGeneration;
 using MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators;
 using MakeYouPro.Bourse.CRM.TestDataGeneration.TablesGenerator;
 using Microsoft.Data.SqlClient;

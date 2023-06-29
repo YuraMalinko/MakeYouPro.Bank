@@ -2,7 +2,7 @@
 using MakeYouPro.Bourse.CRM.Core.Enums;
 using MakeYouPro.Bourse.CRM.Dal.Models;
 
-namespace MakeYouPro.Bourse.CRM.TestDataGeneration
+namespace MakeYouPro.Bourse.CRM.TestDataGeneration.FakerGenerators
 {
     public class FakerGenerator
     {

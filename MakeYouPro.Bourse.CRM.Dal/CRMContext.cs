@@ -1,4 +1,3 @@
-
 using EntityFrameworkCore.EncryptColumn.Extension;
 using EntityFrameworkCore.EncryptColumn.Interfaces;
 using EntityFrameworkCore.EncryptColumn.Util;
@@ -24,7 +23,6 @@ namespace MakeYouPro.Bourse.CRM.Dal
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseDB"));
-            //builder.UseSqlServer(Environment.GetEnvironmentVariable("CrmBourseLocalDB"));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
