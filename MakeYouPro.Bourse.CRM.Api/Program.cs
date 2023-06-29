@@ -1,11 +1,11 @@
 using MakeYouPro.Bourse.CRM.Api.Extentions;
 using MakeYouPro.Bourse.CRM.Api.Mappings;
 using MakeYouPro.Bourse.CRM.Bll.Mappings;
+using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Core.Clients.AuthService;
 using MakeYouPro.Bourse.CRM.Core.Clients.TransactionService;
 using MakeYouPro.Bourse.CRM.Core.ExceptionMiddleware;
 using MakeYouPro.Bourse.CRM.Core.RabbitMQ;
-using MakeYouPro.Bourse.CRM.Core.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Dal;
 using NLog;
 using ILogger = NLog.ILogger;
@@ -23,7 +23,7 @@ builder.Services.AddAutoMapper(typeof(MapperApiLeadProfile), typeof(MapperBllLea
                                 typeof(MapperApiAccountProfile), typeof(MapperBllAccountProfile),
                                 typeof(MapperApiTransactionProfile), typeof(MapperClientTransactionProfile));
 
-builder.Services.AddScoped<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
+builder.Services.AddTransient<CRMContext>(_ => new CRMContext(Environment.GetEnvironmentVariable("EncryptKey")));
 builder.Services.AddRepositories();
 
 builder.Services.AddServices();
@@ -45,11 +45,11 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 app.UseMiddleware<ExceptionHandler>();
 
 app.UseHttpsRedirection();
@@ -58,6 +58,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Services.GetRequiredService<IConsumer<CommissionMessage>>();
+app.Services.GetRequiredService<IConsumer<UpdateRoleMessage>>();
 
 app.Run();

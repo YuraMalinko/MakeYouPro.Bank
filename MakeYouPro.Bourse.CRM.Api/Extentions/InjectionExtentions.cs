@@ -5,6 +5,7 @@ using MakeYouPro.Bourse.CRM.Api.Models.Transaction.Request;
 using MakeYouPro.Bourse.CRM.Api.Validations;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.RabbitMQ;
+using MakeYouPro.Bourse.CRM.Bll.RabbitMQ.Models;
 using MakeYouPro.Bourse.CRM.Bll.Services;
 using MakeYouPro.Bourse.CRM.Core.Configurations.ISettings;
 using MakeYouPro.Bourse.CRM.Core.Configurations.Settings;
@@ -20,13 +21,14 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
     {
         public static void AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<ILeadRepository, LeadRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddTransient<ILeadRepository, LeadRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
         }
 
         public static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<ILeadService, LeadService>();
+            //services.AddSingleton<ILeadSingletoneService, LeadService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITransactionService, TransactionService>();
         }
@@ -44,20 +46,23 @@ namespace MakeYouPro.Bourse.CRM.Api.Extentions
 
         public static void AddSettings(this IServiceCollection services)
         {
-            services.AddScoped<ICurrencySetting, CurrencySetting>();
-            services.AddScoped<IAccountSetting, AccountSetting>();
+            services.AddSingleton<ICurrencySetting, CurrencySetting>();
+            services.AddSingleton<IAccountSetting, AccountSetting>();
             services.AddSingleton<ICommissionSettings, CommissionSettings>();
         }
 
         public static void AddRabbitMQ(this IServiceCollection services)
         {
-            //todo переделать
             services.AddSingleton(_ => new ConnectionFactory { HostName = Environment.GetEnvironmentVariable("RabbitHostName") }.CreateConnection());
 
             services.AddSingleton<IProduser<CommissionMessage>, Produser<CommissionMessage>>(
                 s => new Produser<CommissionMessage>(s.GetRequiredService<IConnection>(), "commissionExchange", "commissionQueue"));
-            services.AddSingleton<IConsumer<CommissionMessage>, CommissionConsumer>(
-                s => new CommissionConsumer(s.GetRequiredService<IConnection>(), "commissionQueue", s.GetRequiredService<NLog.ILogger>()));
+            services.AddSingleton<IConsumer<UpdateRoleMessage>, UpdateRoleConsumer>(
+                s => new UpdateRoleConsumer(s.GetRequiredService<IConnection>(), "update-lead-status-on-vip",
+                                            s.GetRequiredService<ILeadRepository>(), s.GetRequiredService<NLog.ILogger>()));
+            //services.AddHostedService<UpdateRoleConsumer>(
+            //    s => new UpdateRoleConsumer(s.GetRequiredService<IConnection>(), "update-lead-status-on-vip",
+            //                                s.GetRequiredService<ILeadService>(), s.GetRequiredService<NLog.ILogger>()));
         }
     }
 }

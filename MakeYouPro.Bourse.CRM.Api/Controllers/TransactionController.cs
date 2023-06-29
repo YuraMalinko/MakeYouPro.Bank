@@ -101,17 +101,5 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
 
             return Ok(result);
         }
-
-        [HttpGet("com", Name = "GetCom")]
-        public void Get()
-        {
-            //var producer = new Produser<CommissionMessage>("localhost", "commissionExchange", "commissionQueue");
-            var mes = new CommissionMessage
-            {
-                CommissionAmount = 100,
-                TransactionId = 1
-            };
-            _producer.Publish(mes);
-        }
     }
 }

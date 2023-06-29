@@ -46,7 +46,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                     return await RecoverOrThrowAsync(leadsMatched.First(), addLead);
 
                 default:
-                    // _logger.Log(LogLevel.Warn,  "2 or more properties (email/phoneNumber/passportNumber) belong to different Leads in database.");
                     throw new ArgumentException("2 or more properties (email/phoneNumber/passportNumber) belong to different Leads in database");
             };
         }
@@ -59,7 +58,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
             if (leadEntity.Status == LeadStatusEnum.Deleted || leadEntity.Status == LeadStatusEnum.Deactive)
             {
-                // _logger.Log(LogLevel.Warn, " Lead with id {leadId} is deleted or is deactive");
                 throw new ArgumentException($"Lead with id {leadId} is deleted or is deactive");
             }
             else
@@ -89,23 +87,18 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                // _logger.Log(LogLevel.Warn, " You can delete lead only with status-Active");
                 throw new ArgumentException("You can delete lead only with status-Active");
             }
         }
 
         public async Task<Lead> UpdateLeadUsingLeadAsync(Lead updateLead)
         {
-            //�������� �������� �� �������? � ���, ��� ��� �������� ���� � ����
-            // �� ���� ������� �������� ��������? �� �� ��� ��� �����������
-
             _logger.Info($"{nameof(LeadService)} start {nameof(UpdateLeadUsingLeadAsync)}");
 
             var leadEntityDb = await _leadRepository.GetLeadByIdAsync(updateLead.Id);
 
             if (leadEntityDb.Status == LeadStatusEnum.Deleted || leadEntityDb.Status == LeadStatusEnum.Deactive)
             {
-                // _logger.Log(LogLevel.Warn, " Lead with id {updateLead.Id} is deleted or is deactive");
                 throw new ArgumentException("Lead with this id is deleted or is deactive");
             }
             else
@@ -127,7 +120,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else
                 {
-                    //  _logger.Log(LogLevel.Warn, "Lead has unsuitable role for update");
                     throw new ArgumentException($"Lead has unsuitable role for update");
                 }
             }
@@ -143,7 +135,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             if (leadEntityDb.Status == LeadStatusEnum.Deleted || managerEntityDb.Status == LeadStatusEnum.Deleted
                 || leadEntityDb.Status == LeadStatusEnum.Deactive || managerEntityDb.Status == LeadStatusEnum.Deactive)
             {
-                // _logger.Log(LogLevel.Warn, "Lead or Manager is deleted or deactive");
                 throw new ArgumentException($"Lead or Manager is deleted or deactive");
             }
             else
@@ -169,7 +160,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else
                 {
-                    //  _logger.Log(LogLevel.Warn, " One of Leads has unsuitable role for update");
                     throw new ArgumentException($"One of Leads has unsuitable role for update");
                 }
             }
@@ -177,9 +167,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         public async Task<Lead> UpdateLeadRoleAsync(int leadRole, int leadId)
         {
-            //�������� �������� �� ��������� �������
-            // � �������� �� �� ��� �� ����� ������ ������
-
             _logger.Info($"{nameof(LeadService)} start {nameof(UpdateLeadRoleAsync)}");
 
             var leadEntity = await _leadRepository.UpdateLeadRoleAsync(leadRole, leadId);
@@ -192,15 +179,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> CreateLeadAsync(Lead lead)
         {
-            //try
-            //{
-            //    await _authServiceClient.RegisterAsync(CreateUserRegisterReguest(lead));
-            //}
-            //catch ()
-            //{ 
-
-            //}
-
             _logger.Info($"{nameof(LeadService)} start {nameof(CreateLeadAsync)}");
 
             var leadEntity = _mapper.Map<LeadEntity>(lead);
@@ -222,7 +200,6 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
             }
             else
             {
-                // _logger.Log(LogLevel.Warn, " New lead did not created");
                 throw new ArgumentException("New lead did not created");
             }
         }
@@ -240,24 +217,19 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
 
         private async Task<Lead> RecoverOrThrowAsync(Lead leadDb, Lead leadRequest)
         {
-            // � ���������� � ������� �y� ���� ����� ���� ��������� � ��� �� ������ ��� ���� //
-
             _logger.Info($"{nameof(LeadService)} start {nameof(RecoverOrThrowAsync)}");
 
             if (leadDb.Status == LeadStatusEnum.Active)
             {
-                //  _logger.Log(LogLevel.Warn, "One of properties - email/phoneNumber/passportNumber belong to different Leads in database.");
                 throw new AlreadyExistException(" one of properties - email/phoneNumber/passportNumber belong to different Leads in database");
             }
             else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role != LeadRoleEnum.Manager)
             {
-                // _logger.Log(LogLevel.Warn, "Only manager can restore deactive lead");
                 throw new ArgumentException("Only manager can restore deactive lead");
             }
             else if (leadDb.Status == LeadStatusEnum.Deleted &&
                     (leadRequest.Role != LeadRoleEnum.StandardLead && leadRequest.Role != LeadRoleEnum.VipLead))
             {
-                //  _logger.Log(LogLevel.Warn, "Only Lead can restore deleted lead");
                 throw new ArgumentException("Only Lead can restore deleted lead");
             }
             else if (leadDb.Status == LeadStatusEnum.Deactive && leadRequest.Role == LeadRoleEnum.Manager
@@ -269,12 +241,10 @@ namespace MakeYouPro.Bourse.CRM.Bll.Services
                 }
                 else if (leadDb.Email == leadRequest.Email && leadDb.PhoneNumber == leadRequest.PhoneNumber)
                 {
-                    //  _logger.Log(LogLevel.Warn, "Email and phoneNumber belong to other Lead in database.");
                     throw new AlreadyExistException("email and phoneNumber");
                 }
                 else if (leadDb.Email == leadRequest.Email)
                 {
-                    // _logger.Log(LogLevel.Warn, "Email belong to other Lead in database.");
                     throw new AlreadyExistException(nameof(LeadEntity.Email));
                 }
                 else if (leadDb.PhoneNumber == leadRequest.PhoneNumber)

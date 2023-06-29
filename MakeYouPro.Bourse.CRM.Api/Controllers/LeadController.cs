@@ -4,7 +4,6 @@ using MakeYouPro.Bourse.CRM.Api.Models.Lead.Request;
 using MakeYouPro.Bourse.CRM.Api.Models.Lead.Response;
 using MakeYouPro.Bourse.CRM.Bll.IServices;
 using MakeYouPro.Bourse.CRM.Bll.Models;
-using MakeYouPro.Bourse.CRM.Models.Lead.Response;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
@@ -116,18 +115,6 @@ namespace MakeYouPro.Bourse.CRM.Api.Controllers
             var lead = _mapper.Map<Lead>(updateRequestLead);
             var updateLead = await _leadService.UpdateLeadUsingManagerAsync(lead, managerId);
             var result = _mapper.Map<LeadResponseInfo>(updateLead);
-
-            return Ok(result);
-        }
-
-        [HttpPatch("leadRole", Name = "UpdateLeadRoleAsync")]
-        [SwaggerResponse((int)HttpStatusCode.OK)]
-        [SwaggerResponse((int)HttpStatusCode.BadRequest)]
-        [SwaggerResponse((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<LeadResponseBase>> UpdateLeadRoleAsync(int leadRole, int leadId)
-        {
-            var lead = await _leadService.UpdateLeadRoleAsync(leadRole, leadId);
-            var result = _mapper.Map<LeadResponseBase>(lead);
 
             return Ok(result);
         }

@@ -18,8 +18,6 @@ namespace MakeYouPro.Bourse.CRM.Core.RabbitMQ
 
         private readonly ILogger _nLogger;
 
-        //public ConsumerBase(string hostName, string queueName)
-
         public ConsumerBase(IConnection connection, string queueName, ILogger nLogger)
         {
             _queueName = queueName;

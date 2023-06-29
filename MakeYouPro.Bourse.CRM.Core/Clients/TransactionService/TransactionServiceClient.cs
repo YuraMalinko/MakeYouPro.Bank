@@ -16,10 +16,6 @@ namespace MakeYouPro.Bourse.CRM.Core.Clients.TransactionService
 
         public async Task<decimal> GetAccountBalanceAsync(int accountId)
         {
-            //var query = HttpUtility.ParseQueryString(string.Empty);
-            //query["accountId"] = accountId.ToString();
-            //string queryString = query.ToString();
-
             var response = await _client.GetAsync($"balanse/{accountId}");
 
             if (response.StatusCode == HttpStatusCode.OK)
